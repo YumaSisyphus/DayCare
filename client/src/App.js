@@ -1,5 +1,7 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import WelcomeScreen from "../src/pages/WelcomeScreen";
 
 function App() {
   const [backendData, setBackendData] = useState([{}]);
@@ -13,11 +15,11 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>App</h1>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<WelcomeScreen />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
