@@ -100,6 +100,7 @@ const Login = () => {
       .post("http://localhost:5000/login", { username, password })
       .then((res) => {
         if (res.data.success) {
+          
           Cookies.set("token", res.data.token, { expires: 1 / 24 });
           navigate("/");
         } else {
