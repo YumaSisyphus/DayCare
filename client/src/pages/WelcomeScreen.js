@@ -2,23 +2,8 @@ import { Box, Container, Typography } from "@mui/material";
 import { Colors } from "../utils/colors";
 import { motion } from "framer-motion";
 import Logo from "../images/logo.jpg";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import { Button } from "@mui/material";
 
 const WelcomeScreen = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-
-    navigate("/login");
-  };
-
-  const Dashboard = () => {
-    navigate("/Dashboard");
-  };
-
   return (
     <div>
       <Box width={"100%"} sx={{ bgcolor: `${Colors.primary}` }}>
@@ -32,24 +17,6 @@ const WelcomeScreen = () => {
             gap={20}
             p={5}
           >
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleLogout}
-              sx={{ marginTop: 2 }}
-            >
-              Logout
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={Dashboard}
-              sx={{ marginTop: 2 }}
-            >
-              Dashboard
-            </Button>
-            
-            
             <img src={Logo} alt="logo" className="welcome-screen-logo" />
             <Box zIndex={1} width={"30%"}>
               <Typography variant="h2" fontFamily={"'Baloo 2', sans-serif"}>
