@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import {
   Box,
@@ -10,8 +11,6 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Menu,
-  MenuItem,
   Drawer,
   List,
   ListItem,
@@ -39,6 +38,11 @@ const Dashboard = () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  const handleLogout = () => {
+    Cookies.remove("token");
+
+    navigate("/login");
+  };
   const navigate = useNavigate();
 
   return (
@@ -58,7 +62,7 @@ const Dashboard = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 , color:"#333333"}}>
             Dashboard
           </Typography>
-          <Button color="inherit" sx={{ color: "black" }}>Logout</Button>
+          <Button color="inherit"  onClick={handleLogout} sx={{ color: "black" }}>Logout</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -80,7 +84,7 @@ const Dashboard = () => {
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary="Inbox" />
+            <ListItemText primary="Welcome page" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
