@@ -19,10 +19,10 @@ import {
   Button,
   TextField,
   Snackbar,
-  Alert,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
@@ -35,6 +35,7 @@ function Activity() {
   const [editedDescription, setEditedDescription] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isNewActivity, setIsNewActivity] = useState(false);
 
   useEffect(() => {
     fetch("/activity")
@@ -43,10 +44,19 @@ function Activity() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+  const handleAddNew = () => {
+    setSelectedActivity(null);
+    setEditedName("");
+    setEditedDescription("");
+    setIsNewActivity(true);
+    setOpenModal(true);
+  };
+
   const handleEdit = (activity) => {
     setSelectedActivity(activity);
     setEditedName(activity.Name);
     setEditedDescription(activity.Description);
+    setIsNewActivity(false);
     setOpenModal(true);
   };
 
@@ -55,8 +65,14 @@ function Activity() {
   };
 
   const handleSaveChanges = () => {
-    fetch(`/activity/${selectedActivity.ActivityId}`, {
-      method: "PUT",
+    const apiUrl = isNewActivity
+      ? "/activity"
+      : `/activity/${selectedActivity.ActivityId}`;
+
+    const method = isNewActivity ? "POST" : "PUT";
+
+    fetch(apiUrl, {
+      method: method,
       headers: {
         "Content-Type": "application/json",
       },
@@ -70,23 +86,30 @@ function Activity() {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
         if (data.affectedRows > 0) {
-          setActivities(
-            activities.map((activity) =>
-              activity.ActivityId === selectedActivity.ActivityId
-                ? {
-                    ...activity,
-                    Name: editedName,
-                    Description: editedDescription,
-                  }
-                : activity
-            )
-          );
+          if (isNewActivity) {
+            setActivities([...activities, data.newActivity]);
+          } else {
+            setActivities(
+              activities.map((activity) =>
+                activity.ActivityId === selectedActivity.ActivityId
+                  ? {
+                      ...activity,
+                      Name: editedName,
+                      Description: editedDescription,
+                    }
+                  : activity
+              )
+            );
+          }
           setOpenModal(false);
         }
       })
-      .catch((error) => console.error("Error updating activity:", error));
-    setSnackbarMessage("Error updating activity");
-    setSnackbarOpen(true);
+      .catch((error) => {
+        console.error("Error updating or adding activity:", error);
+        setSnackbarMessage("Error updating or adding activity");
+        setSnackbarOpen(true);
+      });
+    setOpenModal(false);
   };
 
   const handleDelete = (activityId) => {
@@ -127,9 +150,21 @@ function Activity() {
         alignItems={"center"}
       >
         <Container>
-          <Typography variant="h4" gutterBottom>
-            Activity Dashboard
-          </Typography>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Typography variant="h4" gutterBottom>
+              Activity Dashboard
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleAddNew}
+              sx={{ height: "20%" }}
+            >
+              Add New
+            </Button>
+          </Box>
+
           <TableContainer
             component={Paper}
             sx={{
@@ -140,21 +175,20 @@ function Activity() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Number</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Actions</TableCell>
+                  <TableCell>
+                    <Typography fontWeight={"bold"}>Name</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography fontWeight={"bold"}>Description</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography fontWeight={"bold"}>Actions</Typography>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activities.map((activity, index) => (
+                {activities.map((activity) => (
                   <TableRow key={activity.ActivityId}>
-                    <TableCell>
-                      {" "}
-                      <Typography variant="body1" fontWeight={"bold"}>
-                        {index + 1}
-                      </Typography>
-                    </TableCell>
                     <TableCell>
                       <Typography variant="body1">{activity.Name}</Typography>
                     </TableCell>
@@ -185,7 +219,9 @@ function Activity() {
             </Table>
           </TableContainer>
           <Dialog open={openModal} onClose={handleModalClose}>
-            <DialogTitle>Edit Activity</DialogTitle>
+            <DialogTitle>
+              {isNewActivity ? "Add New Activity" : "Edit Activity"}
+            </DialogTitle>
             <DialogContent>
               <TextField
                 margin="normal"

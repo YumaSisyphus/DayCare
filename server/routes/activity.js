@@ -72,14 +72,40 @@ router.put("/:id", (req, res) => {
     }
 
     if (result.affectedRows > 0) {
-      return res
-        .status(200)
-        .json({
-          message: "Activity updated successfully",
-          affectedRows: result.affectedRows,
-        });
+      return res.status(200).json({
+        message: "Activity updated successfully",
+        affectedRows: result.affectedRows,
+      });
     } else {
       return res.status(404).json({ message: "Activity not found" });
+    }
+  });
+});
+
+router.post("", (req, res) => {
+  const { Name, Description } = req.body;
+
+  const query = "INSERT INTO activity (Name, Description) VALUES (?, ?)";
+
+  db.query(query, [Name, Description], (err, result) => {
+    if (err) {
+      console.error("Error adding new activity:", err);
+      return res
+        .status(500)
+        .json({ message: "Error adding new activity", error: err });
+    }
+
+    if (result.affectedRows > 0) {
+      return res.status(200).json({
+        message: "Activity added successfully",
+        newActivity: {
+          ActivityId: result.insertId,
+          Name: Name,
+          Description: Description,
+        },
+      });
+    } else {
+      return res.status(400).json({ message: "Failed to add new activity" });
     }
   });
 });
