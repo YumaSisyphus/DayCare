@@ -52,7 +52,6 @@ router.post("/", (req, res) => {
         success: true,
         message: "Login Successful",
         token: token,
-        user: staffData[0],
       });
     } else {
       // Check in parent table
@@ -88,7 +87,6 @@ router.post("/", (req, res) => {
             success: true,
             message: "Login Successful",
             token: token,
-            user: parentData[0],
           });
         } else {
           return res.json({
