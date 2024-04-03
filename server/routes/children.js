@@ -23,7 +23,7 @@ router.get("/getChildren", (req, res) => {
       return res.json({
         success: true,
         message: "Fetch children succesful",
-        data,
+        children:data,
       });
     }
   });
@@ -40,15 +40,15 @@ router.get("/getChild", (req, res) => {
       return res.json({
         success: true,
         message: "Fetch child succesful",
-        data,
+        child:data,
       });
     }
   });
 });
 
-router.delete("/deleteChild", (req, res) => {
+router.delete("/deleteChild/:id", (req, res) => {
   const sql = "DELETE FROM child WHERE ChildId=?";
-  const values = [req.body.childId];
+  const values = [req.params.id];
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
@@ -64,7 +64,7 @@ router.delete("/deleteChild", (req, res) => {
 
 router.post("/createChild", (req, res) => {
   const sql =
-    "INSERT INTO child (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments) VALUES (?)";
+    "INSERT INTO child (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) VALUES (?)";
   const values = [
     req.body.birthday,
     req.body.gender,
@@ -74,6 +74,7 @@ router.post("/createChild", (req, res) => {
     req.body.name,
     req.body.surname,
     req.body.payments,
+    req.body.active,
   ];
   db.query(sql, [values], (err, data) => {
     if (err) {
@@ -83,37 +84,37 @@ router.post("/createChild", (req, res) => {
       return res.json({
         success: true,
         message: "Create child succesful",
-        test:data[0]
       });
     }
   });
 });
 
 router.put("/updateChild", (req, res) => {
-    const sql =
-      "UPDATE child SET Birthday=?, Gender=?, Photo=?, Allergies=?, Vaccines=?, Name=?, Surname=?, Payments=? WHERE ChildId=?";
-    const values = [
-      req.body.birthday,
-      req.body.gender,
-      req.body.photo,
-      req.body.allergies,
-      req.body.vaccines,
-      req.body.name,
-      req.body.surname,
-      req.body.payments,
-      req.body.childId
-    ];
-    db.query(sql, values, (err, data) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.json({ success: false, message: "Update child failed" });
-      } else {
-        return res.json({
-          success: true,
-          message: "Update child successful",
-        });
-      }
-    });
+  const sql =
+    "UPDATE child SET Birthday=?, Gender=?, Photo=?, Allergies=?, Vaccines=?, Name=?, Surname=?, Payments=? WHERE ChildId=?";
+  const values = [
+    req.body.birthday,
+    req.body.gender,
+    req.body.photo,
+    req.body.allergies,
+    req.body.vaccines,
+    req.body.name,
+    req.body.surname,
+    req.body.payments,
+    req.body.active,
+    req.body.childId,
+  ];
+  db.query(sql, values, (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({ success: false, message: "Update child failed" });
+    } else {
+      return res.json({
+        success: true,
+        message: "Update child successful",
+      });
+    }
+  });
 });
 
 module.exports = router;
