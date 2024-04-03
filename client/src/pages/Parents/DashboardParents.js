@@ -9,23 +9,11 @@ import {
   TableRow,
   Button,
   Paper,
-  TextField,
 } from "@mui/material";
+import ParentForm from "./ParentForm"; // Import the form component
 
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    birthday: "",
-    gender: "",
-    email: "",
-    address: "",
-    phonenumber: "",
-    username: "",
-    password: "",
-    active:1,
-  });
 
   useEffect(() => {
     const fetchParents = async () => {
@@ -45,25 +33,6 @@ const ParentsList = () => {
       setParents((prevParents) => prevParents.filter((parent) => parent.ParentId !== parentId));
     } catch (error) {
       console.error("Error deleting parent:", error.message);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const handleCreateParent = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/parents/createParent", formData);
-      setParents((prevParents) => [...prevParents, response.data.parent]);
-       
-    } catch (error) {
-      console.error("Error creating parent:", error.message);
     }
   };
 
@@ -115,85 +84,9 @@ const ParentsList = () => {
           )}
         </TableBody>
       </Table>
-      <form onSubmit={handleCreateParent}>
-      <TextField
-        label="Name"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Surname"
-        name="surname"
-        value={formData.surname}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label=""
-        name="birthday"
-        type="date"
-        value={formData.birthday}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Gender"
-        name="gender"
-        value={formData.gender}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Email"
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Address"
-        name="address"
-        value={formData.address}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Phone Number"
-        name="phonenumber"
-        value={formData.phonenumber}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Username"
-        name="username"
-        value={formData.username}
-        onChange={handleChange}
-        required
-      />
-
-      <TextField
-        label="Password"
-        name="password"
-        type="password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
-        <Button type="submit" variant="contained" color="primary">
-          Create Parent
-        </Button>
-      </form>
+       <a href="/ParentForm">
+        Create Form
+       </a>
     </TableContainer>
   );
 };

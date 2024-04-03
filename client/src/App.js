@@ -3,9 +3,10 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WelcomeScreen from "../src/pages/WelcomeScreen";
 import Login from "./pages/Login";
-import DashboardParents from "./pages/DashboardParents";
+import DashboardParents from "./pages/Parents/DashboardParents";
 import DashboardChildren from "./pages/dashboardChildren";
 import Activity from "./pages/Activities/ActivityDashboard";
+import ParentForm from "./pages/Parents/ParentForm";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/DashboardParents" element={<DashboardParents />} />
         <Route path="/DashboardChildren" element={<DashboardChildren />} />
         <Route path="/activities" element={<Activity />} />
+        <Route path="/ParentForm" element={<ParentForm />} />
       </Routes>
     </BrowserRouter>
   );
