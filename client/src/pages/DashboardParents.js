@@ -16,8 +16,15 @@ const ParentsList = () => {
   const [parents, setParents] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
+    surname: "",
+    birthday: "",
+    gender: "",
     email: "",
     address: "",
+    phonenumber: "",
+    username: "",
+    password: "",
+    active:1,
   });
 
   useEffect(() => {
@@ -54,11 +61,7 @@ const ParentsList = () => {
     try {
       const response = await axios.post("http://localhost:5000/parents/createParent", formData);
       setParents((prevParents) => [...prevParents, response.data.parent]);
-      setFormData({
-        name: "",
-        email: "",
-        address: "",
-      });
+       
     } catch (error) {
       console.error("Error creating parent:", error.message);
     }
@@ -70,30 +73,46 @@ const ParentsList = () => {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
+            <TableCell>Surname</TableCell>
+            <TableCell>Birthday</TableCell>
+            <TableCell>Gender</TableCell>
             <TableCell>Email</TableCell>
             <TableCell>Address</TableCell>
+            <TableCell>Phone Number</TableCell>
+            <TableCell>Username</TableCell>
+            <TableCell>Password</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-        {parents && parents.map((parent) => (
-            <TableRow key={parent.ParentId}>
-              <TableCell>{parent.Name}</TableCell>
-              <TableCell>{parent.Surname}</TableCell>
-              <TableCell>{parent.Birthday}</TableCell>
-              <TableCell>{parent.Gender}</TableCell>
-              <TableCell>{parent.Email}</TableCell>
-              <TableCell>{parent.Address}</TableCell>
-              <TableCell>{parent.PhoneNumber}</TableCell>
-              <TableCell>{parent.Username}</TableCell>
-              <TableCell>{parent.Password}</TableCell>
-              <TableCell>
-                <Button variant="contained" color="secondary" onClick={() => handleDeleteParent(parent.ParentId)}>
-                  Delete
-                </Button>
-              </TableCell>
+          {parents.length > 0 ? (
+            parents.map((parent) => (
+              <TableRow key={parent.ParentId}>
+                <TableCell>{parent.Name}</TableCell>
+                <TableCell>{parent.Surname}</TableCell>
+                <TableCell>{parent.Birthday}</TableCell>
+                <TableCell>{parent.Gender}</TableCell>
+                <TableCell>{parent.Email}</TableCell>
+                <TableCell>{parent.Address}</TableCell>
+                <TableCell>{parent.PhoneNumber}</TableCell>
+                <TableCell>{parent.Username}</TableCell>
+                <TableCell>{parent.Password}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDeleteParent(parent.ParentId)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={10}>No parents found.</TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
       <form onSubmit={handleCreateParent}>
@@ -171,7 +190,6 @@ const ParentsList = () => {
         onChange={handleChange}
         required
       />
-
         <Button type="submit" variant="contained" color="primary">
           Create Parent
         </Button>

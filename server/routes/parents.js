@@ -46,9 +46,9 @@ router.get("/getParent", (req, res) => {
   });
 });
 
-router.delete("/deleteParent", (req, res) => {
+router.delete("/deleteParent/:parentId", (req, res) => {
   const sql = "DELETE FROM parent WHERE ParentId=?";
-  const values = [req.body.parentId];
+  const values = [req.params.parentId];
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
@@ -62,9 +62,10 @@ router.delete("/deleteParent", (req, res) => {
   });
 });
 
+
 router.post("/createParent", (req, res) => {
   const sql =
-    "INSERT INTO parent (Name, Surname,Birthday, Gender,Email, Address, PhoneNumber, Username, Password) VALUES (?)";
+    "INSERT INTO parent (Name, Surname,Birthday, Gender,Email, Address, PhoneNumber, Username, Password, Active) VALUES (?)";
   const values = [
     req.body.name,
     req.body.surname,
@@ -75,6 +76,7 @@ router.post("/createParent", (req, res) => {
     req.body.phonenumber,
     req.body.username,
     req.body.password,
+    req.body.active,
   ];
   db.query(sql, [values], (err, data) => {
     if (err) {
@@ -92,7 +94,7 @@ router.post("/createParent", (req, res) => {
 
 router.put("/updateParent", (req, res) => {
     const sql =
-      "UPDATE parent SET  Name=?, Surname=?, Birthday=?, Gender=?, Email=?, Address=?, PhoneNumber=?, Username=?, Password=? WHERE ParentId=?";
+      "UPDATE parent SET  Name=?, Surname=?, Birthday=?, Gender=?, Email=?, Address=?, PhoneNumber=?, Username=?, Password=?, Active=? WHERE ParentId=?";
     const values = [
       req.body.name,
       req.body.surname,
@@ -103,6 +105,7 @@ router.put("/updateParent", (req, res) => {
       req.body.phonenumber,
       req.body.username,
       req.body.password,
+      req.body.active,
       req.body.parentId
     ];
     db.query(sql, values, (err, data) => {
