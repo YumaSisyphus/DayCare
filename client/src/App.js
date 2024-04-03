@@ -1,10 +1,11 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import WelcomeScreen from "../src/pages/WelcomeScreen";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DashboardChildren from "./pages/dashboardChildren";
+import Activity from "./pages/Activities/ActivityDashboard";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/DashboardChildren" element={<DashboardChildren />} />
+        <Route path="/activities" element={<Activity />} />
       </Routes>
     </BrowserRouter>
   );

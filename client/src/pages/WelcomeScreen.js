@@ -5,6 +5,7 @@ import Logo from "../images/logo.jpg";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Button } from "@mui/material";
+import Header from "../components/Header";
 
 const WelcomeScreen = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const WelcomeScreen = () => {
   return (
     <div>
       <Box width={"100%"} sx={{ bgcolor: `${Colors.primary}` }}>
+        <Header />
         <Container maxWidth="xl">
           <Box
             height={"400px"}
@@ -48,8 +50,7 @@ const WelcomeScreen = () => {
             >
               Dashboard
             </Button>
-            
-            
+
             <img src={Logo} alt="logo" className="welcome-screen-logo" />
             <Box zIndex={1} width={"30%"}>
               <Typography variant="h2" fontFamily={"'Baloo 2', sans-serif"}>

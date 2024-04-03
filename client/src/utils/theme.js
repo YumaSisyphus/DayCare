@@ -15,6 +15,9 @@ export const theme = createTheme({
     white: {
       main: Colors.white,
     },
+    red: {
+      main: Colors.redlet,
+    },
   },
   typography: {
     fontFamily: "'Baloo 2', sans-serif",

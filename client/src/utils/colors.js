@@ -5,4 +5,5 @@ export const Colors = {
   cleanLightBlack: "#4a4a4a",
   white: "#ffffff",
   black: "#000000",
+  redlet: "#da1737",
 };
