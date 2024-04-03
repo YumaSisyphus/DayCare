@@ -7,6 +7,7 @@ import DashboardParents from "./pages/Parents/DashboardParents";
 import DashboardChildren from "./pages/dashboardChildren";
 import Activity from "./pages/Activities/ActivityDashboard";
 import ParentForm from "./pages/Parents/ParentForm";
+import Food from "./pages/Food/FoodDashboard";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/DashboardChildren" element={<DashboardChildren />} />
         <Route path="/activities" element={<Activity />} />
         <Route path="/ParentForm" element={<ParentForm />} />
+        <Route path="/foodDashboard" element={<Food />} />
       </Routes>
     </BrowserRouter>
   );

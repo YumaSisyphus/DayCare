@@ -110,6 +110,10 @@ function Activity() {
         setSnackbarOpen(true);
       });
     setOpenModal(false);
+    fetch("/activity")
+      .then((response) => response.json())
+      .then((data) => setActivities(data))
+      .catch((error) => console.error("Error fetching data:", error));
   };
 
   const handleDelete = (activityId) => {
@@ -182,7 +186,9 @@ function Activity() {
                     <Typography fontWeight={"bold"}>Description</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Actions</Typography>
+                    <Typography fontWeight={"bold"} textAlign={"right"}>
+                      Actions
+                    </Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -197,7 +203,7 @@ function Activity() {
                         {activity.Description}
                       </Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ textAlign: "right" }}>
                       <IconButton
                         color="primary"
                         aria-label="edit"
