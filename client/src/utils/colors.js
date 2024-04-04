@@ -6,4 +6,10 @@ export const Colors = {
   white: "#ffffff",
   black: "#000000",
   redlet: "#da1737",
+  tomato: "#ff735e",
+  pastelPurple: "#e0b6c7",
+  pastelOrange: "#FFCF81",
+  yellowLime: "#F6FDC3",
+  pastelPeach: "#EEA5A6",
+  darkSilver: "#737373",
 };
