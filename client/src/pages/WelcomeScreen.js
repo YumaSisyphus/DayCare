@@ -17,7 +17,7 @@ const WelcomeScreen = () => {
   };
 
   const Dashboard = () => {
-    navigate("/Dashboard");
+    navigate("/DashboardParents");
   };
 
   return (
