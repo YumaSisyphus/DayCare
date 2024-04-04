@@ -162,6 +162,15 @@ const ParentsList = () => {
                         Delete
                       </Button>
                     </TableCell>
+                    <TableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => navigate(`/EditParents/${parent.ParentId}`)} // Navigate to edit page
+                    >
+                      Edit
+                    </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (

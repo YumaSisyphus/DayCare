@@ -31,7 +31,7 @@ router.get("/getParents", (req, res) => {
 
 router.get("/getParent", (req, res) => {
   const sql = "SELECT * FROM parent WHERE ParentId=?";
-  const values = [req.body.parentId];
+  const values = [req.params.parentId];
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
