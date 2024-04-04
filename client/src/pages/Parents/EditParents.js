@@ -29,16 +29,17 @@ const EditParent = () => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const open = Boolean(anchorEl);
   const [parent, setParent] = useState({
-    name: "",
+    username: "",
     surname: "",
-    birthday: "",
+    phonenumber: "",
+    password: "",
+    name: "",
     gender: "",
     email: "",
+    birthday: "",
     address: "",
-    phonenumber: "",
-    username: "",
-    password: "",
     active: 1,
+    parentId: parentId,
   });
 
   useEffect(() => {
@@ -60,6 +61,7 @@ const EditParent = () => {
           username: fetchedParent.Username,
           password: fetchedParent.Password,
           active: fetchedParent.Active,
+          parentId: parentId,
         });
       } catch (error) {
         console.error("Fetch parent error:", error);
@@ -75,6 +77,7 @@ const EditParent = () => {
       ...prevParent,
       [name]: value,
     }));
+    console.log(parent);
   };
 
   const handleSubmit = async (e) => {

@@ -107,6 +107,9 @@ router.put("/updateParent", (req, res) => {
     req.body.active,
     req.body.parentId,
   ];
+
+  console.log("SQL Query:", sql);
+  console.log("Values:", values);
   db.query(sql, values, (err, data) => {
     if (err) {
       console.error("Database error:", err);
