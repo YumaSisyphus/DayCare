@@ -9,10 +9,13 @@ import Activity from "./pages/Activities/ActivityDashboard";
 import ParentForm from "./pages/Parents/ParentForm";
 import Food from "./pages/Food/FoodDashboard";
 import EditParent from "./pages/Parents/EditParents";
+import Header from "../src/components/Header";
 
 function App() {
   return (
     <BrowserRouter>
+      <Header />
+
       <Routes>
         <Route path="/" element={<WelcomeScreen />} />
         <Route path="/login" element={<Login />} />
