@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -13,14 +16,15 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
+  const [selectedChildren, setSelectedChildren] = useState([]); // Track selected children
   const [deleteChildModalOpen, setDeleteChildModalOpen] = useState(false);
-  const [deletingChild, setDeletingChild] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchChildren = async () => {
@@ -36,25 +40,33 @@ export default function DashboardChildren() {
     fetchChildren();
   }, []);
 
-  const handleDeleteChildModalOpen = (childId) => {
-    setDeletingChild(childId);
+  const handleDeleteChildModalOpen = () => {
     setDeleteChildModalOpen(true);
   };
 
   const handleDeleteChildModalClose = () => {
-    setDeletingChild(null);
     setDeleteChildModalOpen(false);
   };
 
-  const handleDeleteChild = async () => {
+  const handleDeleteChildren = async () => {
     try {
       await axios.delete(
-        `http://localhost:5000/children/deleteChild/${deletingChild}`
+        `http://localhost:5000/children/deleteChildren`,
+        { data: { childIds: selectedChildren } } // Pass selected child IDs to the backend
       );
       //   handlePageChange(pageNr);
       handleDeleteChildModalClose();
     } catch (error) {
-      console.error("Error deleting child:", error.message);
+      console.error("Error deleting children:", error.message);
+    }
+  };
+
+  // Toggle selection of a child
+  const toggleSelectChild = (childId) => {
+    if (selectedChildren.includes(childId)) {
+      setSelectedChildren(selectedChildren.filter((id) => id !== childId));
+    } else {
+      setSelectedChildren([...selectedChildren, childId]);
     }
   };
   return (
@@ -184,16 +196,31 @@ export default function DashboardChildren() {
                     <Typography variant="body2">
                       <Box display="flex" flexDirection={"column"}>
                         <Button>View</Button>
-                        {/* <Button onClick={() => handleEdit(child.ChildId)}>
-                          Edit
-                        </Button> */}
                         <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() =>
+                            navigate(`/EditChild/${child.ChildId}`)
+                          }
+                        >
+                          Edit
+                        </Button>
+                        {/* <Button
                           onClick={() =>
                             handleDeleteChildModalOpen(child.ChildId)
                           }
                         >
                           Delete
-                        </Button>
+                        </Button> */}
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={selectedChildren.includes(child.ChildId)}
+                              onChange={() => toggleSelectChild(child.ChildId)}
+                            />
+                          }
+                          label="SELECT"
+                        ></FormControlLabel>
                       </Box>
                     </Typography>
                   </TableCell>
@@ -202,7 +229,7 @@ export default function DashboardChildren() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Dialog
+        {/* <Dialog
           open={deleteChildModalOpen}
           onClose={handleDeleteChildModalClose}
           maxWidth="xs"
@@ -223,7 +250,34 @@ export default function DashboardChildren() {
             <Button onClick={handleDeleteChildModalClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleDeleteChild} color="primary" autoFocus>
+            <Button onClick={handleDeleteChildren} color="primary" autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog> */}
+        <Button
+          onClick={handleDeleteChildModalOpen}
+          disabled={selectedChildren.length === 0} // Disable button if no child selected
+        >
+          Delete Selected Children
+        </Button>
+        <Dialog
+          open={deleteChildModalOpen}
+          onClose={handleDeleteChildModalClose}
+          maxWidth="xs"
+          fullWidth
+        >
+          <DialogTitle>Delete Confirmation</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete the selected children?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteChildModalClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDeleteChildren} color="primary" autoFocus>
               Delete
             </Button>
           </DialogActions>

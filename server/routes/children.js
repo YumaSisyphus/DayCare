@@ -23,15 +23,15 @@ router.get("/getChildren", (req, res) => {
       return res.json({
         success: true,
         message: "Fetch children succesful",
-        children:data,
+        children: data,
       });
     }
   });
 });
 
-router.get("/getChild", (req, res) => {
+router.get("/getChild/:id", (req, res) => {
   const sql = "SELECT * FROM child WHERE ChildId=?";
-  const values = [req.body.childId];
+  const values = [req.params.id];
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
@@ -40,50 +40,50 @@ router.get("/getChild", (req, res) => {
       return res.json({
         success: true,
         message: "Fetch child succesful",
-        child:data,
+        child: data,
       });
     }
   });
 });
 
-router.delete("/deleteChild/:id", (req, res) => {
-  const sql = "DELETE FROM child WHERE ChildId=?";
-  const values = [req.params.id];
-  db.query(sql, [values], (err, data) => {
+router.delete("/deleteChildren", (req, res) => {
+  const childIds = req.body.childIds; // Array of child IDs to delete
+  const sql = "DELETE FROM child WHERE ChildId IN (?)"; // Use IN clause to delete multiple rows
+  db.query(sql, [childIds], (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Delete child failed" });
+      return res.json({ success: false, message: "Delete children failed" });
     } else {
       return res.json({
         success: true,
-        message: "Delete child succesful",
+        message: "Delete children successful",
       });
     }
   });
 });
 
-router.post("/createChild", (req, res) => {
+router.post("/createChildren", (req, res) => {
+  const childrenData = req.body.map((child) => [
+    child.birthday,
+    child.gender,
+    child.photo,
+    child.allergies,
+    child.vaccines,
+    child.name,
+    child.surname,
+    child.payments,
+    child.active,
+  ]);
   const sql =
-    "INSERT INTO child (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) VALUES (?)";
-  const values = [
-    req.body.birthday,
-    req.body.gender,
-    req.body.photo,
-    req.body.allergies,
-    req.body.vaccines,
-    req.body.name,
-    req.body.surname,
-    req.body.payments,
-    req.body.active,
-  ];
-  db.query(sql, [values], (err, data) => {
+    "INSERT INTO child (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) VALUES ?";
+  db.query(sql, [childrenData], (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Create child failed" });
+      return res.json({ success: false, message: "Create children failed" });
     } else {
       return res.json({
         success: true,
-        message: "Create child succesful",
+        message: "Create children successful",
       });
     }
   });
