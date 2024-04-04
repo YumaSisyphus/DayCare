@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2");
 
+router.use(express.json());
+
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -42,14 +44,14 @@ router.get("/getFoodId", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/updateFood/:id", (req, res) => {
   const { id } = req.params;
   const { Name, Description, Allergens } = req.body;
 
   const query =
     "UPDATE food SET Name = ?, Description = ?, Allergens = ? WHERE FoodId = ?";
 
-  db.query(query, [Name, Description,Allergens, id], (err, result) => {
+  db.query(query, [Name, Description, Allergens, id], (err, result) => {
     if (err) {
       console.error("Error updating food:", err);
       return res
@@ -71,7 +73,8 @@ router.put("/:id", (req, res) => {
 router.post("/createFood", (req, res) => {
   const { Name, Description, Allergens } = req.body;
 
-  const query = "INSERT INTO food (Name, Description, Allergens) VALUES (?, ?)";
+  const query =
+    "INSERT INTO food (Name, Description, Allergens) VALUES (?, ?, ?)";
 
   db.query(query, [Name, Description, Allergens], (err, result) => {
     if (err) {
@@ -96,8 +99,6 @@ router.post("/createFood", (req, res) => {
     }
   });
 });
-
-
 
 router.delete("/deleteFood/:foodId", (req, res) => {
   const deleteMealsSql = "DELETE FROM food_calendar_meal WHERE FoodId=?";
@@ -129,4 +130,3 @@ router.delete("/deleteFood/:foodId", (req, res) => {
 });
 
 module.exports = router;
-

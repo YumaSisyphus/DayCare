@@ -68,7 +68,9 @@ function Food() {
   };
 
   const handleSaveChanges = () => {
-    const apiUrl = isNewFood ? "/food/createFood" : "/food/updateFood";
+    const apiUrl = isNewFood
+      ? "/food/createFood"
+      : `/food/updateFood/${selectedFood.FoodId}`;
 
     const method = isNewFood ? "POST" : "PUT";
 
@@ -78,19 +80,21 @@ function Food() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: editedName,
-        description: editedDescription,
-        allergens: editedAllergens,
-        foodId: selectedFood ? selectedFood.FoodId : undefined,
+        Name: editedName,
+        Description: editedDescription,
+        Allergens: editedAllergens,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
-        if (data.success) {
+        if (
+          data.message === "Food added successfully" ||
+          data.message === "Food updated successfully"
+        ) {
           if (isNewFood) {
-            setFoods([...foods, data.test]);
+            setFoods([...foods, data.newFood]);
           } else {
             setFoods(
               foods.map((food) =>
@@ -106,6 +110,9 @@ function Food() {
             );
           }
           setOpenModal(false);
+        } else {
+          setSnackbarMessage("Error updating or adding food");
+          setSnackbarOpen(true);
         }
       })
       .catch((error) => {
@@ -200,9 +207,7 @@ function Food() {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">
-                        {food.Allergens}
-                      </Typography>
+                      <Typography variant="body1">{food.Allergens}</Typography>
                     </TableCell>
                     <TableCell>
                       <IconButton
@@ -246,6 +251,7 @@ function Food() {
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
               />
+
               <TextField
                 margin="normal"
                 label="Allergens"
