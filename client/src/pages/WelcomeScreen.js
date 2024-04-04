@@ -35,14 +35,12 @@ const WelcomeScreen = () => {
             justifyContent={"center"}
             alignItems={"center"}
             gap={10}
+            mt={5}
+            borderRadius={10}
             p={5}
+            className="welcome-first-section"
           >
-            <Box
-              zIndex={1}
-              width={"35%"}
-              mt={6}
-              className="welcome-first-section"
-            >
+            <Box zIndex={1} width={"35%"} mt={6}>
               <Typography
                 variant="h3"
                 fontFamily={"'Baloo 2', sans-serif"}
@@ -246,12 +244,7 @@ const WelcomeScreen = () => {
               alt="logo"
               className="welcome-screen-img2"
             />
-            <Box
-              zIndex={1}
-              width={"40%"}
-              mt={6}
-              className="welcome-first-section"
-            >
+            <Box zIndex={1} width={"40%"} mt={6}>
               <Typography
                 variant="h3"
                 fontFamily={"'Baloo 2', sans-serif"}

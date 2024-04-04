@@ -28,7 +28,6 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const open = Boolean(anchorEl);
@@ -36,7 +35,9 @@ const ParentsList = () => {
   useEffect(() => {
     const fetchParents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/parents/getParents");
+        const response = await axios.get(
+          "http://localhost:5000/parents/getParents"
+        );
         setParents(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -47,8 +48,12 @@ const ParentsList = () => {
 
   const handleDeleteParent = async (parentId) => {
     try {
-      await axios.delete(`http://localhost:5000/parents/deleteParent/${parentId}`);
-      setParents((prevParents) => prevParents.filter((parent) => parent.ParentId !== parentId));
+      await axios.delete(
+        `http://localhost:5000/parents/deleteParent/${parentId}`
+      );
+      setParents((prevParents) =>
+        prevParents.filter((parent) => parent.ParentId !== parentId)
+      );
     } catch (error) {
       console.error("Error deleting parent:", error.message);
     }
@@ -75,22 +80,38 @@ const ParentsList = () => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 , backgroundColor: "#FFDAB9"}}>
+      <AppBar
+        position="fixed"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "#FFDAB9",
+        }}
+      >
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 , color:"#333333"}}
+            sx={{ mr: 2, color: "#333333" }}
             onClick={handleDrawerToggle}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 , color:"#333333"}}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "#333333" }}
+          >
             Dashboard
           </Typography>
-          <Button color="inherit"  onClick={handleLogout} sx={{ color: "black" }}>Logout</Button>
+          <Button
+            color="inherit"
+            onClick={handleLogout}
+            sx={{ color: "black" }}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -122,10 +143,15 @@ const ParentsList = () => {
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+      >
         <Toolbar />
-        <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
-          <Table sx={{ minWidth: 650 }}> {}
+        <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+          <Table sx={{ minWidth: 650 }}>
+            {" "}
+            {}
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -163,13 +189,15 @@ const ParentsList = () => {
                       </Button>
                     </TableCell>
                     <TableCell>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => navigate(`/EditParents/${parent.ParentId}`)} // Navigate to edit page
-                    >
-                      Edit
-                    </Button>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          navigate(`/EditParents/${parent.ParentId}`)
+                        } // Navigate to edit page
+                      >
+                        Edit
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
