@@ -248,7 +248,7 @@ const WelcomeScreen = () => {
             />
             <Box
               zIndex={1}
-              width={"35%"}
+              width={"40%"}
               mt={6}
               className="welcome-first-section"
             >
