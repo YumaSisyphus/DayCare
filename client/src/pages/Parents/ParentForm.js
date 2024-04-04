@@ -55,6 +55,7 @@ const ParentForm = ({ setParents }) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/parents/createParent", formData);
+      navigate("/DashboardParents");
       setParents((prevParents) => [...prevParents, response.data.parent]);
       setFormData({
         name: "",

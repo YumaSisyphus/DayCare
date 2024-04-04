@@ -13,6 +13,11 @@ const db = mysql.createConnection({
   database: "daycare",
 });
 
+const formatDate = (date) => {
+  const formattedDate = new Date(date).toISOString().split('T')[0];
+  return formattedDate;
+};
+
 router.get("/getParents", (req, res) => {
   const sql = "SELECT * FROM parent";
   db.query(sql, [], (err, data) => {
@@ -20,10 +25,16 @@ router.get("/getParents", (req, res) => {
       console.error("Database error:", err);
       return res.json({ success: false, message: "Fetch parents failed" });
     } else {
+      // Convert dates in the 'data' array to the required format
+      const formattedData = data.map((item) => ({
+        ...item,
+        Birthday: formatDate(item.Birthday),
+        // Add more date fields as needed
+      }));
       return res.json({
         success: true,
-        message: "Fetch parents succesful",
-        data,
+        message: "Fetch parents successful",
+        data: formattedData,
       });
     }
   });
@@ -32,19 +43,26 @@ router.get("/getParents", (req, res) => {
 router.get("/getParent/:parentId", (req, res) => {
   const sql = "SELECT * FROM parent WHERE ParentId=?";
   const values = [req.params.parentId];
-  db.query(sql, [values], (err, data) => {
+  db.query(sql, values, (err, data) => {
     if (err) {
       console.error("Database error:", err);
       return res.json({ success: false, message: "Fetch parent failed" });
     } else {
+      // Convert dates in the 'data' array to the required format
+      const formattedData = data.map((item) => ({
+        ...item,
+        Birthday: formatDate(item.Birthday),
+        // Add more date fields as needed
+      }));
       return res.json({
         success: true,
-        message: "Fetch parent succesful",
-        data,
+        message: "Fetch parent successful",
+        data: formattedData,
       });
     }
   });
 });
+
 
 router.delete("/deleteParent/:parentId", (req, res) => {
   const sql = "DELETE FROM parent WHERE ParentId=?";
@@ -107,9 +125,6 @@ router.put("/updateParent", (req, res) => {
     req.body.active,
     req.body.parentId,
   ];
-
-  console.log("SQL Query:", sql);
-  console.log("Values:", values);
   db.query(sql, values, (err, data) => {
     if (err) {
       console.error("Database error:", err);

@@ -39,7 +39,7 @@ const EditParent = () => {
     birthday: "",
     address: "",
     active: 1,
-    parentId: parentId,
+    parentId:parentId,
   });
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const EditParent = () => {
           username: fetchedParent.Username,
           password: fetchedParent.Password,
           active: fetchedParent.Active,
-          parentId: parentId,
+          parentId:parentId,
         });
       } catch (error) {
         console.error("Fetch parent error:", error);
@@ -106,6 +106,7 @@ const EditParent = () => {
 
     navigate("/login");
   };
+
 
   return (
     <Box sx={{ display: "flex" }}>
