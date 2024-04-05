@@ -11,6 +11,7 @@ const activityRoutes = require("./routes/activity");
 const foodRoutes = require("./routes/food");
 const classRoutes = require("./routes/class");
 const ageGroupRoutes = require("./routes/agegroup");
+const mealRoutes = require("./routes/meal");
 
 app.use("/login", loginRoutes);
 app.use("/children", childrenRoutes);
@@ -19,6 +20,7 @@ app.use("/activity", activityRoutes);
 app.use("/food", foodRoutes);
 app.use("/class", classRoutes);
 app.use("/agegroup", ageGroupRoutes);
+app.use("/meal", mealRoutes);
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");
