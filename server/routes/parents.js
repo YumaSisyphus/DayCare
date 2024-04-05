@@ -181,5 +181,22 @@ router.post("/assignChildToParent", (req, res) => {
     }
   });
 });
+     
+router.get('/getchildparent', (req, res) => {
+  const sql = `
+    SELECT cp.ChildId, cp.ParentId, c.Name AS ChildName, c.Surname AS Surname, p.Name AS Name, p.Surname AS Surname
+    FROM child_parent cp
+    JOIN child c ON cp.ChildId = c.ChildId
+    JOIN parent p ON cp.ParentId = p.ParentId
+  `;
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error('Error fetching child-parent relationships:', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      res.status(200).json(data);
+    }
+  });
+});
 
 module.exports = router;

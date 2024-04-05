@@ -11,7 +11,7 @@ import {
   Box,
   Typography,
   Paper,
-  Grid,
+  Container,
   AppBar,
   Toolbar,
   IconButton,
@@ -20,17 +20,24 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Snackbar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Colors } from "../../utils/colors";
+import DashboardBg from "../../images/geometricbg.png";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import { theme } from "../../utils/theme";
+
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const open = Boolean(anchorEl);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchParents = async () => {
@@ -59,145 +66,148 @@ const ParentsList = () => {
     }
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
 
   const handleLogout = () => {
     Cookies.remove("token");
-
     navigate("/login");
   };
-  const navigate = useNavigate();
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#FFDAB9",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2, color: "#333333" }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, color: "#333333" }}
-          >
-            Dashboard
-          </Typography>
-          <Button
-            color="inherit"
-            onClick={handleLogout}
-            sx={{ color: "black" }}
-          >
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-            boxSizing: "border-box",
-          },
-        }}
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-      >
+    <Box
+      sx={{
+        display: "flex",
+        flexGrow: 1,
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        maxWidth:"150%"
+      }}
+    >
+      
+      
+      <Container sx={{ flexGrow: 1, p: 3, width:"100%" }}>
+      <Box display={"flex"} justifyContent={"space-between"}>
+            <Typography variant="h4" gutterBottom>
+              Parents List
+            </Typography>
+          </Box>
         <Toolbar />
-        <List>
-          <ListItem button onClick={() => navigate("/")}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Welcome page" />
-          </ListItem>
-          <ListItem button onClick={() => navigate("/DashboardParents")}>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary="Parents" />
-          </ListItem>
-        </List>
-      </Drawer>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-      >
-        <Toolbar />
-        <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
-          <Table sx={{ minWidth: 650 }}>
-            {" "}
-            {}
+        <Box textAlign="right" marginTop={-5}  marginRight={-8}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/ParentForm")}
+            >
+              Register a parent
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/ChildParent")}
+              sx={{ ml: 2 }}
+            >
+              Parent-Child List
+            </Button>
+          </Box>
+        <TableContainer
+          component={Paper}
+          sx={{
+            overflowX: "auto",
+            backdropFilter: "blur(10px)",
+            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            maxWidth: "none", // Remove maxWidth constraint
+            width: "110%", // Set width directly
+            '@media (max-width: 1200px)': { // Example media query for adjusting width
+              width: "100%", // Set a different width for smaller screens
+            },
+          }}
+        >          <Table sx={{ minWidth: 800 }}>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Surname</TableCell>
-                <TableCell>Birthday</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>Phone No.</TableCell>
-                <TableCell>Username</TableCell>
-                <TableCell>Password</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Name</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Surname</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Birthday</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Gender</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Email</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Address</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Phone No.</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Username</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Password</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold" textAlign="center">Actions</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {parents.length > 0 ? (
                 parents.map((parent) => (
                   <TableRow key={parent.ParentId}>
-                    <TableCell>{parent.Name}</TableCell>
-                    <TableCell>{parent.Surname}</TableCell>
-                    <TableCell>{parent.Birthday}</TableCell>
-                    <TableCell>{parent.Gender}</TableCell>
-                    <TableCell>{parent.Email}</TableCell>
-                    <TableCell>{parent.Address}</TableCell>
-                    <TableCell>{parent.PhoneNumber}</TableCell>
-                    <TableCell>{parent.Username}</TableCell>
-                    <TableCell>{parent.Password}</TableCell>
                     <TableCell>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleDeleteParent(parent.ParentId)}
-                      >
-                        Delete
-                      </Button>
+                      <Typography variant="body1">{parent.Name}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() =>
-                          navigate(`/EditParents/${parent.ParentId}`)
-                        } // Navigate to edit page
-                      >
-                        Edit
-                      </Button>
+                      <Typography variant="body1">{parent.Surname}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.Birthday}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.Gender}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.Email}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.Address}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.PhoneNumber}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.Username}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">{parent.Password}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Box textAlign="center">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleDeleteParent(parent.ParentId)}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => navigate(`/EditParents/${parent.ParentId}`)}
+                        >
+                          Edit
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))
@@ -208,16 +218,9 @@ const ParentsList = () => {
               )}
             </TableBody>
           </Table>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/ParentForm")}
-            sx={{ mt: 2 }}
-          >
-            Register a parent
-          </Button>
+          
         </TableContainer>
-      </Box>
+      </Container>
     </Box>
   );
 };
