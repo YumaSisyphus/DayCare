@@ -14,7 +14,7 @@ const db = mysql.createConnection({
 });
 
 const formatDate = (date) => {
-  const formattedDate = new Date(date).toISOString().split('T')[0];
+  const formattedDate = new Date(date).toISOString().split("T")[0];
   return formattedDate;
 };
 
@@ -62,7 +62,6 @@ router.get("/getParent/:parentId", (req, res) => {
     }
   });
 });
-
 
 router.delete("/deleteParent/:parentId", (req, res) => {
   const sql = "DELETE FROM parent WHERE ParentId=?";
@@ -122,7 +121,6 @@ router.post("/createParent", (req, res) => {
   });
 });
 
-
 router.put("/updateParent", (req, res) => {
   const sql =
     "UPDATE parent SET  Name=?, Surname=?, Birthday=?, Gender=?, Email=?, Address=?, PhoneNumber=?, Username=?, Password=?, Active=? WHERE ParentId=?";
@@ -152,24 +150,36 @@ router.put("/updateParent", (req, res) => {
   });
 });
 
-
 router.post("/assignChildToParent", (req, res) => {
-  const { parentId, childId } = req.body;
+  const { parentId, childIds } = req.body;
+  console.log(childIds);
 
-  // Insert the parent-child relationship into the child_parent table
-  const insertRelationshipSql = "INSERT INTO child_parent (ChildId, ParentId) VALUES (?)";
-  const insertRelationshipValues = [childId, parentId];
+  // Insert the parent-child relationships into the child_parent table
+  const insertRelationshipSql =
+    "INSERT INTO child_parent (ChildId, ParentId) VALUES ?";
+  const insertRelationshipValues = childIds.map((childId) => [
+    childId,
+    parentId,
+  ]);
 
   db.query(insertRelationshipSql, [insertRelationshipValues], (err) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json({ success: false, message: "Assigning child to parent failed" });
-      } else {
-          return res.status(200).json({ success: true, message: "Child assigned to parent successfully" });
-      }
+    if (err) {
+      console.error("Database error:", err);
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: "Assigning children to parent failed",
+        });
+    } else {
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Children assigned to parent successfully",
+        });
+    }
   });
 });
-
-
 
 module.exports = router;

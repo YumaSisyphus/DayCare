@@ -19,6 +19,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Autocomplete, // Import Autocomplete
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -26,7 +27,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
-const ParentForm = () => {
+const ParentForm = ({ setParents }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const open = Boolean(anchorEl);
@@ -42,7 +43,7 @@ const ParentForm = () => {
     username: "",
     password: "",
     active: 1,
-    childId: "",
+    childId: [],
   });
 
   useEffect(() => {
@@ -75,20 +76,22 @@ const ParentForm = () => {
         "http://localhost:5000/parents/createParent",
         parentData
       );
-      console.log(createParentResponse);
 
       if (createParentResponse.data.success) {
-        // Parent created successfully, now assign the child to the parent
+        // Parent created successfully, now assign the children to the parent
         const parentId = createParentResponse.data.data.id;
-        console.log(parentId);
         const assignChildResponse = await axios.post(
           "http://localhost:5000/parents/assignChildToParent",
-          { parentId, childId }
+          { parentId, childIds: childId } // Ensure childIds is an array
         );
 
         if (assignChildResponse.data.success) {
-          // Child assigned to parent successfully
+          // Children assigned to parent successfully
           navigate("/DashboardParents");
+          setParents((prevParents) => [
+            ...prevParents,
+            createParentResponse.data.parent,
+          ]);
           setFormData({
             name: "",
             surname: "",
@@ -100,11 +103,11 @@ const ParentForm = () => {
             username: "",
             password: "",
             active: 1,
-            childId: "", // Clear childId from the form after saving
+            childId: [], // Clear childId from the form after saving
           });
         } else {
           console.error(
-            "Error assigning child to parent:",
+            "Error assigning children to parent:",
             assignChildResponse.data.message
           );
         }
@@ -136,6 +139,7 @@ const ParentForm = () => {
 
     navigate("/login");
   };
+
   const navigate = useNavigate();
 
   return (
@@ -312,26 +316,26 @@ const ParentForm = () => {
                         />
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField
-                          select
-                          label="Select Child"
-                          name="childId"
-                          value={formData.childId}
-                          onChange={handleChange}
-                          required
+                        <Autocomplete
                           fullWidth
-                        >
-                          {children.map((child) => {
-                            return (
-                              <MenuItem
-                                key={child.ChildId}
-                                value={child.ChildId}
-                              >
-                                {child.Name}
-                              </MenuItem>
-                            );
-                          })}
-                        </TextField>
+                          multiple // Enable multiple selection
+                          value={children.filter((child) =>
+                            formData.childId.includes(child.ChildId)
+                          )}
+                          onChange={(event, newValue) => {
+                            setFormData((prevFormData) => ({
+                              ...prevFormData,
+                              childId: newValue.map((child) => child.ChildId), // Map to array of ChildIds
+                            }));
+                          }}
+                          options={children}
+                          getOptionLabel={(option) =>
+                            option.Name + " " + option.Surname
+                          }
+                          renderInput={(params) => (
+                            <TextField {...params} label="Select Children" />
+                          )}
+                        />
                       </Grid>
                       <Grid item xs={12}>
                         <Button
