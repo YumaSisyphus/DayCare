@@ -200,14 +200,11 @@ const ChildForm = () => {
           </ListItem>
         </List>
       </Drawer>
-      <Box
-        component="main"
-        sx={{ bgcolor: "background.default", p: 3 }}
-      >
+      <Box component="main" sx={{ bgcolor: "background.default", p: 3 }}>
         <Toolbar />
-        {formDataList.map((formData, index) => (
-          <Grid container justifyContent="center" key={index}>
-            <Grid item xs={12} sm={10} md={8} lg={6}>
+        <Grid container justifyContent="center" spacing={3}>
+          {formDataList.map((formData, index) => (
+            <Grid item xs={6} sm={6} md={6} lg={6}>
               <Paper elevation={3} sx={{ padding: 2 }}>
                 <Typography variant="h6" gutterBottom>
                   Register a Child {index + 1}
@@ -353,8 +350,8 @@ const ChildForm = () => {
                 </Box>
               </Paper>
             </Grid>
-          </Grid>
-        ))}
+          ))}
+        </Grid>
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Button
