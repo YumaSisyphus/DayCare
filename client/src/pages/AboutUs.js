@@ -121,7 +121,7 @@ const AboutUs = () => {
                   color={Colors.pastelPurple}
                   textAlign="center"
                 >
-                 About LET Center
+                  About LET Center
                 </Typography>
                 <Typography
                   variant="h6"
@@ -130,8 +130,13 @@ const AboutUs = () => {
                   color={Colors.darkSilver}
                   textAlign="justify"
                 >
-                  
-At Our Daycare, we provide a safe and nurturing environment where children can learn, play, and grow. Our experienced staff is dedicated to the well-being and development of each child, focusing on social, emotional, and cognitive skills. We understand the importance of early childhood education and strive to create a stimulating and engaging environment where children can explore, discover, and learn at their own pace.
+                  At Our Daycare, we provide a safe and nurturing environment
+                  where children can learn, play, and grow. Our experienced
+                  staff is dedicated to the well-being and development of each
+                  child, focusing on social, emotional, and cognitive skills. We
+                  understand the importance of early childhood education and
+                  strive to create a stimulating and engaging environment where
+                  children can explore, discover, and learn at their own pace.
                 </Typography>
                 <Button
                   sx={{
@@ -153,6 +158,7 @@ At Our Daycare, we provide a safe and nurturing environment where children can l
                   src={image1}
                   alt="Welcome to Our Story"
                   style={{ width: "100%", borderRadius: "10px" }}
+                  className="aboutUs-img"
                 />
               </Grid>
             </Grid>
@@ -162,7 +168,7 @@ At Our Daycare, we provide a safe and nurturing environment where children can l
             mt={8}
             p={3}
             borderRadius={10}
-            bgcolor={Colors.lightBlue} 
+            bgcolor={Colors.lightBlue}
             display="flex"
             alignItems="center"
             justifyContent="space-around"
@@ -187,10 +193,6 @@ At Our Daycare, we provide a safe and nurturing environment where children can l
               ))}
             </Grid>
           </Box>
-
-        
-   
-      
         </Container>
       </Box>
     </ThemeProvider>

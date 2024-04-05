@@ -12,7 +12,9 @@ import ParentForm from "./pages/Parents/ParentForm";
 import EditParent from "./pages/Parents/EditParents";
 import Food from "./pages/Food/FoodDashboard";
 import Header from "../src/components/Header";
-import AboutUs from './pages/AboutUs';
+import AboutUs from "./pages/AboutUs";
+import ClassDashboard from "./pages/Class/ClassDashboard";
+import AgeGroupDashboard from "./pages/AgeGroup/AgeGroupDashboard";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="/EditParents/:parentId" element={<EditParent />} />
         <Route path="/foodDashboard" element={<Food />} />
         <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/ClassDashboard" element={<ClassDashboard />} />
+        <Route path="/AgeGroupDashboard" element={<AgeGroupDashboard />} />
       </Routes>
     </BrowserRouter>
   );

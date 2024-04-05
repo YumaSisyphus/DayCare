@@ -12,6 +12,10 @@
   filter: drop-shadow(rgba(163, 208, 252, 0.7) 0px 8px 24px);
 }
 
+.aboutUs-img {
+  filter: drop-shadow(rgba(224, 182, 199, 0.7) 0px 8px 24px);
+}
+
 .welcome-first-section {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 24px;
 }

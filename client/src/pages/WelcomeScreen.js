@@ -21,9 +21,15 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
 import ChildrenLearning from "../images/ChildrenLearning.png";
 import { theme } from "../utils/theme";
+import Cookies from "js-cookie";
 
 const WelcomeScreen = () => {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Cookies.remove("token");
+    navigate("/Login");
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,6 +79,7 @@ const WelcomeScreen = () => {
                     backgroundColor: `${Colors.pastelPurple}60`,
                   },
                 }}
+                onClick={handleLogout}
               >
                 Login Here
               </Button>

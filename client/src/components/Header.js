@@ -70,7 +70,6 @@ function ResponsiveAppBar() {
         to="/fooddashboard"
         onClick={toggleDrawer(false)}
       >
-        
         <ListItemText primary="Food" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
@@ -79,8 +78,7 @@ function ResponsiveAppBar() {
         to="/DashboardParents"
         onClick={toggleDrawer(false)}
       >
-
-<ListItemText primary="AboutUs" sx={{ textAlign: "center" }} />
+        <ListItemText primary="AboutUs" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
         button
@@ -125,27 +123,6 @@ function ResponsiveAppBar() {
             >
               <MenuIcon />
             </IconButton>
-            {/* <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-                flexDirection: "column",
-              }}
-            >
-              {drawerList}
-            </Menu> */}
           </Box>
 
           <Box
@@ -177,7 +154,7 @@ function ResponsiveAppBar() {
               Activities
             </a>
             <a href={"/AboutUs"} className="link-header">
-            AboutUs
+              AboutUs
             </a>
             <a href={"/fooddashboard"} className="link-header">
               Food
@@ -187,6 +164,12 @@ function ResponsiveAppBar() {
             </a>
             <a href={"/DashboardChildren"} className="link-header">
               Children
+            </a>
+            <a href={"/ClassDashboard"} className="link-header">
+              Class
+            </a>
+            <a href={"/AgeGroupDashboard"} className="link-header">
+              Age Group
             </a>
           </Box>
 
