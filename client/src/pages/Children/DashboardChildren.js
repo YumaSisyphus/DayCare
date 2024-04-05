@@ -18,12 +18,17 @@ import {
   Typography,
   Checkbox,
   FormControlLabel,
+  Pagination,
 } from "@mui/material";
+import SearchBar from "../../components/Searchbar";
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
   const [selectedChildren, setSelectedChildren] = useState([]); // Track selected children
   const [deleteChildModalOpen, setDeleteChildModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,13 +37,18 @@ export default function DashboardChildren() {
         const result = await axios.get(
           "http://localhost:5000/children/getChildren"
         );
-        setChildren(result.data.children);
+        const filteredRows = result.data.children.filter((data) =>
+          `${data.Name} ${data.Surname}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        );
+        setChildren(filteredRows);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchChildren();
-  }, []);
+  }, [searchTerm]);
 
   const handleDeleteChildModalOpen = () => {
     setDeleteChildModalOpen(true);
@@ -69,6 +79,15 @@ export default function DashboardChildren() {
       setSelectedChildren([...selectedChildren, childId]);
     }
   };
+
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    setPage(1); // Reset page to 1 when searching
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
   return (
     <Box
       display={"flex"}
@@ -76,6 +95,7 @@ export default function DashboardChildren() {
       alignItems={"center"}
       height={"99.6vh"}
     >
+      <SearchBar label="Search..." onSearch={handleSearch} />
       {/* <Box
         mt={7}
         mb={2}
@@ -159,7 +179,13 @@ export default function DashboardChildren() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {children.map((child) => (
+              {(rowsPerPage > 0
+                ? children.slice(
+                    (page - 1) * rowsPerPage,
+                    (page - 1) * rowsPerPage + rowsPerPage
+                  )
+                : children
+              ).map((child) => (
                 <TableRow key={child.ChildId}>
                   <TableCell>
                     <Typography variant="body2">{child.Photo}</Typography>
@@ -229,6 +255,13 @@ export default function DashboardChildren() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Box mt={2} display="flex" justifyContent="center">
+          <Pagination
+            count={Math.ceil(children.length / rowsPerPage)}
+            page={page}
+            onChange={handleChangePage}
+          />
+        </Box>
         {/* <Dialog
           open={deleteChildModalOpen}
           onClose={handleDeleteChildModalClose}
