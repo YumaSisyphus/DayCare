@@ -160,7 +160,7 @@ router.post("/assignChildToParent", (req, res) => {
   const insertRelationshipSql = "INSERT INTO child_parent (ChildId, ParentId) VALUES (?)";
   const insertRelationshipValues = [childId, parentId];
 
-  db.query(insertRelationshipSql, insertRelationshipValues, (err) => {
+  db.query(insertRelationshipSql, [insertRelationshipValues], (err) => {
       if (err) {
           console.error("Database error:", err);
           return res.status(500).json({ success: false, message: "Assigning child to parent failed" });

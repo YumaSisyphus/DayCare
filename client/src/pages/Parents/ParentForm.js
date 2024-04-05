@@ -26,8 +26,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
-
-const ParentForm = ({ setParents }) => {
+const ParentForm = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const open = Boolean(anchorEl);
@@ -43,7 +42,7 @@ const ParentForm = ({ setParents }) => {
     username: "",
     password: "",
     active: 1,
-    childId:"",
+    childId: "",
   });
 
   useEffect(() => {
@@ -59,7 +58,6 @@ const ParentForm = ({ setParents }) => {
     };
     fetchChildren();
   }, []);
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,19 +71,24 @@ const ParentForm = ({ setParents }) => {
     e.preventDefault();
     try {
       const { childId, ...parentData } = formData;
-      const createParentResponse = await axios.post("http://localhost:5000/parents/createParent", parentData);
+      const createParentResponse = await axios.post(
+        "http://localhost:5000/parents/createParent",
+        parentData
+      );
       console.log(createParentResponse);
-  
+
       if (createParentResponse.data.success) {
         // Parent created successfully, now assign the child to the parent
-        const parentId = createParentResponse.data.data.insertId;
+        const parentId = createParentResponse.data.data.id;
         console.log(parentId);
-        const assignChildResponse = await axios.post("http://localhost:5000/parents/assignChildToParent", { parentId, childId });
-  
+        const assignChildResponse = await axios.post(
+          "http://localhost:5000/parents/assignChildToParent",
+          { parentId, childId }
+        );
+
         if (assignChildResponse.data.success) {
           // Child assigned to parent successfully
           navigate("/DashboardParents");
-          setParents((prevParents) => [...prevParents, createParentResponse.data.parent]);
           setFormData({
             name: "",
             surname: "",
@@ -100,18 +103,22 @@ const ParentForm = ({ setParents }) => {
             childId: "", // Clear childId from the form after saving
           });
         } else {
-          console.error("Error assigning child to parent:", assignChildResponse.data.message);
+          console.error(
+            "Error assigning child to parent:",
+            assignChildResponse.data.message
+          );
         }
       } else {
-        console.error("Error creating parent:", createParentResponse.data.message);
+        console.error(
+          "Error creating parent:",
+          createParentResponse.data.message
+        );
       }
     } catch (error) {
       console.error("Error creating parent:", error.message);
     }
   };
-  
 
-  
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -133,22 +140,38 @@ const ParentForm = ({ setParents }) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 , backgroundColor: "#FFDAB9"}}>
+      <AppBar
+        position="fixed"
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backgroundColor: "#FFDAB9",
+        }}
+      >
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 , color:"#333333"}}
+            sx={{ mr: 2, color: "#333333" }}
             onClick={handleDrawerToggle}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 , color:"#333333"}}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "#333333" }}
+          >
             Dashboard
           </Typography>
-          <Button color="inherit"  onClick={handleLogout} sx={{ color: "black" }}>Logout</Button>
+          <Button
+            color="inherit"
+            onClick={handleLogout}
+            sx={{ color: "black" }}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -180,142 +203,153 @@ const ParentForm = ({ setParents }) => {
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+      >
         <Toolbar />
-  <Box> 
-    <table>
-  <TableRow>
-    <TableCell>
-      <Paper elevation={3} sx={{ padding: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Register a Parent
-        </Typography>
-        <form onSubmit={handleCreateParent}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Surname"
-                name="surname"
-                value={formData.surname}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label=""
-                name="birthday"
-                type="date"
-                value={formData.birthday}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Phone Number"
-                name="phonenumber"
-                value={formData.phonenumber}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-            <TextField
-              select
-              label="Select Child"
-              name="childId"
-              value={formData.childId}
-              onChange={handleChange}
-              required
-              fullWidth
-            >
-              {children.map((child) => {
-                return (
-                  <MenuItem key={child.ChildId} value={child.ChildId}>
-                    {child.Name}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
-                Create Parent
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
-    </TableCell>
-  </TableRow>
-  </table>
-     </Box>
+        <Box>
+          <table>
+            <TableRow>
+              <TableCell>
+                <Paper elevation={3} sx={{ padding: 2 }}>
+                  <Typography variant="h6" gutterBottom>
+                    Register a Parent
+                  </Typography>
+                  <form onSubmit={handleCreateParent}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Surname"
+                          name="surname"
+                          value={formData.surname}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label=""
+                          name="birthday"
+                          type="date"
+                          value={formData.birthday}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Gender"
+                          name="gender"
+                          value={formData.gender}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Address"
+                          name="address"
+                          value={formData.address}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Phone Number"
+                          name="phonenumber"
+                          value={formData.phonenumber}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Username"
+                          name="username"
+                          value={formData.username}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Password"
+                          name="password"
+                          type="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          select
+                          label="Select Child"
+                          name="childId"
+                          value={formData.childId}
+                          onChange={handleChange}
+                          required
+                          fullWidth
+                        >
+                          {children.map((child) => {
+                            return (
+                              <MenuItem
+                                key={child.ChildId}
+                                value={child.ChildId}
+                              >
+                                {child.Name}
+                              </MenuItem>
+                            );
+                          })}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                        >
+                          Create Parent
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Paper>
+              </TableCell>
+            </TableRow>
+          </table>
+        </Box>
       </Box>
     </Box>
   );
