@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   TableRow,
@@ -11,6 +11,7 @@ import {
   Paper,
   Grid,
   AppBar,
+  MenuItem,
   Toolbar,
   IconButton,
   Drawer,
@@ -30,6 +31,7 @@ const ParentForm = ({ setParents }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const open = Boolean(anchorEl);
+  const [children, setChildren] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -41,7 +43,23 @@ const ParentForm = ({ setParents }) => {
     username: "",
     password: "",
     active: 1,
+    childId:"",
   });
+
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:5000/children/getChildren"
+        );
+        setChildren(result.data.children);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchChildren();
+  }, []);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,25 +72,46 @@ const ParentForm = ({ setParents }) => {
   const handleCreateParent = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/parents/createParent", formData);
-      navigate("/DashboardParents");
-      setParents((prevParents) => [...prevParents, response.data.parent]);
-      setFormData({
-        name: "",
-        surname: "",
-        birthday: "",
-        gender: "",
-        email: "",
-        address: "",
-        phonenumber: "",
-        username: "",
-        password: "",
-        active: 1,
-      });
+      const { childId, ...parentData } = formData;
+      const createParentResponse = await axios.post("http://localhost:5000/parents/createParent", parentData);
+      console.log(createParentResponse);
+  
+      if (createParentResponse.data.success) {
+        // Parent created successfully, now assign the child to the parent
+        const parentId = createParentResponse.data.data.insertId;
+        console.log(parentId);
+        const assignChildResponse = await axios.post("http://localhost:5000/parents/assignChildToParent", { parentId, childId });
+  
+        if (assignChildResponse.data.success) {
+          // Child assigned to parent successfully
+          navigate("/DashboardParents");
+          setParents((prevParents) => [...prevParents, createParentResponse.data.parent]);
+          setFormData({
+            name: "",
+            surname: "",
+            birthday: "",
+            gender: "",
+            email: "",
+            address: "",
+            phonenumber: "",
+            username: "",
+            password: "",
+            active: 1,
+            childId: "", // Clear childId from the form after saving
+          });
+        } else {
+          console.error("Error assigning child to parent:", assignChildResponse.data.message);
+        }
+      } else {
+        console.error("Error creating parent:", createParentResponse.data.message);
+      }
     } catch (error) {
       console.error("Error creating parent:", error.message);
     }
   };
+  
+
+  
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -143,7 +182,8 @@ const ParentForm = ({ setParents }) => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
         <Toolbar />
-        <TableFooter>
+  <Box> 
+    <table>
   <TableRow>
     <TableCell>
       <Paper elevation={3} sx={{ padding: 2 }}>
@@ -246,6 +286,25 @@ const ParentForm = ({ setParents }) => {
               />
             </Grid>
             <Grid item xs={12}>
+            <TextField
+              select
+              label="Select Child"
+              name="childId"
+              value={formData.childId}
+              onChange={handleChange}
+              required
+              fullWidth
+            >
+              {children.map((child) => {
+                return (
+                  <MenuItem key={child.ChildId} value={child.ChildId}>
+                    {child.Name}
+                  </MenuItem>
+                );
+              })}
+            </TextField>
+            </Grid>
+            <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary" fullWidth>
                 Create Parent
               </Button>
@@ -255,8 +314,8 @@ const ParentForm = ({ setParents }) => {
       </Paper>
     </TableCell>
   </TableRow>
-</TableFooter>
-
+  </table>
+     </Box>
       </Box>
     </Box>
   );

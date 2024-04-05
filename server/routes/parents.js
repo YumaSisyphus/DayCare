@@ -82,7 +82,7 @@ router.delete("/deleteParent/:parentId", (req, res) => {
 
 router.post("/createParent", (req, res) => {
   const sql =
-    "INSERT INTO parent (Name, Surname,Birthday, Gender,Email, Address, PhoneNumber, Username, Password, Active) VALUES (?)";
+    "INSERT INTO parent (Name, Surname, Birthday, Gender, Email, Address, PhoneNumber, Username, Password, Active) VALUES (?)";
   const values = [
     req.body.name,
     req.body.surname,
@@ -95,19 +95,33 @@ router.post("/createParent", (req, res) => {
     req.body.password,
     req.body.active,
   ];
-  db.query(sql, [values], (err, data) => {
+  db.query(sql, [values], (err, result) => {
     if (err) {
       console.error("Database error:", err);
       return res.json({ success: false, message: "Create parent failed" });
     } else {
+      const insertedParent = {
+        id: result.insertId,
+        name: req.body.name,
+        surname: req.body.surname,
+        birthday: req.body.birthday,
+        gender: req.body.gender,
+        email: req.body.email,
+        address: req.body.address,
+        phoneNumber: req.body.phonenumber,
+        username: req.body.username,
+        password: req.body.password,
+        active: req.body.active,
+      };
       return res.json({
         success: true,
-        message: "Create parent succesful",
-        test: data[0],
+        message: "Create parent successful",
+        data: insertedParent,
       });
     }
   });
 });
+
 
 router.put("/updateParent", (req, res) => {
   const sql =
@@ -137,5 +151,25 @@ router.put("/updateParent", (req, res) => {
     }
   });
 });
+
+
+router.post("/assignChildToParent", (req, res) => {
+  const { parentId, childId } = req.body;
+
+  // Insert the parent-child relationship into the child_parent table
+  const insertRelationshipSql = "INSERT INTO child_parent (ChildId, ParentId) VALUES (?)";
+  const insertRelationshipValues = [childId, parentId];
+
+  db.query(insertRelationshipSql, insertRelationshipValues, (err) => {
+      if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json({ success: false, message: "Assigning child to parent failed" });
+      } else {
+          return res.status(200).json({ success: true, message: "Child assigned to parent successfully" });
+      }
+  });
+});
+
+
 
 module.exports = router;
