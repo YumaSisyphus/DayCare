@@ -12,6 +12,7 @@ import ParentForm from "./pages/Parents/ParentForm";
 import EditParent from "./pages/Parents/EditParents";
 import Food from "./pages/Food/FoodDashboard";
 import Header from "../src/components/Header";
+import AboutUs from './pages/AboutUs';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/ParentForm" element={<ParentForm />} />
         <Route path="/EditParents/:parentId" element={<EditParent />} />
         <Route path="/foodDashboard" element={<Food />} />
+        <Route path="/aboutus" element={<AboutUs />} />
       </Routes>
     </BrowserRouter>
   );
