@@ -12,40 +12,23 @@ import {
   Typography,
   Paper,
   Container,
-  AppBar,
   Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Snackbar,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import { Colors } from "../../utils/colors";
 import DashboardBg from "../../images/geometricbg.png";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import { theme } from "../../utils/theme";
+import { Colors } from "../../utils/colors";
+import { groupParents } from "../../utils/groupParents"; // Adjust the path as per your project structure
 
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchParents = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/parents/getParents"
-        );
-        setParents(response.data.data);
+        const response = await axios.get("http://localhost:5000/parents/getParents");
+        const processedParents = groupParents(response.data.data); // Process the data here
+        setParents(processedParents);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -53,26 +36,24 @@ const ParentsList = () => {
     fetchParents();
   }, []);
 
+  const groupParents = (data) => {
+    const grouped = {};
+    data.forEach((parent) => {
+      if (!grouped[parent.ParentId]) {
+        grouped[parent.ParentId] = { ...parent, children: [] };
+      }
+      grouped[parent.ParentId].children.push({ Name: parent.ChildName, Surname: parent.ChildSurname });
+    });
+    return Object.values(grouped);
+  };
+
   const handleDeleteParent = async (parentId) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/parents/deleteParent/${parentId}`
-      );
-      setParents((prevParents) =>
-        prevParents.filter((parent) => parent.ParentId !== parentId)
-      );
+      await axios.delete(`http://localhost:5000/parents/deleteParent/${parentId}`);
+      setParents((prevParents) => prevParents.filter((parent) => parent.ParentId !== parentId));
     } catch (error) {
       console.error("Error deleting parent:", error.message);
     }
-  };
-
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/login");
   };
 
   return (
@@ -84,48 +65,30 @@ const ParentsList = () => {
         backgroundImage: `url(${DashboardBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        maxWidth:"150%"
+        maxWidth: "150%",
       }}
     >
-      
-      
-      <Container sx={{ flexGrow: 1, p: 3, width:"100%" }}>
-      <Box display={"flex"} justifyContent={"space-between"}>
-            <Typography variant="h4" gutterBottom>
-              Parents List
-            </Typography>
-          </Box>
+      <Container sx={{ flexGrow: 1, p: 3, width: "100%" }}>
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Typography variant="h4" gutterBottom>
+            Parents List
+          </Typography>
+        </Box>
         <Toolbar />
-        <Box textAlign="right" marginTop={-5}  marginRight={-8}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate("/ParentForm")}
-            >
-              Register a parent
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate("/ChildParent")}
-              sx={{ ml: 2 }}
-            >
-              Parent-Child List
-            </Button>
-          </Box>
         <TableContainer
           component={Paper}
           sx={{
             overflowX: "auto",
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.6)",
-            maxWidth: "none", // Remove maxWidth constraint
-            width: "110%", // Set width directly
-            '@media (max-width: 1200px)': { // Example media query for adjusting width
-              width: "100%", // Set a different width for smaller screens
+            maxWidth: "none",
+            width: "110%",
+            '@media (max-width: 1200px)': {
+              width: "100%",
             },
           }}
-        >          <Table sx={{ minWidth: 800 }}>
+        >
+          <Table sx={{ minWidth: 800 }}>
             <TableHead>
               <TableRow>
                 <TableCell>
@@ -154,6 +117,9 @@ const ParentsList = () => {
                 </TableCell>
                 <TableCell>
                   <Typography fontWeight="bold">Password</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography fontWeight="bold">Children</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography fontWeight="bold" textAlign="center">Actions</Typography>
@@ -192,6 +158,13 @@ const ParentsList = () => {
                       <Typography variant="body1">{parent.Password}</Typography>
                     </TableCell>
                     <TableCell>
+                      <Typography variant="body1">
+                        {parent.children.map((child, index) => (
+                          <span key={index}>{child.Name} {child.Surname}{index !== parent.children.length - 1 ? ', ' : ''}</span>
+                        ))}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
                       <Box textAlign="center">
                         <Button
                           variant="contained"
@@ -213,12 +186,11 @@ const ParentsList = () => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={10}>No parents found.</TableCell>
+                  <TableCell colSpan={11}>No parents found.</TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-          
         </TableContainer>
       </Container>
     </Box>
