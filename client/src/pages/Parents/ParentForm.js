@@ -10,27 +10,13 @@ import {
   Typography,
   Paper,
   Grid,
-  AppBar,
-  MenuItem,
-  Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Autocomplete, // Import Autocomplete
+  Autocomplete,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
+import { Colors } from "../../utils/colors";
 
 const ParentForm = ({ setParents }) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const open = Boolean(anchorEl);
   const [children, setChildren] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -122,238 +108,159 @@ const ParentForm = ({ setParents }) => {
     }
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-
-    navigate("/login");
-  };
-
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#FFDAB9",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2, color: "#333333" }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, color: "#333333" }}
-          >
-            Dashboard
-          </Typography>
-          <Button
-            color="inherit"
-            onClick={handleLogout}
-            sx={{ color: "black" }}
-          >
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-            boxSizing: "border-box",
-          },
-        }}
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-      >
-        <Toolbar />
-        <List>
-          <ListItem button onClick={() => navigate("/")}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Welcome page" />
-          </ListItem>
-          <ListItem button onClick={() => navigate("/DashboardParents")}>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary="Parents" />
-          </ListItem>
-        </List>
-      </Drawer>
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+            }}
+    >
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        sx={{ flexGrow: 1, bgcolor: Colors.secondary, p: 3, marginLeft:"20%"}}
       >
-        <Toolbar />
-        <Box>
-          <table>
-            <TableRow>
-              <TableCell>
-                <Paper elevation={3} sx={{ padding: 2 }}>
-                  <Typography variant="h6" gutterBottom>
-                    Register a Parent
-                  </Typography>
-                  <form onSubmit={handleCreateParent}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Surname"
-                          name="surname"
-                          value={formData.surname}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label=""
-                          name="birthday"
-                          type="date"
-                          value={formData.birthday}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Gender"
-                          name="gender"
-                          value={formData.gender}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Email"
-                          name="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Address"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Phone Number"
-                          name="phonenumber"
-                          value={formData.phonenumber}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Username"
-                          name="username"
-                          value={formData.username}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Password"
-                          name="password"
-                          type="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          required
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Autocomplete
-                          fullWidth
-                          multiple // Enable multiple selection
-                          value={children.filter((child) =>
-                            formData.childId.includes(child.ChildId)
-                          )}
-                          onChange={(event, newValue) => {
-                            setFormData((prevFormData) => ({
-                              ...prevFormData,
-                              childId: newValue.map((child) => child.ChildId), // Map to array of ChildIds
-                            }));
-                          }}
-                          options={children}
-                          getOptionLabel={(option) =>
-                            option.Name + " " + option.Surname
-                          }
-                          renderInput={(params) => (
-                            <TextField {...params} label="Select Children" />
-                          )}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          color="primary"
-                          fullWidth
-                        >
-                          Create Parent
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </form>
-                </Paper>
-              </TableCell>
-            </TableRow>
-          </table>
-        </Box>
+        <Paper elevation={3} sx={{ padding: 2, width:"67%" }}>
+          <Typography variant="h6" gutterBottom>
+            Register a Parent
+          </Typography>
+          <form onSubmit={handleCreateParent} >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Surname"
+                  name="surname"
+                  value={formData.surname}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label=""
+                  name="birthday"
+                  type="date"
+                  value={formData.birthday}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Phone Number"
+                  name="phonenumber"
+                  value={formData.phonenumber}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Autocomplete
+                  fullWidth
+                  multiple // Enable multiple selection
+                  value={children.filter((child) =>
+                    formData.childId.includes(child.ChildId)
+                  )}
+                  onChange={(event, newValue) => {
+                    setFormData((prevFormData) => ({
+                      ...prevFormData,
+                      childId: newValue.map((child) => child.ChildId), // Map to array of ChildIds
+                    }));
+                  }}
+                  options={children}
+                  getOptionLabel={(option) =>
+                    option.Name + " " + option.Surname
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Children" />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Create Parent
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
       </Box>
     </Box>
   );

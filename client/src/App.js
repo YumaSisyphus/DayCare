@@ -11,6 +11,11 @@ import EditParent from "./pages/Parents/EditParents";
 import Header from "../src/components/Header";
 import ChildParent from "./pages/Parents/ChildParent";
 import DashboardChildren from "./pages/Children/DashboardChildren";
+import ClassDashboard from "./pages/Class/ClassDashboard";
+import AboutUs from "./pages/AboutUs";
+import AgeGroupDashboard from "./pages/AgeGroup/AgeGroupDashboard";
+import ChildForm from "./pages/Children/ChildForm";
+import EditChild from "./pages/Children/EditChild";
 
 function App() {
   return (
@@ -26,6 +31,13 @@ function App() {
         <Route path="/EditParents/:parentId" element={<EditParent />} />
         <Route path="/ChildParent" element={<ChildParent />} />     
         <Route path="/foodDashboard" element={<Food />} />
+        <Route path="/ClassDashboard" element={<ClassDashboard />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/AgeGroupDashboard" element={<AgeGroupDashboard />} />
+        <Route path="/AddChild" element={<ChildForm />} />
+        <Route path="/EditChild/:childId" element={<EditChild />} />
+
+        
       </Routes>
     </BrowserRouter>
   );

@@ -11,12 +11,12 @@ import {
   Grid,
   Toolbar,
 } from "@mui/material";
+import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
+import { Colors } from "../../utils/colors";
 
 const EditParent = () => {
   const navigate = useNavigate();
   const { parentId } = useParams(); // Assuming you have a parent ID in the route params
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const [parent, setParent] = useState({
     username: "",
     surname: "",
@@ -28,7 +28,7 @@ const EditParent = () => {
     birthday: "",
     address: "",
     active: 1,
-    parentId:parentId,
+    parentId: parentId,
   });
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const EditParent = () => {
           username: fetchedParent.Username,
           password: fetchedParent.Password,
           active: fetchedParent.Active,
-          parentId:parentId,
+          parentId: parentId,
         });
       } catch (error) {
         console.error("Fetch parent error:", error);
@@ -66,7 +66,6 @@ const EditParent = () => {
       ...prevParent,
       [name]: value,
     }));
-    console.log(parent);
   };
 
   const handleSubmit = async (e) => {
@@ -78,17 +77,25 @@ const EditParent = () => {
       console.error("Error updating parent:", error);
     }
   };
- 
 
   return (
-    <Box sx={{ display: "flex" }}>
-     
+    <Box
+    sx={{
+      bgcolor: Colors.secondary,
+      backgroundImage: `url(${DashboardBg})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}
+    height={"100vh"}
+    display={"flex"}
+    justifyContent={"center"}
+    alignItems={"center"}
+    >
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3 , marginTop:-10}}
       >
-        <Toolbar />
-        <Grid container justifyContent="center">
+              <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>

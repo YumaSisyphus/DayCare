@@ -33,11 +33,11 @@ router.get("/getFoodId", (req, res) => {
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Fetch parent failed" });
+      return res.json({ success: false, message: "Fetch food failed" });
     } else {
       return res.json({
         success: true,
-        message: "Fetch parent succesful",
+        message: "Fetch food succesful",
         data,
       });
     }
