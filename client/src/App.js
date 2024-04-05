@@ -16,6 +16,7 @@ import AboutUs from "./pages/AboutUs";
 import AgeGroupDashboard from "./pages/AgeGroup/AgeGroupDashboard";
 import ChildForm from "./pages/Children/ChildForm";
 import EditChild from "./pages/Children/EditChild";
+import Meal from "./pages/Meal/MealDashboard";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/EditChild/:childId" element={<EditChild />} />
 
         
+        <Route path="/mealDashboard" element={<Meal />} />
       </Routes>
     </BrowserRouter>
   );

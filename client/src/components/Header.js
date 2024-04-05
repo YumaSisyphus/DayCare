@@ -62,6 +62,7 @@ function ResponsiveAppBar() {
         to="/activities"
         onClick={toggleDrawer(false)}
       >
+        
         <ListItemText primary="Activities" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
@@ -71,6 +72,15 @@ function ResponsiveAppBar() {
         onClick={toggleDrawer(false)}
       >
         <ListItemText primary="Food" sx={{ textAlign: "center" }} />
+      </ListItem>
+      <ListItem
+        button
+        component={Link}
+        to="/DashboardParents"
+        onClick={toggleDrawer(false)}
+      >
+
+<ListItemText primary="Meal" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
         button
@@ -158,6 +168,9 @@ function ResponsiveAppBar() {
             </a>
             <a href={"/fooddashboard"} className="link-header">
               Food
+            </a>
+            <a href={"/mealdashboard"} className="link-header">
+              Meal
             </a>
             <a href={"/DashboardParents"} className="link-header">
               Parents
