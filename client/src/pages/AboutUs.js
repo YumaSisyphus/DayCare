@@ -2,6 +2,7 @@ import React from "react";
 import {
   Box,
   Container,
+  Paper,
   Typography,
   Card,
   CardContent,
@@ -15,7 +16,8 @@ import image1 from "../images/children1.gif";
 import image4 from "../images/preeschooler.jpeg";
 import image2 from "../images/toddlerplaying.png";
 import image3 from "../images/infantplaying.jpg";
-import logo from "../images/handshake.png"; // Replace 'logo.png' with the path to your logo image
+import logo from "../images/handshake.png";
+import yourImage from "../images/safety.jpg";
 
 const programs = [
   {
@@ -97,6 +99,49 @@ const ProgramCard = ({ title, description, image }) => {
   );
 };
 
+const ImageWithText = ({ image, title, text }) => {
+  return (
+    <Box
+      bgcolor="#ffddd1"
+      p={8}
+      mt={2}
+      style={{ marginLeft: '-24px', marginRight: '-24px' }}
+    >
+      <Box
+        display="flex"
+        alignItems="center"
+        bgcolor="white"
+        borderRadius="10px"
+        p={2}
+        style={{ marginLeft: '-10px', marginRight: '-10px' }}
+      >
+    
+        <Box
+          style={{ backgroundColor: 'white', borderRadius: '10px 0 0 10px', flexBasis: '50%' }}
+        >
+          <img
+            src={image}
+            alt="Your Image"
+            style={{ width: "100%", height: "auto", borderRadius: "10px 0 0 10px" }}
+          />
+        </Box>
+
+
+        <Box p={2} flexGrow={1} borderRadius="0 10px 10px 0">
+          <Typography variant="h6" gutterBottom>
+            {title}
+          </Typography>
+          <Typography variant="body1">
+            {text}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+
+
 const AboutUs = () => {
   return (
     <ThemeProvider theme={theme}>
@@ -166,85 +211,91 @@ const AboutUs = () => {
                 />
               </Grid>
             </Grid>
-          </Box>
 
-          <Box
-            mt={8}
-            p={3}
-            borderRadius={10}
-            bgcolor={Colors.lightBlue}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-around"
-            flexDirection="column"
-          >
-            <Typography
-              variant="h4"
-              fontFamily={"'Baloo 2', sans-serif"}
-              textTransform={"uppercase"}
-              fontWeight={450}
-              mb={2}
-              color={Colors.pastelPurple}
-              textAlign="center"
-            >
-              Our Programs
-            </Typography>
-            <Grid container spacing={3}>
-              {programs.map((program, index) => (
-                <Grid item xs={12} md={4} key={index}>
-                  <ProgramCard {...program} />
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
+            
 
-          <Box
-            mt={8}
-            p={3}
-            borderRadius={10}
-            bgcolor={Colors.lightBlue}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-around"
-            flexDirection={{ xs: 'column', md: 'row' }}
-          >
             <Box
-              flexGrow={1}
+              mt={8}
+              p={3}
+              borderRadius={10}
+              bgcolor={Colors.lightBlue}
               display="flex"
-              justifyContent="center"
               alignItems="center"
-              maxWidth={{ xs: '100%', md: '30%' }}
-              mb={{ xs: 4, md: 0 }}
-            >
-              <img
-                src={logo}
-                alt="Logo"
-                style={{ width: '100%', height: 'auto', maxWidth: '350px', marginLeft: '300px' }}
-              />
-            </Box>
-            <Box
-              flexGrow={1}
-              maxWidth={{ xs: '100%', md: '60%' }}
-              textAlign={{ xs: 'center', md: 'left' }}
+              justifyContent="space-around"
+              flexDirection="column"
             >
               <Typography
-                variant="h3"
-                fontFamily="'Baloo 2', sans-serif"
-                textTransform="uppercase"
-                marginLeft={25}
+                variant="h4"
+                fontFamily={"'Baloo 2', sans-serif"}
+                textTransform={"uppercase"}
                 fontWeight={450}
                 mb={2}
-              
                 color={Colors.pastelPurple}
+                textAlign="center"
               >
-                 Here’s How<br />
-                We’ll Earn Your<br />
-                Confidence:
+                Our Programs
               </Typography>
-    
+              <Grid container spacing={3}>
+                {programs.map((program, index) => (
+                  <Grid item xs={12} md={4} key={index}>
+                    <ProgramCard {...program} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+
+            <Box
+              mt={8}
+              p={3}
+              borderRadius={10}
+              bgcolor={Colors.lightBlue}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-around"
+              flexDirection={{ xs: 'column', md: 'row' }}
+            >
+              <Box
+                flexGrow={1}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                maxWidth={{ xs: '100%', md: '30%' }}
+                mb={{ xs: 4, md: 0 }}
+              >
+                <img
+                  src={logo}
+                  alt="Logo"
+                  style={{ width: '100%', height: 'auto', maxWidth: '350px', marginLeft: '300px' }}
+                />
+              </Box>
+              <Box
+                flexGrow={1}
+                maxWidth={{ xs: '100%', md: '60%' }}
+                textAlign={{ xs: 'center', md: 'left' }}
+              >
+                <Typography
+                  variant="h3"
+                  fontFamily="'Baloo 2', sans-serif"
+                  textTransform="uppercase"
+                  marginLeft={25}
+                  fontWeight={450}
+                  mb={2}
+                  color={Colors.pastelPurple}
+                >
+                   Here’s How<br />
+                  We’ll Earn Your<br />
+                  Confidence:
+                </Typography>
+
+       
+              </Box>
             </Box>
           </Box>
-
+          <ImageWithText
+          image={yourImage}
+           title="Health and Safety"
+          text="Test"
+/>
         </Container>
       </Box>
     </ThemeProvider>
