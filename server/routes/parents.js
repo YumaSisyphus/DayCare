@@ -19,11 +19,11 @@ const formatDate = (date) => {
 };
 
 router.get("/getParents", (req, res) => {
-  const sql = "SELECT * FROM parent";
-  db.query(sql, [], (err, data) => {
+  const parentChildQuery = "SELECT p.*, c.Name AS ChildName, c.Surname AS ChildSurname FROM parent p LEFT JOIN child_parent cp ON p.ParentId = cp.ParentId LEFT JOIN child c ON cp.ChildId = c.ChildId";
+  db.query(parentChildQuery, (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Fetch parents failed" });
+      return res.json({ success: false, message: "Fetch parents with child failed" });
     } else {
       // Convert dates in the 'data' array to the required format
       const formattedData = data.map((item) => ({
@@ -33,12 +33,14 @@ router.get("/getParents", (req, res) => {
       }));
       return res.json({
         success: true,
-        message: "Fetch parents successful",
+        message: "Fetch parents with child successful",
         data: formattedData,
       });
     }
   });
 });
+
+
 
 router.get("/getParent/:parentId", (req, res) => {
   const sql = "SELECT * FROM parent WHERE ParentId=?";
