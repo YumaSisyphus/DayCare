@@ -15,6 +15,7 @@ import image1 from "../images/children1.gif";
 import image4 from "../images/preeschooler.jpeg";
 import image2 from "../images/toddlerplaying.png";
 import image3 from "../images/infantplaying.jpg";
+import logo from "../images/handshake.png"; // Replace 'logo.png' with the path to your logo image
 
 const programs = [
   {
@@ -119,7 +120,9 @@ const AboutUs = () => {
                   fontWeight={450}
                   mb={1}
                   color={Colors.pastelPurple}
+                  marginBottom={-5}
                   textAlign="center"
+                  marginTop={8}
                 >
                   About LET Center
                 </Typography>
@@ -129,6 +132,7 @@ const AboutUs = () => {
                   mb={3}
                   color={Colors.darkSilver}
                   textAlign="justify"
+                  marginTop={7}
                 >
                   At Our Daycare, we provide a safe and nurturing environment
                   where children can learn, play, and grow. Our experienced
@@ -136,7 +140,7 @@ const AboutUs = () => {
                   child, focusing on social, emotional, and cognitive skills. We
                   understand the importance of early childhood education and
                   strive to create a stimulating and engaging environment where
-                  children can explore, discover, and learn at their own pace.
+                  children can explore and learn at their own pace.
                 </Typography>
                 <Button
                   sx={{
@@ -157,7 +161,7 @@ const AboutUs = () => {
                 <img
                   src={image1}
                   alt="Welcome to Our Story"
-                  style={{ width: "100%", borderRadius: "10px" }}
+                  style={{ width: "100%", borderRadius: "10px" , marginTop: "20px" }}
                   className="aboutUs-img"
                 />
               </Grid>
@@ -193,6 +197,54 @@ const AboutUs = () => {
               ))}
             </Grid>
           </Box>
+
+          <Box
+            mt={8}
+            p={3}
+            borderRadius={10}
+            bgcolor={Colors.lightBlue}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-around"
+            flexDirection={{ xs: 'column', md: 'row' }}
+          >
+            <Box
+              flexGrow={1}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              maxWidth={{ xs: '100%', md: '30%' }}
+              mb={{ xs: 4, md: 0 }}
+            >
+              <img
+                src={logo}
+                alt="Logo"
+                style={{ width: '100%', height: 'auto', maxWidth: '350px', marginLeft: '300px' }}
+              />
+            </Box>
+            <Box
+              flexGrow={1}
+              maxWidth={{ xs: '100%', md: '60%' }}
+              textAlign={{ xs: 'center', md: 'left' }}
+            >
+              <Typography
+                variant="h3"
+                fontFamily="'Baloo 2', sans-serif"
+                textTransform="uppercase"
+                marginLeft={25}
+                fontWeight={450}
+                mb={2}
+              
+                color={Colors.pastelPurple}
+              >
+                 Here’s How<br />
+                We’ll Earn Your<br />
+                Confidence:
+              </Typography>
+    
+            </Box>
+          </Box>
+
         </Container>
       </Box>
     </ThemeProvider>
