@@ -14,8 +14,10 @@ const db = mysql.createConnection({
 });
 
 router.get("/getChildren", (req, res) => {
-  const sql = "SELECT * FROM child";
-  db.query(sql, [], (err, data) => {
+  const sql = `
+  SELECT * FROM child
+  `;
+  db.query(sql, (err, data) => {
     if (err) {
       console.error("Database error:", err);
       return res.json({ success: false, message: "Fetch children failed" });
@@ -30,9 +32,12 @@ router.get("/getChildren", (req, res) => {
 });
 
 router.get("/getChild/:id", (req, res) => {
-  const sql = "SELECT * FROM child WHERE ChildId=?";
+  const sql = `
+  SELECT * FROM child
+  WHERE ChildId=?
+  `;
   const values = [req.params.id];
-  db.query(sql, [values], (err, data) => {
+  db.query(sql, values, (err, data) => {
     if (err) {
       console.error("Database error:", err);
       return res.json({ success: false, message: "Fetch child failed" });
@@ -47,8 +52,11 @@ router.get("/getChild/:id", (req, res) => {
 });
 
 router.delete("/deleteChildren", (req, res) => {
-  const childIds = req.body.childIds; // Array of child IDs to delete
-  const sql = "DELETE FROM child WHERE ChildId IN (?)"; // Use IN clause to delete multiple rows
+  const childIds = req.body.childIds;
+  const sql = `
+  DELETE FROM child 
+  WHERE ChildId IN (?)
+  `;
   db.query(sql, [childIds], (err, data) => {
     if (err) {
       console.error("Database error:", err);
@@ -74,24 +82,38 @@ router.post("/createChildren", (req, res) => {
     child.payments,
     child.active,
   ]);
-  const sql =
-    "INSERT INTO child (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) VALUES ?";
+  const sql = `
+    INSERT INTO child 
+    (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) 
+    VALUES ?
+    `;
   db.query(sql, [childrenData], (err, data) => {
     if (err) {
       console.error("Database error:", err);
       return res.json({ success: false, message: "Create children failed" });
     } else {
+      const childIds = Array.from(
+        { length: req.body.length },
+        (_, index) => data.insertId + index
+      );
+      console.log(childIds);
       return res.json({
         success: true,
         message: "Create children successful",
+        childIds: childIds,
       });
     }
   });
 });
 
 router.put("/updateChild", (req, res) => {
-  const sql =
-    "UPDATE child SET Birthday=?, Gender=?, Photo=?, Allergies=?, Vaccines=?, Name=?, Surname=?, Payments=? WHERE ChildId=?";
+  const sql = `
+    UPDATE child 
+    SET Birthday=?, Gender=?, Photo=?, 
+    Allergies=?, Vaccines=?, Name=?, 
+    Surname=?, Payments=?, Active=? 
+    WHERE ChildId=?
+    `;
   const values = [
     req.body.birthday,
     req.body.gender,
@@ -112,6 +134,109 @@ router.put("/updateChild", (req, res) => {
       return res.json({
         success: true,
         message: "Update child successful",
+        child: data,
+      });
+    }
+  });
+});
+
+router.get("/getClasses", (req, res) => {
+  const sql = `
+    SELECT ClassId, Name
+    FROM class
+  `;
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Error fetching classes",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Fetch classes successful",
+        class: data,
+      });
+    }
+  });
+});
+
+router.get("/getChildClass/:id", (req, res) => {
+  const values = [req.params.id];
+  const sql = `
+    SELECT cc.ChildId, cc.ClassId, cl.Name AS ClassName
+    FROM class_child cc
+    JOIN child ch ON cc.ChildId = ch.ChildId
+    JOIN class cl ON cc.ClassId = cl.ClassId
+    WHERE ch.ChildId=?
+  `;
+  db.query(sql, [values], (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Error fetching class-child relationships",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Update child successful",
+        class: data,
+      });
+    }
+  });
+});
+
+router.post("/assignChildToClass", (req, res) => {
+  console.log(req.body);
+  const values = req.body.childIdsWithClassIds.map((child) => [
+    child.childId,
+    child.classId,
+  ]);
+  const sql = `
+  INSERT INTO class_child 
+  (ChildId, ClassId) 
+  VALUES ?
+  `;
+  db.query(sql, [values], (err) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Assigning children to class failed",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Children assigned to class successfully",
+      });
+    }
+  });
+});
+
+router.put("/updateChildToClass", (req, res) => {
+  const values = [
+    req.body.childIdsWithClassIds.childId,
+    req.body.childIdsWithClassIds.classId,
+    req.body.childIdsWithClassIds.childId,
+  ];
+  const sql = `
+    UPDATE class_child 
+    SET ChildId=?, ClassId=?
+    WHERE ChildId=?
+    `;
+  db.query(sql, values, (err) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Editing children to class failed",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Children edited to class successfully",
       });
     }
   });
