@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import Cookies from "js-cookie";
+import dayjs from "dayjs";
 import {
-  TableRow,
-  TableCell,
+  Box,
+  Paper,
+  Typography,
   TextField,
   Button,
-  TableFooter,
-  Box,
-  Typography,
-  Paper,
   Grid,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
   FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
+import { Colors } from "../../utils/colors";
 
 const EditChild = () => {
   const navigate = useNavigate();
-  const { childId } = useParams(); // Assuming you have a child ID in the route params
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [classes, setClasses] = useState([]);
+  const { childId } = useParams();
   const [child, setChild] = useState({
     name: "",
     surname: "",
@@ -43,17 +35,34 @@ const EditChild = () => {
     payments: "",
     active: "",
     childId: childId,
+    classId: "t",
   });
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/children/getClasses"
+        );
+        setClasses(response.data.class);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchClasses();
+  }, []);
 
   useEffect(() => {
     const fetchChildData = async () => {
       try {
-        const response = await axios.get(
+        const responseChild = await axios.get(
           `http://localhost:5000/children/getChild/${childId}`
         );
-        console.log(response.data.child)
-        const fetchedChild = response.data.child[0]; // Destructuring the fetched data
-
+        const responseClass = await axios.get(
+          `http://localhost:5000/children/getChildClass/${childId}`
+        );
+        const fetchedChild = responseChild.data.child[0];
+        const fetchClass = responseClass.data.class[0];
         setChild({
           name: fetchedChild.Name,
           surname: fetchedChild.Surname,
@@ -65,129 +74,91 @@ const EditChild = () => {
           payments: fetchedChild.Payments,
           active: fetchedChild.Active,
           childId: childId,
+          classId: fetchClass.ClassId,
         });
       } catch (error) {
         console.error("Fetch child error:", error);
       }
     };
-
     fetchChildData();
   }, [childId]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setChild((prevChild) => ({
-      ...prevChild,
-      [name]: value,
-    }));
-    console.log(child);
+    if (e.$isDayjsObject) {
+      setChild((prevChild) => ({
+        ...prevChild,
+        birthday: e.$d,
+      }));
+    } else {
+      const { name, value } = e.target;
+      setChild((prevChild) => ({
+        ...prevChild,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/children/updateChild`, child);
-      navigate("/DashboardChildren"); // Navigate to the child dashboard after editing
+      const formattedChild = {
+        ...child,
+        birthday: child.birthday
+          ? dayjs(child.birthday).format("YYYY-MM-DD")
+          : null,
+      };
+      const response = await axios.put(
+        `http://localhost:5000/children/updateChild`,
+        formattedChild
+      );
+      if (response.data.success) {
+        console.log(response);
+        const childIdsWithClassIds = {
+          childId: child.childId,
+          classId: child.classId,
+        };
+
+        await axios.put("http://localhost:5000/children/updateChildToClass", {
+          childIdsWithClassIds,
+        });
+      }
+      navigate("/DashboardChildren");
     } catch (error) {
       console.error("Error updating child:", error);
     }
   };
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-
-    navigate("/login");
-  };
-
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#FFDAB9",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2, color: "#333333" }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, color: "#333333" }}
-          >
-            Dashboard
-          </Typography>
-          <Button
-            color="inherit"
-            onClick={handleLogout}
-            sx={{ color: "black" }}
-          >
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-            boxSizing: "border-box",
-          },
-        }}
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-      >
-        <Toolbar />
-        <List>
-          <ListItem button onClick={() => navigate("/")}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Welcome page" />
-          </ListItem>
-          <ListItem button onClick={() => navigate("/DashboardChildren")}>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary="Children" />
-          </ListItem>
-        </List>
-      </Drawer>
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      height={"100vh"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3, marginTop: -10 }}
       >
-        <Toolbar />
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>
-                Edit Child
+                Edit {child.name} {child.surname}
               </Typography>
               <form onSubmit={handleSubmit}>
-              <Grid container spacing={2}>
+                <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Photo"
                       name="photo"
                       value={child.photo}
                       onChange={handleChange}
-                      required
                       fullWidth
                     />
                   </Grid>
@@ -197,7 +168,6 @@ const EditChild = () => {
                       name="name"
                       value={child.name}
                       onChange={handleChange}
-                      required
                       fullWidth
                     />
                   </Grid>
@@ -207,25 +177,36 @@ const EditChild = () => {
                       name="surname"
                       value={child.surname}
                       onChange={handleChange}
-                      required
                       fullWidth
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      label=""
+                    <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
+                      <DatePicker
+                        label="Birthday"
+                        name="birthday"
+                        minDate={dayjs().subtract(6, "year")}
+                        maxDate={dayjs()}
+                        value={child.birthday ? dayjs(child.birthday) : null}
+                        onChange={handleChange}
+                        sx={{ width: "100%" }}
+                      />
+                    </LocalizationProvider>
+                    {/* <TextField
+                      label="BirthDay"
                       name="birthday"
                       type="date"
                       value={child.birthday}
                       onChange={handleChange}
-                      required
                       fullWidth
-                    />
+                    /> */}
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <FormControl variant="outlined" fullWidth>
+                      <InputLabel>Gender</InputLabel>
                       <Select
                         name="gender"
+                        label="Gender"
                         // error={
                         //   valid &&
                         //   (child.statusId === undefined ||
@@ -243,14 +224,12 @@ const EditChild = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-
                   <Grid item xs={12} sm={6}>
                     <TextField
                       label="Allergies"
                       name="allergies"
                       value={child.allergies}
                       onChange={handleChange}
-                      required
                       fullWidth
                     />
                   </Grid>
@@ -260,7 +239,6 @@ const EditChild = () => {
                       name="vaccines"
                       value={child.vaccines}
                       onChange={handleChange}
-                      required
                       fullWidth
                     />
                   </Grid>
@@ -270,15 +248,15 @@ const EditChild = () => {
                       name="payments"
                       value={child.payments}
                       onChange={handleChange}
-                      required
                       fullWidth
                     />
                   </Grid>
-
                   <Grid item xs={12} sm={6}>
                     <FormControl variant="outlined" fullWidth>
+                      <InputLabel>Status</InputLabel>
                       <Select
                         name="active"
+                        label="Status"
                         // error={
                         //   valid &&
                         //   (child.statusId === undefined ||
@@ -296,7 +274,30 @@ const EditChild = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-
+                  <Grid item xs={12} sm={6}>
+                    <FormControl variant="outlined" fullWidth>
+                      <Select
+                        name="classId"
+                        // error={
+                        //   valid &&
+                        //   (formData.statusId === undefined ||
+                        //     formData.statusId === 0 ||
+                        //     !formData.statusId)
+                        // }
+                        value={child.classId}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="t">
+                          <em>Choose class</em>
+                        </MenuItem>
+                        {classes.map((item) => (
+                          <MenuItem key={item.ClassId} value={item.ClassId}>
+                            {item.Name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                   <Grid item xs={12}>
                     <Button
                       type="submit"
@@ -304,7 +305,7 @@ const EditChild = () => {
                       color="primary"
                       fullWidth
                     >
-                      Create Child
+                      Save Changes
                     </Button>
                   </Grid>
                 </Grid>

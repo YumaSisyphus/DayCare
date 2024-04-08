@@ -1,35 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 import {
-  TableRow,
-  TableCell,
   TextField,
   Button,
-  TableFooter,
   Box,
   Typography,
   Paper,
   Grid,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
   Select,
   FormControl,
 } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
+import { Colors } from "../../utils/colors";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 
 const ChildForm = () => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const [classes, setClasses] = useState([]);
   const [formDataList, setFormDataList] = useState([
     {
       name: "",
@@ -41,30 +33,76 @@ const ChildForm = () => {
       photo: "",
       payments: "",
       active: "t",
+      classId: "t",
     },
   ]);
 
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:5000/children/getClasses"
+        );
+        setClasses(result.data.class);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchClasses();
+  }, []);
+
   const handleChange = (index, e) => {
-    const { name, value } = e.target;
-    setFormDataList((prevFormDataList) => {
-      const newDataList = [...prevFormDataList];
-      newDataList[index] = {
-        ...newDataList[index],
-        [name]: value,
-      };
-      return newDataList;
-    });
+    if (e.$isDayjsObject) {
+      setFormDataList((prevFormDataList) => {
+        const newDataList = [...prevFormDataList];
+        newDataList[index] = {
+          ...newDataList[index],
+          birthday: e.$d,
+        };
+        return newDataList;
+      });
+    } else {
+      const { name, value } = e.target;
+      setFormDataList((prevFormDataList) => {
+        const newDataList = [...prevFormDataList];
+        newDataList[index] = {
+          ...newDataList[index],
+          [name]: value,
+        };
+        return newDataList;
+      });
+    }
   };
 
   const handleCreateChildren = async (e) => {
     e.preventDefault();
-    console.log(formDataList);
     try {
+      const formattedChildrenData = formDataList.map((child) => {
+        const { classId, ...formattedChild } = child;
+        return {
+          ...formattedChild,
+          birthday: formattedChild.birthday
+            ? dayjs(formattedChild.birthday).format("YYYY-MM-DD")
+            : null,
+        };
+      });
       const response = await axios.post(
         "http://localhost:5000/children/createChildren",
-        formDataList
+        formattedChildrenData
       );
-      // Reset form data list after successful creation
+      if (response.data.success) {
+        const childIdsWithClassIds = response.data.childIds.map(
+          (childId, index) => ({
+            childId,
+            classId: formDataList[index].classId,
+          })
+        );
+        console.log(childIdsWithClassIds);
+        await axios.post(
+          "http://localhost:5000/children/assignChildToClass",
+          { childIdsWithClassIds } // Ensure childIds is an array
+        );
+      }
       setFormDataList([
         {
           name: "",
@@ -76,8 +114,10 @@ const ChildForm = () => {
           photo: "",
           payments: "",
           active: "t",
+          classId: "t",
         },
       ]);
+      navigate("/DashboardChildren");
     } catch (error) {
       console.error("Error creating children:", error.message);
     }
@@ -96,6 +136,7 @@ const ChildForm = () => {
         photo: "",
         payments: "",
         active: "t",
+        classId: "t",
       },
     ]);
   };
@@ -113,6 +154,7 @@ const ChildForm = () => {
           photo: "",
           payments: "",
           active: "t",
+          classId: "t",
         },
       ]);
     } else {
@@ -124,87 +166,21 @@ const ChildForm = () => {
     }
   };
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/login");
-  };
-
-  const navigate = useNavigate();
-
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          backgroundColor: "#FFDAB9",
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2, color: "#333333" }}
-            onClick={handleDrawerToggle}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, color: "#333333" }}
-          >
-            Dashboard
-          </Typography>
-          <Button
-            color="inherit"
-            onClick={handleLogout}
-            sx={{ color: "black" }}
-          >
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: 240,
-            boxSizing: "border-box",
-          },
-        }}
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-      >
-        <Toolbar />
-        <List>
-          <ListItem button onClick={() => navigate("/")}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Welcome page" />
-          </ListItem>
-          <ListItem button onClick={() => navigate("/DashboardChildren")}>
-            <ListItemIcon>
-              <MailIcon />
-            </ListItemIcon>
-            <ListItemText primary="Children" />
-          </ListItem>
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ bgcolor: "background.default", p: 3 }}>
-        <Toolbar />
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        py: 3,
+      }}
+    >
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
         <Grid container justifyContent="center" spacing={3}>
           {formDataList.map((formData, index) => (
-            <Grid item xs={6} sm={6} md={6} lg={6}>
+            <Grid item xs={12} sm={6} md={6} lg={6}>
               <Paper elevation={3} sx={{ padding: 2 }}>
                 <Typography variant="h6" gutterBottom>
                   Register a Child {index + 1}
@@ -242,15 +218,22 @@ const ChildForm = () => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        label=""
-                        name="birthday"
-                        type="date"
-                        value={formData.birthday}
-                        onChange={(e) => handleChange(index, e)}
-                        required
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
                         fullWidth
-                      />
+                      >
+                        <DatePicker
+                          label="Birthday"
+                          name="birthday"
+                          minDate={dayjs().subtract(6, "year")}
+                          maxDate={dayjs()}
+                          value={
+                            formData.birthday ? dayjs(formData.birthday) : null
+                          }
+                          onChange={(e) => handleChange(index, e)}
+                          sx={{ width: "100%" }}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <FormControl variant="outlined" fullWidth>
@@ -326,7 +309,30 @@ const ChildForm = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-
+                    <Grid item xs={12} sm={6}>
+                      <FormControl variant="outlined" fullWidth>
+                        <Select
+                          name="classId"
+                          // error={
+                          //   valid &&
+                          //   (formData.statusId === undefined ||
+                          //     formData.statusId === 0 ||
+                          //     !formData.statusId)
+                          // }
+                          value={formData.classId}
+                          onChange={(e) => handleChange(index, e)}
+                        >
+                          <MenuItem value="t">
+                            <em>Choose class</em>
+                          </MenuItem>
+                          {classes.map((item) => (
+                            <MenuItem key={item.ClassId} value={item.ClassId}>
+                              {item.Name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                     {/* <Grid item xs={12}>
                       <Button
                         type="submit"
