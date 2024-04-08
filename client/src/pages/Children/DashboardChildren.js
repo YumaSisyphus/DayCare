@@ -21,10 +21,15 @@ import {
   Pagination,
 } from "@mui/material";
 import SearchBar from "../../components/Searchbar";
+import DashboardBg from "../../images/geometricbg.png";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import { Colors } from "../../utils/colors";
+import { theme } from "../../utils/theme";
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
-  const [selectedChildren, setSelectedChildren] = useState([]); // Track selected children
+  const [selectedChildren, setSelectedChildren] = useState([]);
   const [deleteChildModalOpen, setDeleteChildModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
@@ -60,18 +65,15 @@ export default function DashboardChildren() {
 
   const handleDeleteChildren = async () => {
     try {
-      await axios.delete(
-        `http://localhost:5000/children/deleteChildren`,
-        { data: { childIds: selectedChildren } } // Pass selected child IDs to the backend
-      );
-      //   handlePageChange(pageNr);
+      await axios.delete(`http://localhost:5000/children/deleteChildren`, {
+        data: { childIds: selectedChildren },
+      });
       handleDeleteChildModalClose();
     } catch (error) {
       console.error("Error deleting children:", error.message);
     }
   };
 
-  // Toggle selection of a child
   const toggleSelectChild = (childId) => {
     if (selectedChildren.includes(childId)) {
       setSelectedChildren(selectedChildren.filter((id) => id !== childId));
@@ -90,91 +92,87 @@ export default function DashboardChildren() {
   };
   return (
     <Box
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      height={"99.6vh"}
+      sx={{
+        display: "flex",
+        flexGrow: 1,
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        maxWidth: "100%",
+        height: "99.6vh",
+      }}
     >
-      <SearchBar label="Search..." onSearch={handleSearch} />
-      {/* <Box
-        mt={7}
-        mb={2}
-        display="flex"
-        flexDirection="row"
-        justifyContent="space-between"
+      <Box
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: "100%",
+          marginTop: "3%",
+          marginBottom: "10%",
+          marginLeft: "15%",
+          marginRight: "15%",
+        }}
       >
+        <Box display={"flex"} justifyContent={"space-between"}>
+          <Typography variant="h4" gutterBottom>
+            Children List
+          </Typography>
+        </Box>
+        <Button
+          sx={{ marginBottom: 2 }}
+          variant="contained"
+          color="primary"
+          onClick={() => navigate("/AddChild")}
+        >
+          Add Child
+        </Button>
         <SearchBar label="Search..." onSearch={handleSearch} />
-        <Link href="/legalActsForm">
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{
-              backgroundColor: Colours.whiteish3,
-              color: Colours.lightGrey,
-              ":hover": {
-                bgcolor: Colours.govMain,
-                color: "white",
-              },
-            }}
-          >
-            Shto
-          </Button>
-        </Link>
-      </Box> */}
-      <Box>
-        <TableContainer component={Paper}>
-          <Table aria-label="customized table">
+        <TableContainer
+          component={Paper}
+          sx={{
+            overflowX: "auto",
+            backdropFilter: "blur(10px)",
+            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            maxWidth: "none",
+            width: "100%",
+            "@media (max-width: 1200px)": {
+              width: "100%",
+            },
+          }}
+        >
+          <Table sx={{ minWidth: 800 }}>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Photo
-                  </Typography>
+                  <Typography fontWeight="bold">Photo</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Name
-                  </Typography>
+                  <Typography fontWeight="bold">Name</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Surname
-                  </Typography>
+                  <Typography fontWeight="bold">Surname</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Gender
-                  </Typography>
+                  <Typography fontWeight="bold">Gender</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Birthday
-                  </Typography>
+                  <Typography fontWeight="bold">Birthday</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Allergies
-                  </Typography>
+                  <Typography fontWeight="bold">Allergies</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Vaccines
-                  </Typography>
+                  <Typography fontWeight="bold">Vaccines</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Payments
-                  </Typography>
+                  <Typography fontWeight="bold">Payments</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Active
-                  </Typography>
+                  <Typography fontWeight="bold">Active</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="body1" fontFamily={"Lexend"}>
-                    Actions
-                  </Typography>
+                  <Typography fontWeight="bold">Actions</Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -219,36 +217,24 @@ export default function DashboardChildren() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      <Box display="flex" flexDirection={"column"}>
-                        <Button>View</Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            navigate(`/EditChild/${child.ChildId}`)
-                          }
-                        >
-                          Edit
-                        </Button>
-                        {/* <Button
-                          onClick={() =>
-                            handleDeleteChildModalOpen(child.ChildId)
-                          }
-                        >
-                          Delete
-                        </Button> */}
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={selectedChildren.includes(child.ChildId)}
-                              onChange={() => toggleSelectChild(child.ChildId)}
-                            />
-                          }
-                          label="SELECT"
-                        ></FormControlLabel>
-                      </Box>
-                    </Typography>
+                    <Box display="flex" flexDirection={"column"}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate(`/EditChild/${child.ChildId}`)}
+                      >
+                        Edit
+                      </Button>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={selectedChildren.includes(child.ChildId)}
+                            onChange={() => toggleSelectChild(child.ChildId)}
+                          />
+                        }
+                        label="SELECT"
+                      ></FormControlLabel>
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -262,35 +248,9 @@ export default function DashboardChildren() {
             onChange={handleChangePage}
           />
         </Box>
-        {/* <Dialog
-          open={deleteChildModalOpen}
-          onClose={handleDeleteChildModalClose}
-          maxWidth="xs"
-          fullWidth
-        >
-          <DialogTitle>Delete Confirmation</DialogTitle>
-          <DialogContent>
-            <Typography>Are you sure you want to delete this child?</Typography>
-          </DialogContent>
-          <DialogActions
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              px: 3,
-              pb: 3,
-            }}
-          >
-            <Button onClick={handleDeleteChildModalClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleDeleteChildren} color="primary" autoFocus>
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog> */}
         <Button
           onClick={handleDeleteChildModalOpen}
-          disabled={selectedChildren.length === 0} // Disable button if no child selected
+          disabled={selectedChildren.length === 0}
         >
           Delete Selected Children
         </Button>
