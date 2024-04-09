@@ -19,6 +19,7 @@ import {
   DialogActions,
   Button,
   TextField,
+  MenuItem,
   Snackbar,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -30,10 +31,11 @@ import DashboardBg from "../../images/geometricbg.png";
 
 function ChildParent() {
   const [parentsWithChildren, setParentsWithChildren] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [selectedChild, setSelectedChild] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedParent, setSelectedParent] = useState(null);
   const [editedChildName, setEditedChildName] = useState("");
-  const [editedParentName, setEditedParentName] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewChild, setIsNewChild] = useState(false);
@@ -62,18 +64,24 @@ function ChildParent() {
         console.error("Error fetching child-parent relationships:", error);
       });
   }, []);
-
-  const handleAddNew = () => {
-    setSelectedParent(null);
-    setEditedChildName("");
-    setIsNewChild(true);
-    setOpenModal(true);
-  };
+  
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:5000/children/getChildren"
+        );
+        setChildren(result.data.children);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchChildren();
+  }, []);
 
   const handleEdit = (parent, child) => {
     setSelectedParent(parent);
-    setEditedChildName(child.childName);
-    setIsNewChild(false);
+    setSelectedChild(child);
     setOpenModal(true);
   };
 
@@ -113,15 +121,7 @@ function ChildParent() {
             <Typography variant="h4" gutterBottom>
               Child-Parent Relationships
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
+          
           </Box>
 
           <TableContainer
@@ -140,11 +140,7 @@ function ChildParent() {
                   <TableCell>
                     <Typography fontWeight={"bold"}>Children</Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography fontWeight={"bold"} textAlign={"right"}>
-                      Actions
-                    </Typography>
-                  </TableCell>
+                 
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -160,22 +156,7 @@ function ChildParent() {
                         </Typography>
                       ))}
                     </TableCell>
-                    <TableCell sx={{ textAlign: "right" }}>
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        onClick={() => handleEdit(parent, parent.children[0])}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        aria-label="delete"
-                        onClick={() => handleDelete(parent, parent.children[0].childId)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
+                   
                   </TableRow>
                 ))}
               </TableBody>
@@ -190,10 +171,16 @@ function ChildParent() {
                 margin="normal"
                 label="Child Name"
                 fullWidth
-                value={editedChildName}
-                onChange={(e) => setEditedChildName(e.target.value)}
-              />
-              
+                select
+                value={selectedChild.childId}
+                onChange={(e) => setSelectedChild(e.target.value)}
+              >
+                {children.map((child) => (
+                  <MenuItem key={child.childId} value={child.childId}>
+                    {child.childName}
+                  </MenuItem>
+                ))}
+              </TextField>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
