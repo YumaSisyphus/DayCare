@@ -238,6 +238,8 @@ function Staff() {
               component={Paper}
               sx={{
                 backdropFilter: "blur(10px)",
+                marginLeft:"-3.5rem",
+                width:"80rem",
                 backgroundColor: "rgba(255, 255, 255, 0.6)",
               }}
             >
