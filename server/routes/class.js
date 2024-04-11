@@ -76,6 +76,20 @@ router.put("/:id", (req, res) => {
   });
 });
 
+router.get("/staffByClass", (req, res) => {
+  const query = `
+    SELECT s.StaffId, s.Name as StaffName, c.ClassId, c.Name as ClassName
+    FROM staff_class sc
+    JOIN staff s ON sc.StaffId = s.StaffId
+    JOIN class c ON sc.ClassId = c.ClassId
+  `;
+
+  db.query(query, (err, result) => {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM class WHERE ClassId = ?";
