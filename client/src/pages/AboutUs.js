@@ -17,7 +17,8 @@ import image4 from "../images/preeschooler.jpeg";
 import image2 from "../images/toddlerplaying.png";
 import image3 from "../images/infantplaying.jpg";
 import logo from "../images/handshake.png";
-import yourImage from "../images/safety.jpg";
+import about from "../images/preeschooler.jpeg";
+
 
 const programs = [
   {
@@ -290,12 +291,51 @@ const AboutUs = () => {
        
               </Box>
             </Box>
+
+            <Box
+  bgcolor={Colors.orange}
+  pt={10}
+  pb={10}
+  mt={5}
+  style={{ backgroundColor: "#FFA500" }}
+>
+  <Container maxWidth="xl">
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={6}>
+        <img
+          src={about}
+          alt="Your Image"
+          style={{ width: "100%", height: "auto", borderRadius: "10px" }}
+        />
+
+      </Grid>
+      <Grid item xs={12} md={6} >
+        <Box
+          bgcolor="white"
+          p={3}
+          borderRadius="10px"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+        >
+          <Typography variant="h4" color={Colors.darkBlue} gutterBottom>
+            Your Title Here
+          </Typography>
+          <Typography variant="body1" color={Colors.darkGray} paragraph>
+            Your paragraph text here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
+          </Typography>
+          <Button variant="contained" color="primary">
+            Learn More
+          </Button>
+        </Box>
+      </Grid>
+    </Grid>
+  </Container>
+</Box>
+
           </Box>
-          <ImageWithText
-          image={yourImage}
-           title="Health and Safety"
-          text="Test"
-/>
+    
         </Container>
       </Box>
     </ThemeProvider>
