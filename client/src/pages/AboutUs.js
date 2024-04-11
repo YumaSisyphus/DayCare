@@ -19,6 +19,8 @@ import image3 from "../images/infantplaying.jpg";
 import logo from "../images/handshake.png";
 import health from "../images/health.jpg";
 import kids from "../images/kids.jpg";
+import trust from "../images/trust.jpg";
+import classroom from "../images/classroom.jpg";
 
 const programs = [
   {
@@ -305,7 +307,7 @@ const AboutUs = () => {
             bgcolor={Colors.orange}
             py={10}
             mt={5}
-            style={{ backgroundColor: "#e0b6c7" }}
+            style={{ backgroundColor: "#DFCCFB" }}
             width={"100%"}
           >
             <Container maxWidth="xl">
@@ -451,6 +453,163 @@ const AboutUs = () => {
   </Container>
 </Box>
 
+<Box
+            bgcolor={Colors.orange}
+            py={10}
+            mt={5}
+            style={{ backgroundColor: "#FFD4B2" }}
+            marginTop={0}
+            width={"100%"}
+          >
+            <Container maxWidth="xl">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <img
+                    src={trust}
+                    alt="Your Image"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+               
+              
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={10}
+                  md={6}
+                  bgcolor={Colors.white}
+                  marginTop={3}
+            
+               
+                >
+                  <Typography variant="h4" color= {"#FFD4B2"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
+                  Talent and Trust
+                  </Typography>
+                  < Typography variant="body1" color={Colors.black} paragraph style={{ marginBottom: "20px", fontSize: "20px" }}>
+                  Who brings (big) heart and soul into our programs every day? Our teachers! They’re experts at caring for kids and leading your child’s learning journey.
+                 </Typography>
+                  <Typography
+                 variant="body1"
+                 color={Colors.black}
+                  paragraph
+                 style={{
+                fontSize: "16px",
+                fontFamily: "'Baloo 2', sans-serif",
+                marginBottom: "20px",
+                lineHeight: "1.6",
+                  }}
+                 >
+                <ul>
+                     <li>  We believe that every child has unique talents and abilities. Our programs are designed to recognize and nurture these talents, whether it's in arts, sports, academics, or other areas. </li>
+                     <li>Trust is the foundation of our relationship with parents and children. We build trust through open communication, transparency, and by delivering on our promises. </li>
+                     <li>We provide a wide range of activities and experiences that allow children to explore their interests and discover new talents.</li>
+                     <li>We empower children to take ownership of their learning and development.</li>
+    
+  
+                  </ul>
+                  <Box display="flex"  marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#FFD4B2", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+                    </Typography>
+                
+              
+                </Grid>
+              </Grid>
+            </Container>
+          </Box>
+
+          <Box
+  bgcolor={Colors.orange}
+  py={10}
+  mt={5}
+  marginTop={0}
+  style={{ backgroundColor: "#F6F193" }}
+  width={"100%"}
+>
+  <Container maxWidth="xl">
+    <Grid container>
+      <Grid
+        item
+        xs={12}
+        md={6}
+        bgcolor={Colors.white}
+
+        style={{ textAlign: "center" }}
+      >
+        <Typography
+          variant="h4"
+          color="#F6F193"
+          style={{
+            fontFamily: "'Baloo 2', sans-serif",
+            marginTop: "18px",
+          }}
+          gutterBottom
+        >
+         Classrooms and Learning
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{ marginBottom: "20px", fontSize: "20px" }}
+        >
+        Step into our classrooms to see (and feel) the buzz of learning in motion!
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{
+            fontSize: "16.6px",
+            fontFamily: "'Baloo 2', sans-serif",
+            marginBottom: "20px",
+            lineHeight: "1.6",
+            textAlign: "justify",
+            marginLeft: "0px",
+            paddingRight: "10px",
+           
+          }}
+        >
+          <ul>
+            <li>
+            Well-equipped classrooms designed for interactive learning
+            </li>
+            <li>
+            Age-appropriate educational materials and resources
+            </li>
+            <li>Experienced teachers who create engaging lesson plans.</li>
+            <li>Small class sizes for individualized attention.</li>
+            <li>Emphasis on hands-on learning experiences.</li>
+            <li>
+            Integration of technology for enhanced learning
+            </li>
+            <li>Supportive and inclusive learning environment</li>
+            
+          </ul>
+          <Box display="flex" justifyContent="flex-end" marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#FFCF81", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+        </Typography>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <img
+          src={classroom}
+          alt="Your Image"
+          style={{
+            width: "100%",
+            height: "auto",
+          }}
+        />
+      </Grid>
+    </Grid>
+  </Container>
+</Box>
 
         </Box>
       </Box>
