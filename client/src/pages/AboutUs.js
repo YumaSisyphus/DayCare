@@ -18,6 +18,7 @@ import image2 from "../images/toddlerplaying.png";
 import image3 from "../images/infantplaying.jpg";
 import logo from "../images/handshake.png";
 import health from "../images/health.jpg";
+import kids from "../images/kids.jpg";
 
 const programs = [
   {
@@ -327,8 +328,7 @@ const AboutUs = () => {
                   md={6}
                   bgcolor={Colors.white}
                   marginTop={3}
-              
-               
+            
                
                 >
                   <Typography variant="h4" color= {"#c99bb3"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
@@ -348,23 +348,110 @@ const AboutUs = () => {
                 lineHeight: "1.6",
                   }}
                  >
-  <ul>
-
-    <li>  Our daycare follows strict guidelines for food preparation and storage to ensure that all meals and snacks are safe and nutritious. </li>
-    <li>Our staff is trained in CPR and first aid, ensuring they are prepared to handle emergencies. </li>
+                <ul>
+                     <li>  Our daycare follows strict guidelines for food preparation and storage to ensure that all meals and snacks are safe and nutritious. </li>
+                     <li>Our staff is trained in CPR and first aid, ensuring they are prepared to handle emergencies. </li>
+                     <li>We conduct regular safety inspections of our facilities and equipment to ensure they meet or exceed safety standards</li>
+                     <li>We maintain open and transparent communication with parents regarding health and safety practices</li>
+                     <li>We have comprehensive safety protocols in place for emergencies.</li>
     
   
-  </ul>
-  <Button variant="contained" color="secondary" style={{marginTop:"20px"}}>
-            Learn More
-          </Button>
-</Typography>
+                  </ul>
+                 <Button variant="contained" color="secondary" style={{marginTop:"20px"}}>
+                  Learn More
+                    </Button>
+                    </Typography>
                 
               
                 </Grid>
               </Grid>
             </Container>
           </Box>
+          <Box
+  bgcolor={Colors.orange}
+  py={10}
+  mt={5}
+  marginTop={0}
+  style={{ backgroundColor: "#AEC6CF" }}
+  width={"100%"}
+>
+  <Container maxWidth="xl">
+    <Grid container>
+      <Grid
+        item
+        xs={12}
+        md={6}
+        bgcolor={Colors.white}
+
+        style={{ textAlign: "center" }}
+      >
+        <Typography
+          variant="h4"
+          color="#AEC6CF"
+          style={{
+            fontFamily: "'Baloo 2', sans-serif",
+            marginTop: "18px",
+          }}
+          gutterBottom
+        >
+          Convenience and Flexibility 
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{ marginBottom: "20px", fontSize: "20px" }}
+        >
+         Your child care provider is only as helpful as it is convenient! Since our centers are located nationwide, chances are there’s a KinderCare close by.
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{
+            fontSize: "16.6px",
+            fontFamily: "'Baloo 2', sans-serif",
+            marginBottom: "20px",
+            lineHeight: "1.6",
+            textAlign: "justify",
+            marginLeft: "0px",
+            paddingRight: "10px",
+           
+          }}
+        >
+          <ul>
+            <li>
+            Our daycare is centrally located, making drop-offs and pick-ups easy for parents with busy schedules.
+            </li>
+            <li>
+            We offer flexible scheduling options, including full-day, half-day, and extended hours, to accommodate parents' varying needs.
+            </li>
+            <li>Parents can easily book childcare sessions and manage their schedules online, providing convenience and flexibility.</li>
+            <li>Our dedicated customer service team is available to assist parents with any questions or concerns, ensuring a smooth and enjoyable experience.</li>
+            
+          </ul>
+          <Box display="flex" justifyContent="flex-end" marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#AEC6CF", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+        </Typography>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <img
+          src={kids}
+          alt="Your Image"
+          style={{
+            width: "100%",
+            height: "auto",
+          }}
+        />
+      </Grid>
+    </Grid>
+  </Container>
+</Box>
+
+
         </Box>
       </Box>
     </ThemeProvider>
