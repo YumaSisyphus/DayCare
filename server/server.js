@@ -13,6 +13,7 @@ const classRoutes = require("./routes/class");
 const ageGroupRoutes = require("./routes/agegroup");
 const mealRoutes = require("./routes/meal");
 const staffRoutes = require("./routes/staff");
+const contactformRoutes = require("./routes/contactform");
 
 app.use("/login", loginRoutes);
 app.use("/children", childrenRoutes);
@@ -23,6 +24,7 @@ app.use("/class", classRoutes);
 app.use("/agegroup", ageGroupRoutes);
 app.use("/meal", mealRoutes);
 app.use("/staff", staffRoutes);
+app.use("/contactform", contactformRoutes);
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");

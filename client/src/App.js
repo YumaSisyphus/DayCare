@@ -18,6 +18,7 @@ import ChildForm from "./pages/Children/ChildForm";
 import EditChild from "./pages/Children/EditChild";
 import Meal from "./pages/Meal/MealDashboard";
 import Staff from "./pages/Staff/StaffDashboard";
+import ContactForm from "./pages/ContactForm/ContactDashboard";
 
 function App() {
   return (
@@ -39,8 +40,7 @@ function App() {
         <Route path="/AddChild" element={<ChildForm />} />
         <Route path="/EditChild/:childId" element={<EditChild />} />
         <Route path="/staffDashboard" element={<Staff />} />
-
-        
+        <Route path="/ContactDashboard" element={<ContactForm />} />
         <Route path="/mealDashboard" element={<Meal />} />
       </Routes>
     </BrowserRouter>
