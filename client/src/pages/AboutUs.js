@@ -19,7 +19,6 @@ import image3 from "../images/infantplaying.jpg";
 import logo from "../images/handshake.png";
 import about from "../images/preeschooler.jpeg";
 
-
 const programs = [
   {
     title: "Infant Program",
@@ -106,7 +105,7 @@ const ImageWithText = ({ image, title, text }) => {
       bgcolor="#ffddd1"
       p={8}
       mt={2}
-      style={{ marginLeft: '-24px', marginRight: '-24px' }}
+      style={{ marginLeft: "-24px", marginRight: "-24px" }}
     >
       <Box
         display="flex"
@@ -114,49 +113,50 @@ const ImageWithText = ({ image, title, text }) => {
         bgcolor="white"
         borderRadius="10px"
         p={2}
-        style={{ marginLeft: '-10px', marginRight: '-10px' }}
+        style={{ marginLeft: "-10px", marginRight: "-10px" }}
       >
-    
         <Box
-          style={{ backgroundColor: 'white', borderRadius: '10px 0 0 10px', flexBasis: '50%' }}
+          style={{
+            backgroundColor: "white",
+            borderRadius: "10px 0 0 10px",
+            flexBasis: "50%",
+          }}
         >
           <img
             src={image}
             alt="Your Image"
-            style={{ width: "100%", height: "auto", borderRadius: "10px 0 0 10px" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: "10px 0 0 10px",
+            }}
           />
         </Box>
-
 
         <Box p={2} flexGrow={1} borderRadius="0 10px 10px 0">
           <Typography variant="h6" gutterBottom>
             {title}
           </Typography>
-          <Typography variant="body1">
-            {text}
-          </Typography>
+          <Typography variant="body1">{text}</Typography>
         </Box>
       </Box>
     </Box>
   );
 };
 
-
-
 const AboutUs = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box width={"100%"} mb={5}>
-        <Container maxWidth="xl">
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            mt={5}
-            borderRadius={10}
-            p={5}
-            className="about-us-first-section"
-          >
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          mt={5}
+          borderRadius={10}
+          className="about-us-first-section"
+        >
+          <Container maxWidth="xl">
             <Grid container spacing={5} alignItems="center">
               <Grid item xs={12} md={6} style={{ paddingRight: "2rem" }}>
                 <Typography
@@ -207,13 +207,15 @@ const AboutUs = () => {
                 <img
                   src={image1}
                   alt="Welcome to Our Story"
-                  style={{ width: "100%", borderRadius: "10px" , marginTop: "20px" }}
+                  style={{
+                    width: "100%",
+                    borderRadius: "10px",
+                    marginTop: "20px",
+                  }}
                   className="aboutUs-img"
                 />
               </Grid>
             </Grid>
-
-            
 
             <Box
               mt={8}
@@ -253,26 +255,31 @@ const AboutUs = () => {
               display="flex"
               alignItems="center"
               justifyContent="space-around"
-              flexDirection={{ xs: 'column', md: 'row' }}
+              flexDirection={{ xs: "column", md: "row" }}
             >
               <Box
                 flexGrow={1}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                maxWidth={{ xs: '100%', md: '30%' }}
+                maxWidth={{ xs: "100%", md: "30%" }}
                 mb={{ xs: 4, md: 0 }}
               >
                 <img
                   src={logo}
                   alt="Logo"
-                  style={{ width: '100%', height: 'auto', maxWidth: '350px', marginLeft: '300px' }}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    maxWidth: "350px",
+                    marginLeft: "300px",
+                  }}
                 />
               </Box>
               <Box
                 flexGrow={1}
-                maxWidth={{ xs: '100%', md: '60%' }}
-                textAlign={{ xs: 'center', md: 'left' }}
+                maxWidth={{ xs: "100%", md: "60%" }}
+                textAlign={{ xs: "center", md: "left" }}
               >
                 <Typography
                   variant="h3"
@@ -283,60 +290,59 @@ const AboutUs = () => {
                   mb={2}
                   color={Colors.pastelPurple}
                 >
-                   Here’s How<br />
-                  We’ll Earn Your<br />
+                  Here’s How
+                  <br />
+                  We’ll Earn Your
+                  <br />
                   Confidence:
                 </Typography>
-
-       
               </Box>
             </Box>
+          </Container>
 
-            <Box
-  bgcolor={Colors.orange}
-  pt={10}
-  pb={10}
-  mt={5}
-  style={{ backgroundColor: "#FFA500" }}
->
-  <Container maxWidth="xl">
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <img
-          src={about}
-          alt="Your Image"
-          style={{ width: "100%", height: "auto", borderRadius: "10px" }}
-        />
-
-      </Grid>
-      <Grid item xs={12} md={6} >
-        <Box
-          bgcolor="white"
-          p={3}
-          borderRadius="10px"
-          height="100%"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-        >
-          <Typography variant="h4" color={Colors.darkBlue} gutterBottom>
-            Your Title Here
-          </Typography>
-          <Typography variant="body1" color={Colors.darkGray} paragraph>
-            Your paragraph text here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
-          </Typography>
-          <Button variant="contained" color="primary">
-            Learn More
-          </Button>
-        </Box>
-      </Grid>
-    </Grid>
-  </Container>
-</Box>
-
+          <Box
+            bgcolor={Colors.orange}
+            py={10}
+            mt={5}
+            style={{ backgroundColor: "#FFA500" }}
+            width={"100%"}
+          >
+            <Container maxWidth="xl">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <img
+                    src={about}
+                    alt="Your Image"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "10px",
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  bgcolor={Colors.white}
+                  borderRadius={10}
+                >
+                  <Typography variant="h4" color={Colors.darkBlue} gutterBottom>
+                    Your Title Here
+                  </Typography>
+                  <Typography variant="body1" color={Colors.darkGray} paragraph>
+                    Your paragraph text here. Lorem ipsum dolor sit amet,
+                    consectetur adipiscing elit. Integer nec odio. Praesent
+                    libero. Sed cursus ante dapibus diam. Sed nisi.
+                  </Typography>
+                  <Button variant="contained" color="primary">
+                    Learn More
+                  </Button>
+                </Grid>
+              </Grid>
+            </Container>
           </Box>
-    
-        </Container>
+        </Box>
       </Box>
     </ThemeProvider>
   );
