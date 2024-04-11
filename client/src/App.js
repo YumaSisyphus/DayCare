@@ -9,6 +9,7 @@ import ParentForm from "./pages/Parents/ParentForm";
 import Food from "./pages/Food/FoodDashboard";
 import EditParent from "./pages/Parents/EditParents";
 import Header from "../src/components/Header";
+import Footer from "../src/components/Footer";
 import ChildParent from "./pages/Parents/ChildParent";
 import DashboardChildren from "./pages/Children/DashboardChildren";
 import ClassDashboard from "./pages/Class/ClassDashboard";

@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "../components/Footer";
 import {
   Box,
   Container,
@@ -10,6 +11,7 @@ import {
   ThemeProvider,
   Grid,
 } from "@mui/material";
+
 import { Colors } from "../utils/colors";
 import { theme } from "../utils/theme";
 import image1 from "../images/children1.gif";
@@ -359,9 +361,11 @@ const AboutUs = () => {
     
   
                   </ul>
-                 <Button variant="contained" color="secondary" style={{marginTop:"20px"}}>
-                  Learn More
-                    </Button>
+                  <Box display="flex"  marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#c99bb3", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
                     </Typography>
                 
               
@@ -484,7 +488,7 @@ const AboutUs = () => {
             
                
                 >
-                  <Typography variant="h4" color= {"#FFD4B2"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
+                  <Typography variant="h4" color= {"#E96479"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
                   Talent and Trust
                   </Typography>
                   < Typography variant="body1" color={Colors.black} paragraph style={{ marginBottom: "20px", fontSize: "20px" }}>
@@ -510,7 +514,7 @@ const AboutUs = () => {
   
                   </ul>
                   <Box display="flex"  marginTop="20px">
-  <Button variant="contained" color="primary" style={{ backgroundColor: "#FFD4B2", color: "#fff" }}>
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#E96479", color: "#fff" }}>
     Learn More
   </Button>
 </Box>
@@ -542,7 +546,7 @@ const AboutUs = () => {
       >
         <Typography
           variant="h4"
-          color="#F6F193"
+          color="#FFCF81"
           style={{
             fontFamily: "'Baloo 2', sans-serif",
             marginTop: "18px",
