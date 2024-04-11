@@ -19,6 +19,7 @@ import {
   DialogActions,
   Button,
   TextField,
+  MenuItem,
   Snackbar,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -29,38 +30,58 @@ import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 
 function ChildParent() {
-  const [relationships, setRelationships] = useState([]);
+  const [parentsWithChildren, setParentsWithChildren] = useState([]);
+  const [children, setChildren] = useState([]);
+  const [selectedChild, setSelectedChild] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedRelationship, setSelectedRelationship] = useState(null);
+  const [selectedParent, setSelectedParent] = useState(null);
   const [editedChildName, setEditedChildName] = useState("");
-  const [editedParentName, setEditedParentName] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [isNewRelationship, setIsNewRelationship] = useState(false);
+  const [isNewChild, setIsNewChild] = useState(false);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/parents/getchildparent")
+    axios
+      .get("http://localhost:5000/parents/getchildparent")
       .then((res) => {
-        setRelationships(res.data);
+        const parents = {};
+        res.data.forEach((relationship) => {
+          const parentId = relationship.ParentId;
+          if (!parents[parentId]) {
+            parents[parentId] = {
+              Name: relationship.Name,
+              children: [],
+            };
+          }
+          parents[parentId].children.push({
+            childId: relationship.ChildId,
+            childName: relationship.ChildName,
+          });
+        });
+        setParentsWithChildren(Object.values(parents));
       })
       .catch((error) => {
         console.error("Error fetching child-parent relationships:", error);
       });
   }, []);
+  
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const result = await axios.get(
+          "http://localhost:5000/children/getChildren"
+        );
+        setChildren(result.data.children);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchChildren();
+  }, []);
 
-  const handleAddNew = () => {
-    setSelectedRelationship(null);
-    setEditedChildName("");
-    setEditedParentName("");
-    setIsNewRelationship(true);
-    setOpenModal(true);
-  };
-
-  const handleEdit = (relationship) => {
-    setSelectedRelationship(relationship);
-    setEditedChildName(relationship.ChildName);
-    setEditedParentName(relationship.ParentName);
-    setIsNewRelationship(false);
+  const handleEdit = (parent, child) => {
+    setSelectedParent(parent);
+    setSelectedChild(child);
     setOpenModal(true);
   };
 
@@ -69,13 +90,11 @@ function ChildParent() {
   };
 
   const handleSaveChanges = () => {
-    // Handle saving changes here
     setOpenModal(false);
   };
 
-  const handleDelete = (relationshipId) => {
-    // Handle deleting relationship here
-    setSnackbarMessage("Error deleting relationship");
+  const handleDelete = (parent, childId) => {
+    setSnackbarMessage("Error deleting child");
     setSnackbarOpen(true);
   };
 
@@ -102,15 +121,7 @@ function ChildParent() {
             <Typography variant="h4" gutterBottom>
               Child-Parent Relationships
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
+          
           </Box>
 
           <TableContainer
@@ -124,43 +135,28 @@ function ChildParent() {
               <TableHead>
                 <TableRow>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Child Name</Typography>
-                  </TableCell>
-                  <TableCell>
                     <Typography fontWeight={"bold"}>Parent Name</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight={"bold"} textAlign={"right"}>
-                      Actions
-                    </Typography>
+                    <Typography fontWeight={"bold"}>Children</Typography>
                   </TableCell>
+                 
                 </TableRow>
               </TableHead>
               <TableBody>
-                {relationships.map((relationship) => (
-                  <TableRow key={relationship.ChildId + "-" + relationship.ParentId}>
+                {parentsWithChildren.map((parent) => (
+                  <TableRow key={parent.Name}>
                     <TableCell>
-                      <Typography variant="body1">{relationship.ChildName}</Typography>
+                      <Typography variant="body1">{parent.Name}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">{relationship.Name}</Typography>
+                      {parent.children.map((child) => (
+                        <Typography key={child.childId} variant="body1">
+                          {child.childName}
+                        </Typography>
+                      ))}
                     </TableCell>
-                    <TableCell sx={{ textAlign: "right" }}>
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        onClick={() => handleEdit(relationship)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        aria-label="delete"
-                        onClick={() => handleDelete(relationship.RelationshipId)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
+                   
                   </TableRow>
                 ))}
               </TableBody>
@@ -168,23 +164,23 @@ function ChildParent() {
           </TableContainer>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
-              {isNewRelationship ? "Add New Relationship" : "Edit Relationship"}
+              {isNewChild ? "Add New Child" : "Edit Child"}
             </DialogTitle>
             <DialogContent>
               <TextField
                 margin="normal"
                 label="Child Name"
                 fullWidth
-                value={editedChildName}
-                onChange={(e) => setEditedChildName(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Parent Name"
-                fullWidth
-                value={editedParentName}
-                onChange={(e) => setEditedParentName(e.target.value)}
-              />
+                select
+                value={selectedChild.childId}
+                onChange={(e) => setSelectedChild(e.target.value)}
+              >
+                {children.map((child) => (
+                  <MenuItem key={child.childId} value={child.childId}>
+                    {child.childName}
+                  </MenuItem>
+                ))}
+              </TextField>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">

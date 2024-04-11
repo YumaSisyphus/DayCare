@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import Cookies from "js-cookie";
+import dayjs from "dayjs";
 import {
   Box,
   Paper,
@@ -9,13 +9,17 @@ import {
   TextField,
   Button,
   Grid,
-  Toolbar,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
 } from "@mui/material";
 import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
 
 const EditParent = () => {
   const navigate = useNavigate();
+  const[children, setChildren]= useState([]);
   const { parentId } = useParams(); // Assuming you have a parent ID in the route params
   const [parent, setParent] = useState({
     username: "",
@@ -29,7 +33,22 @@ const EditParent = () => {
     address: "",
     active: 1,
     parentId: parentId,
+    childId:"",
   });
+
+  useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/children/getChildren"
+        );
+        setChildren(response.data.children);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchChildren();
+  }, []);
 
   useEffect(() => {
     const fetchParentData = async () => {
@@ -37,7 +56,12 @@ const EditParent = () => {
         const response = await axios.get(
           `http://localhost:5000/parents/getParent/${parentId}`
         );
+
+        const responseChild = await axios.get(
+          `http://localhost:5000/children/getchildparent/${parentId}`
+        );
         const fetchedParent = response.data.data[0]; // Destructuring the fetched data
+        const fetchChild = responseChild.data.children[0];
 
         setParent({
           name: fetchedParent.Name,
@@ -51,7 +75,8 @@ const EditParent = () => {
           password: fetchedParent.Password,
           active: fetchedParent.Active,
           parentId: parentId,
-        });
+          childId: fetchChild ? fetchChild.ChildId : "",
+                });
       } catch (error) {
         console.error("Fetch parent error:", error);
       }
@@ -61,22 +86,44 @@ const EditParent = () => {
   }, [parentId]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setParent((prevParent) => ({
-      ...prevParent,
-      [name]: value,
-    }));
+    if (e.$isDayjsObject) {
+      setParent((prevParent) => ({
+        ...prevParent,
+        birthday: e.$d,
+      }));
+    } else {
+      const { name, value } = e.target;
+      setParent((prevParent) => ({
+        ...prevParent,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/parents/updateParent`, parent);
-      navigate("/DashboardParents"); // Navigate to the parent dashboard after editing
+      const response = await axios.put(
+        `http://localhost:5000/parents/updateParent`,
+        parent
+      );
+      if (response.data.success) {
+        console.log(response);
+        const parentIdsWithChildIds = {
+          parentId: parent.parentId,
+          childId: parent.childId,
+        };
+
+        await axios.put("http://localhost:5000/parents/updateChildToParent", {
+          parentIdsWithChildIds,
+        });
+      }
+      navigate("/DashboardChildren");
     } catch (error) {
-      console.error("Error updating parent:", error);
+      console.error("Error updating child:", error);
     }
   };
+
 
   return (
     <Box
@@ -186,6 +233,30 @@ const EditParent = () => {
                       onChange={handleChange}
                       fullWidth
                     />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl variant="outlined" fullWidth>
+                      <Select
+                        name="childId"
+                        // error={
+                        //   valid &&
+                        //   (formData.statusId === undefined ||
+                        //     formData.statusId === 0 ||
+                        //     !formData.statusId)
+                        // }
+                        value={parent.childId}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="t">
+                          <em>Choose child</em>
+                        </MenuItem>
+                        {children.map((item) => (
+                          <MenuItem key={item.ChildId} value={item.ChildId}>
+                            {item.Name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <Button

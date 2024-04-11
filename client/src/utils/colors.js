@@ -12,4 +12,5 @@ export const Colors = {
   yellowLime: "#F6FDC3",
   pastelPeach: "#EEA5A6",
   darkSilver: "#737373",
+  pastelBlue: "#5775cd",
 };

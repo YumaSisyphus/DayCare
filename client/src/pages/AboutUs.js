@@ -1,4 +1,5 @@
 import React from "react";
+import Footer from "../components/Footer";
 import {
   Box,
   Container,
@@ -10,6 +11,7 @@ import {
   ThemeProvider,
   Grid,
 } from "@mui/material";
+
 import { Colors } from "../utils/colors";
 import { theme } from "../utils/theme";
 import image1 from "../images/children1.gif";
@@ -17,7 +19,10 @@ import image4 from "../images/preeschooler.jpeg";
 import image2 from "../images/toddlerplaying.png";
 import image3 from "../images/infantplaying.jpg";
 import logo from "../images/handshake.png";
-import yourImage from "../images/safety.jpg";
+import health from "../images/health.jpg";
+import kids from "../images/kids.jpg";
+import trust from "../images/trust.jpg";
+import classroom from "../images/classroom.jpg";
 
 const programs = [
   {
@@ -105,7 +110,7 @@ const ImageWithText = ({ image, title, text }) => {
       bgcolor="#ffddd1"
       p={8}
       mt={2}
-      style={{ marginLeft: '-24px', marginRight: '-24px' }}
+      style={{ marginLeft: "-24px", marginRight: "-24px" }}
     >
       <Box
         display="flex"
@@ -113,49 +118,50 @@ const ImageWithText = ({ image, title, text }) => {
         bgcolor="white"
         borderRadius="10px"
         p={2}
-        style={{ marginLeft: '-10px', marginRight: '-10px' }}
+        style={{ marginLeft: "-10px", marginRight: "-10px" }}
       >
-    
         <Box
-          style={{ backgroundColor: 'white', borderRadius: '10px 0 0 10px', flexBasis: '50%' }}
+          style={{
+            backgroundColor: "white",
+            borderRadius: "10px 0 0 10px",
+            flexBasis: "50%",
+          }}
         >
           <img
             src={image}
             alt="Your Image"
-            style={{ width: "100%", height: "auto", borderRadius: "10px 0 0 10px" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: "10px 0 0 10px",
+            }}
           />
         </Box>
-
 
         <Box p={2} flexGrow={1} borderRadius="0 10px 10px 0">
           <Typography variant="h6" gutterBottom>
             {title}
           </Typography>
-          <Typography variant="body1">
-            {text}
-          </Typography>
+          <Typography variant="body1">{text}</Typography>
         </Box>
       </Box>
     </Box>
   );
 };
 
-
-
 const AboutUs = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box width={"100%"} mb={5}>
-        <Container maxWidth="xl">
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            mt={5}
-            borderRadius={10}
-            p={5}
-            className="about-us-first-section"
-          >
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          mt={5}
+          borderRadius={10}
+          className="about-us-first-section"
+        >
+          <Container maxWidth="xl">
             <Grid container spacing={5} alignItems="center">
               <Grid item xs={12} md={6} style={{ paddingRight: "2rem" }}>
                 <Typography
@@ -206,13 +212,15 @@ const AboutUs = () => {
                 <img
                   src={image1}
                   alt="Welcome to Our Story"
-                  style={{ width: "100%", borderRadius: "10px" , marginTop: "20px" }}
+                  style={{
+                    width: "100%",
+                    borderRadius: "10px",
+                    marginTop: "20px",
+                  }}
                   className="aboutUs-img"
                 />
               </Grid>
             </Grid>
-
-            
 
             <Box
               mt={8}
@@ -252,26 +260,31 @@ const AboutUs = () => {
               display="flex"
               alignItems="center"
               justifyContent="space-around"
-              flexDirection={{ xs: 'column', md: 'row' }}
+              flexDirection={{ xs: "column", md: "row" }}
             >
               <Box
                 flexGrow={1}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
-                maxWidth={{ xs: '100%', md: '30%' }}
+                maxWidth={{ xs: "100%", md: "30%" }}
                 mb={{ xs: 4, md: 0 }}
               >
                 <img
                   src={logo}
                   alt="Logo"
-                  style={{ width: '100%', height: 'auto', maxWidth: '350px', marginLeft: '300px' }}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    maxWidth: "350px",
+                    marginLeft: "300px",
+                  }}
                 />
               </Box>
               <Box
                 flexGrow={1}
-                maxWidth={{ xs: '100%', md: '60%' }}
-                textAlign={{ xs: 'center', md: 'left' }}
+                maxWidth={{ xs: "100%", md: "60%" }}
+                textAlign={{ xs: "center", md: "left" }}
               >
                 <Typography
                   variant="h3"
@@ -282,21 +295,327 @@ const AboutUs = () => {
                   mb={2}
                   color={Colors.pastelPurple}
                 >
-                   Here’s How<br />
-                  We’ll Earn Your<br />
+                  Here’s How
+                  <br />
+                  We’ll Earn Your
+                  <br />
                   Confidence:
                 </Typography>
-
-       
               </Box>
             </Box>
+          </Container>
+
+          <Box
+            bgcolor={Colors.orange}
+            py={10}
+            mt={5}
+            style={{ backgroundColor: "#DFCCFB" }}
+            width={"100%"}
+          >
+            <Container maxWidth="xl">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <img
+                    src={health}
+                    alt="Your Image"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+               
+              
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={10}
+                  md={6}
+                  bgcolor={Colors.white}
+                  marginTop={3}
+            
+               
+                >
+                  <Typography variant="h4" color= {"#c99bb3"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
+                  Health and Safety
+                  </Typography>
+                  < Typography variant="body1" color={Colors.black} paragraph style={{ marginBottom: "20px", fontSize: "20px" }}>
+                  Health and safety are paramount at our daycare center. We prioritize the well-being of every child and staff member by maintaining a clean and hygienic environment.
+                 </Typography>
+                  <Typography
+                 variant="body1"
+                 color={Colors.black}
+                  paragraph
+                 style={{
+                fontSize: "16px",
+                fontFamily: "'Baloo 2', sans-serif",
+                marginBottom: "20px",
+                lineHeight: "1.6",
+                  }}
+                 >
+                <ul>
+                     <li>  Our daycare follows strict guidelines for food preparation and storage to ensure that all meals and snacks are safe and nutritious. </li>
+                     <li>Our staff is trained in CPR and first aid, ensuring they are prepared to handle emergencies. </li>
+                     <li>We conduct regular safety inspections of our facilities and equipment to ensure they meet or exceed safety standards</li>
+                     <li>We maintain open and transparent communication with parents regarding health and safety practices</li>
+                     <li>We have comprehensive safety protocols in place for emergencies.</li>
+    
+  
+                  </ul>
+                  <Box display="flex"  marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#c99bb3", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+                    </Typography>
+                
+              
+                </Grid>
+              </Grid>
+            </Container>
           </Box>
-          <ImageWithText
-          image={yourImage}
-           title="Health and Safety"
-          text="Test"
-/>
-        </Container>
+          <Box
+  bgcolor={Colors.orange}
+  py={10}
+  mt={5}
+  marginTop={0}
+  style={{ backgroundColor: "#AEC6CF" }}
+  width={"100%"}
+>
+  <Container maxWidth="xl">
+    <Grid container>
+      <Grid
+        item
+        xs={12}
+        md={6}
+        bgcolor={Colors.white}
+
+        style={{ textAlign: "center" }}
+      >
+        <Typography
+          variant="h4"
+          color="#AEC6CF"
+          style={{
+            fontFamily: "'Baloo 2', sans-serif",
+            marginTop: "18px",
+          }}
+          gutterBottom
+        >
+          Convenience and Flexibility 
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{ marginBottom: "20px", fontSize: "20px" }}
+        >
+         Your child care provider is only as helpful as it is convenient! Since our centers are located nationwide, chances are there’s a KinderCare close by.
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{
+            fontSize: "16.6px",
+            fontFamily: "'Baloo 2', sans-serif",
+            marginBottom: "20px",
+            lineHeight: "1.6",
+            textAlign: "justify",
+            marginLeft: "0px",
+            paddingRight: "10px",
+           
+          }}
+        >
+          <ul>
+            <li>
+            Our daycare is centrally located, making drop-offs and pick-ups easy for parents with busy schedules.
+            </li>
+            <li>
+            We offer flexible scheduling options, including full-day, half-day, and extended hours, to accommodate parents' varying needs.
+            </li>
+            <li>Parents can easily book childcare sessions and manage their schedules online, providing convenience and flexibility.</li>
+            <li>Our dedicated customer service team is available to assist parents with any questions or concerns, ensuring a smooth and enjoyable experience.</li>
+            
+          </ul>
+          <Box display="flex" justifyContent="flex-end" marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#AEC6CF", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+        </Typography>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <img
+          src={kids}
+          alt="Your Image"
+          style={{
+            width: "100%",
+            height: "auto",
+          }}
+        />
+      </Grid>
+    </Grid>
+  </Container>
+</Box>
+
+<Box
+            bgcolor={Colors.orange}
+            py={10}
+            mt={5}
+            style={{ backgroundColor: "#FFD4B2" }}
+            marginTop={0}
+            width={"100%"}
+          >
+            <Container maxWidth="xl">
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <img
+                    src={trust}
+                    alt="Your Image"
+                    style={{
+                      width: "100%",
+                      height: "auto",
+               
+              
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={10}
+                  md={6}
+                  bgcolor={Colors.white}
+                  marginTop={3}
+            
+               
+                >
+                  <Typography variant="h4" color= {"#E96479"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
+                  Talent and Trust
+                  </Typography>
+                  < Typography variant="body1" color={Colors.black} paragraph style={{ marginBottom: "20px", fontSize: "20px" }}>
+                  Who brings (big) heart and soul into our programs every day? Our teachers! They’re experts at caring for kids and leading your child’s learning journey.
+                 </Typography>
+                  <Typography
+                 variant="body1"
+                 color={Colors.black}
+                  paragraph
+                 style={{
+                fontSize: "16px",
+                fontFamily: "'Baloo 2', sans-serif",
+                marginBottom: "20px",
+                lineHeight: "1.6",
+                  }}
+                 >
+                <ul>
+                     <li>  We believe that every child has unique talents and abilities. Our programs are designed to recognize and nurture these talents, whether it's in arts, sports, academics, or other areas. </li>
+                     <li>Trust is the foundation of our relationship with parents and children. We build trust through open communication, transparency, and by delivering on our promises. </li>
+                     <li>We provide a wide range of activities and experiences that allow children to explore their interests and discover new talents.</li>
+                     <li>We empower children to take ownership of their learning and development.</li>
+    
+  
+                  </ul>
+                  <Box display="flex"  marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#E96479", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+                    </Typography>
+                
+              
+                </Grid>
+              </Grid>
+            </Container>
+          </Box>
+
+          <Box
+  bgcolor={Colors.orange}
+  py={10}
+  mt={5}
+  marginTop={0}
+  style={{ backgroundColor: "#F6F193" }}
+  width={"100%"}
+>
+  <Container maxWidth="xl">
+    <Grid container>
+      <Grid
+        item
+        xs={12}
+        md={6}
+        bgcolor={Colors.white}
+
+        style={{ textAlign: "center" }}
+      >
+        <Typography
+          variant="h4"
+          color="#FFCF81"
+          style={{
+            fontFamily: "'Baloo 2', sans-serif",
+            marginTop: "18px",
+          }}
+          gutterBottom
+        >
+         Classrooms and Learning
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{ marginBottom: "20px", fontSize: "20px" }}
+        >
+        Step into our classrooms to see (and feel) the buzz of learning in motion!
+        </Typography>
+        <Typography
+          variant="body1"
+          color={Colors.black}
+          paragraph
+          style={{
+            fontSize: "16.6px",
+            fontFamily: "'Baloo 2', sans-serif",
+            marginBottom: "20px",
+            lineHeight: "1.6",
+            textAlign: "justify",
+            marginLeft: "0px",
+            paddingRight: "10px",
+           
+          }}
+        >
+          <ul>
+            <li>
+            Well-equipped classrooms designed for interactive learning
+            </li>
+            <li>
+            Age-appropriate educational materials and resources
+            </li>
+            <li>Experienced teachers who create engaging lesson plans.</li>
+            <li>Small class sizes for individualized attention.</li>
+            <li>Emphasis on hands-on learning experiences.</li>
+            <li>
+            Integration of technology for enhanced learning
+            </li>
+            <li>Supportive and inclusive learning environment</li>
+            
+          </ul>
+          <Box display="flex" justifyContent="flex-end" marginTop="20px">
+  <Button variant="contained" color="primary" style={{ backgroundColor: "#FFCF81", color: "#fff" }}>
+    Learn More
+  </Button>
+</Box>
+        </Typography>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <img
+          src={classroom}
+          alt="Your Image"
+          style={{
+            width: "100%",
+            height: "auto",
+          }}
+        />
+      </Grid>
+    </Grid>
+  </Container>
+</Box>
+
+        </Box>
       </Box>
     </ThemeProvider>
   );

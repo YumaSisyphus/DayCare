@@ -57,17 +57,16 @@ const ParentsList = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexGrow: 1,
-        bgcolor: Colors.secondary,
-        backgroundImage: `url(${DashboardBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        maxWidth: "150%",
-      }}
-    >
+      <Box
+        sx={{
+          bgcolor: Colors.secondary,
+          backgroundImage: `url(${DashboardBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: "100vh",
+          py: 3,
+        }}
+      >
       <Container sx={{ flexGrow: 1, p: 3, width: "100%" }}>
         <Box display={"flex"} justifyContent={"space-between"}>
           <Typography variant="h4" gutterBottom>
@@ -75,6 +74,24 @@ const ParentsList = () => {
           </Typography>
         </Box>
         <Toolbar />
+        <Box textAlign="right" marginTop={-5}  marginRight={-15}   marginLeft= {-10}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/ParentForm")}
+            >
+              Register a parent
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/ChildParent")}
+              sx={{ ml: 2 }}
+            >
+              Parent-Child List
+            </Button>
+          </Box>
+         
         <TableContainer
           component={Paper}
           sx={{
@@ -82,7 +99,8 @@ const ParentsList = () => {
             backdropFilter: "blur(10px)",
             backgroundColor: "rgba(255, 255, 255, 0.6)",
             maxWidth: "none",
-            width: "110%",
+            marginLeft:-12,
+            width: "120%",
             '@media (max-width: 1200px)': {
               width: "100%",
             },

@@ -184,21 +184,57 @@ router.post("/assignChildToParent", (req, res) => {
   });
 });
      
-router.get('/getchildparent', (req, res) => {
+router.get("/getchildparent/:id", (req, res) => {
+  const values = [req.params.id];
   const sql = `
     SELECT cp.ChildId, cp.ParentId, c.Name AS ChildName, c.Surname AS Surname, p.Name AS Name, p.Surname AS Surname
     FROM child_parent cp
     JOIN child c ON cp.ChildId = c.ChildId
     JOIN parent p ON cp.ParentId = p.ParentId
   `;
-  db.query(sql, (err, data) => {
+  db.query(sql, [values], (err, data) => {
     if (err) {
-      console.error('Error fetching child-parent relationships:', err);
-      res.status(500).send('Internal Server Error');
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Error fetching parent-child relationships",
+      });
     } else {
-      res.status(200).json(data);
+      return res.json({
+        success: true,
+        message: "Update parent successful",
+        class: data,
+      });
     }
   });
 });
+
+router.put("/updateChildToParent", (req, res) => {
+  const values = [
+    req.body.parentIdsWithChildIds.parentId,
+    req.body.parentIdsWithChildIds.childId,
+    req.body.parentIdsWithChildIds.parentId,
+  ];
+  const sql = `
+    UPDATE child_parent 
+    SET ParentId=?, ChildId=?
+    WHERE ParentId=?
+    `;
+  db.query(sql, values, (err) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Editing children to class failed",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Children edited to class successfully",
+      });
+    }
+  });
+});
+
 
 module.exports = router;
