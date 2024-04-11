@@ -17,7 +17,7 @@ import image4 from "../images/preeschooler.jpeg";
 import image2 from "../images/toddlerplaying.png";
 import image3 from "../images/infantplaying.jpg";
 import logo from "../images/handshake.png";
-import about from "../images/preeschooler.jpeg";
+import health from "../images/health.jpg";
 
 const programs = [
   {
@@ -304,40 +304,63 @@ const AboutUs = () => {
             bgcolor={Colors.orange}
             py={10}
             mt={5}
-            style={{ backgroundColor: "#FFA500" }}
+            style={{ backgroundColor: "#e0b6c7" }}
             width={"100%"}
           >
             <Container maxWidth="xl">
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <img
-                    src={about}
+                    src={health}
                     alt="Your Image"
                     style={{
                       width: "100%",
                       height: "auto",
-                      borderRadius: "10px",
+               
+              
                     }}
                   />
                 </Grid>
                 <Grid
                   item
-                  xs={12}
+                  xs={10}
                   md={6}
                   bgcolor={Colors.white}
-                  borderRadius={10}
+                  marginTop={3}
+              
+               
+               
                 >
-                  <Typography variant="h4" color={Colors.darkBlue} gutterBottom>
-                    Your Title Here
+                  <Typography variant="h4" color= {"#c99bb3"}  style={{fontFamily: "'Baloo 2', sans-serif", textAlign: "center", marginTop: "18px" }} gutterBottom>
+                  Health and Safety
                   </Typography>
-                  <Typography variant="body1" color={Colors.darkGray} paragraph>
-                    Your paragraph text here. Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Integer nec odio. Praesent
-                    libero. Sed cursus ante dapibus diam. Sed nisi.
-                  </Typography>
-                  <Button variant="contained" color="primary">
-                    Learn More
-                  </Button>
+                  < Typography variant="body1" color={Colors.black} paragraph style={{ marginBottom: "20px", fontSize: "20px" }}>
+                  Health and safety are paramount at our daycare center. We prioritize the well-being of every child and staff member by maintaining a clean and hygienic environment.
+                 </Typography>
+                  <Typography
+                 variant="body1"
+                 color={Colors.black}
+                  paragraph
+                 style={{
+                fontSize: "16px",
+                fontFamily: "'Baloo 2', sans-serif",
+                marginBottom: "20px",
+                lineHeight: "1.6",
+                  }}
+                 >
+  <ul>
+
+    <li>  Our daycare follows strict guidelines for food preparation and storage to ensure that all meals and snacks are safe and nutritious. </li>
+    <li>Our staff is trained in CPR and first aid, ensuring they are prepared to handle emergencies. </li>
+    
+  
+  </ul>
+  <Button variant="contained" color="secondary" style={{marginTop:"20px"}}>
+            Learn More
+          </Button>
+</Typography>
+                
+              
                 </Grid>
               </Grid>
             </Container>
