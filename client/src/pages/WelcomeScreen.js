@@ -22,6 +22,7 @@ import ChildCareIcon from "@mui/icons-material/ChildCare";
 import ChildrenLearning from "../images/ChildrenLearning.png";
 import { theme } from "../utils/theme";
 import Cookies from "js-cookie";
+import Footer from "../components/Footer";
 
 const WelcomeScreen = () => {
   const navigate = useNavigate();
@@ -213,7 +214,7 @@ const WelcomeScreen = () => {
                 minWidth: 250,
                 maxWidth: 300,
                 minHeight: 250,
-                backgroundColor: Colors.secondary,
+                backgroundColor: Colors.pastelBlue,
                 borderRadius: "10px",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -356,6 +357,7 @@ const WelcomeScreen = () => {
           </Box>
         </Container>
       </Box>
+      <Footer />
     </ThemeProvider>
   );
 };
