@@ -159,6 +159,7 @@ function ResponsiveAppBar() {
               width: "40%",
             }}
           >
+             <Box sx={{ display: "flex", gap: "1rem" }}>
             <Typography
               variant="h6"
               noWrap
@@ -174,8 +175,9 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              LET
+              LET.
             </Typography>
+           
             <a href={"/activities"} className="link-header">
               Activities
             </a>
@@ -208,6 +210,7 @@ function ResponsiveAppBar() {
             <a href={"/AgeGroupDashboard"} className="link-header">
               Age Group
             </a>
+            </Box>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
