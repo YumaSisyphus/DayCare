@@ -11,7 +11,6 @@ const Footer = () => {
         textAlign: "center",
         position: "relative",
         bottom: 0,
-        width: "100%",
       }}
     >
       <Container maxWidth="lg">

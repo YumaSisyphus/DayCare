@@ -65,6 +65,12 @@ function Activity() {
   };
 
   const handleSaveChanges = () => {
+    if (!editedName.trim()) {
+      setSnackbarMessage("Name cannot be empty");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const apiUrl = isNewActivity
       ? "/activity"
       : `/activity/${selectedActivity.ActivityId}`;
@@ -146,7 +152,7 @@ function Activity() {
           bgcolor: Colors.secondary,
           backgroundImage: `url(${DashboardBg})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "top",
         }}
         height={"100vh"}
         display={"flex"}

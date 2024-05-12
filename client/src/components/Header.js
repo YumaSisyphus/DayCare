@@ -62,7 +62,6 @@ function ResponsiveAppBar() {
         to="/activities"
         onClick={toggleDrawer(false)}
       >
-        
         <ListItemText primary="Activities" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
@@ -87,7 +86,7 @@ function ResponsiveAppBar() {
         to="/StaffDashboard"
         onClick={toggleDrawer(false)}
       >
- <ListItemText primary="ContactFrom" sx={{ textAlign: "center" }} />
+        <ListItemText primary="ContactFrom" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
         button
@@ -95,7 +94,7 @@ function ResponsiveAppBar() {
         to="/ContactDashboard"
         onClick={toggleDrawer(false)}
       >
-<ListItemText primary="Meal" sx={{ textAlign: "center" }} />
+        <ListItemText primary="Meal" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
         button
@@ -122,7 +121,6 @@ function ResponsiveAppBar() {
         <ListItemText primary="Children" sx={{ textAlign: "center" }} />
       </ListItem>
     </List>
-    
   );
 
   return (
@@ -156,7 +154,7 @@ function ResponsiveAppBar() {
               display: { xs: "none", md: "flex" },
               justifyContent: "space-around",
               alignItems: "center",
-              width: "40%",
+              width: "70%",
             }}
           >
             <Typography
