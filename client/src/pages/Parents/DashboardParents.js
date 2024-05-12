@@ -82,13 +82,13 @@ const ParentsList = () => {
             >
               Register a parent
             </Button>
+
             <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate("/ChildParent")}
-              sx={{ ml: 2 }}
+             // variant="contained"
+       //       color="primary"
+         //     onClick={() => navigate("/ChildParent")}
+           //   sx={{ ml: 2 }}
             >
-              Parent-Child List
             </Button>
           </Box>
          
