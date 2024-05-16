@@ -90,6 +90,12 @@ export default function DashboardChildren() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const handleCreateReport = (childId) => {
+    // Redirect to the create report page with the childId
+    navigate(`/ReportForm/${childId}`);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
@@ -228,6 +234,13 @@ export default function DashboardChildren() {
                           }
                         >
                           Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleCreateReport(child.ChildId)}
+                        >
+                          Create Report
                         </Button>
                         <FormControlLabel
                           control={

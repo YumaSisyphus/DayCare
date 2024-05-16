@@ -242,4 +242,38 @@ router.put("/updateChildToClass", (req, res) => {
   });
 });
 
+router.post("/createReport", (req, res) => {
+
+  const sql = `
+    INSERT INTO raport 
+    (ChildId, Description) 
+    VALUES (?)
+  `;
+  const values = [
+    req.body.childId, 
+    req.body.description
+  ];
+
+    db.query(sql, [values], (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.json({ success: false, message: "Create report failed" });
+      } else {
+        const insertedReport = {
+          id: result.insertId,
+          childId:req.body.childId,
+          description: req.body.description,
+         
+        };
+        return res.json({
+          success: true,
+          message: "Create report successful",
+          data: insertedReport,
+        });
+      }
+    });
+  });
+
+
+
 module.exports = router;
