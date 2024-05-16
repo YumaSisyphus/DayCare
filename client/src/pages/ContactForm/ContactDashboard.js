@@ -74,7 +74,7 @@ function ContactForm() {
   const handleSaveChanges = () => {
     const apiUrl = isNewContactForm
       ? "/contactform/createContactForm"
-      : `/contactfrom/updateContactForm/${selectedContactForm.ContactFormId}`;
+      : `/contactform/updateContactForm/${selectedContactForm.ContactFormId}`;
 
     const method = isNewContactForm ? "POST" : "PUT";
 
@@ -129,7 +129,7 @@ function ContactForm() {
   };
 
   const handleDelete = (ContactFormId) => {
-    fetch(`/contactfrom/deleteContactForm/${ContactFormId}`, {
+    fetch(`contactform/deleteContactForm/${ContactFormId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())

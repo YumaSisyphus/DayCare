@@ -28,7 +28,7 @@ const ContactUs = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/contactform/createContactForm",
+        "/contactform/createContactForm",
         formData
       );
       if (response.data.success) {
@@ -52,7 +52,14 @@ const ContactUs = () => {
         backgroundColor: "#eaf2d7",
       }}
     >
-      <Paper elevation={3} style={{ padding: "20px 40px",margin:"0px 430px", backgroundColor: "#C0D8C0" }}>
+      <Paper
+        elevation={3}
+        style={{
+          padding: "20px 40px",
+          margin: "0px 430px",
+          backgroundColor: "#C0D8C0",
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           Contact Us
         </Typography>
@@ -110,7 +117,11 @@ const ContactUs = () => {
             variant="contained"
             color="primary"
             size="large"
-            style={{ marginTop: "20px", backgroundColor: "#90caf9", color: "#ffffff" }}
+            style={{
+              marginTop: "20px",
+              backgroundColor: "#90caf9",
+              color: "#ffffff",
+            }}
           >
             Submit
           </Button>
