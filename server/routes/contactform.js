@@ -70,37 +70,36 @@ router.get("/getContactForm", (req, res) => {
     });
   });
 
-router.post("/createContactForm", (req, res) => {
-    const { Email, Message, DateCreated, Subject } = req.body;
-  
-    const query =
-      "INSERT INTO contactform (Email, Message, DateCreated, Subject) VALUES (?, ?, ?, ?)";
-  
-    db.query(query, [Email, Message, DateCreated, Subject], (err, result) => {
+ 
+  router.post("/createContactForm", (req, res) => {
+    const sql =
+      "INSERT INTO contactform (Email, Message, DateCreated, Subject) VALUES ?";
+    const values = [
+      req.body.email,
+      req.body.message,
+      req.body.dateCreated,
+      req.body.subject
+    ];
+    db.query(sql, [values], (err, result) => {
       if (err) {
-        console.error("Error adding new contact:", err);
-        return res
-          .status(500)
-          .json({ message: "Error adding new contact", error: err });
-      }
-  
-      if (result.affectedRows > 0) {
-        return res.status(200).json({
-          message: "Contact added successfully",
-          newContactForm: {
-            ContactFormId: result.insertId,
-            Email: Email,
-            Message: Message,
-            DateCreated: DateCreated,
-            Subject: Subject
-          },
-        });
+        console.error("Database error:", err);
+        return res.json({ success: false, message: "Create contact form failed" });
       } else {
-        return res.status(400).json({ message: "Failed to add new contact" });
+        const insertedForm = {
+          id: result.insertId,
+          email: req.body.email,
+          message: req.body.message,
+          dateCreated: req.body.dateCreated,
+          subject:req.body.subject
+        };
+        return res.json({
+          success: true,
+          message: "Create contact form successful",
+          data: insertedForm,
+        });
       }
     });
   });
-
   
   router.delete("/deleteContactForm/:ContactFormId", (req, res) => {
     const deleteContactFormSql = "DELETE FROM contactform WHERE ContactFormId=?";

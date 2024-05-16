@@ -180,6 +180,42 @@ function ResponsiveAppBar() {
                 LET
               </Typography>
             </Box>
+            <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href="/AboutUs"
+                sx={{
+                  mr: 2,
+                  mt:0.5,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 500,
+                  color: "inherit", 
+                  textDecoration: "none",
+                  fontSize:"15px"
+                }}
+              >
+                About us
+              </Typography>
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href="/ContactUs"
+                sx={{
+                  mr: 2,
+                  mt:0.5,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 500,
+                  color: "inherit", 
+                  textDecoration: "none",
+                  fontSize:"15px"
+                }}
+              >
+                Contact us
+              </Typography>
           </Box>
 
           <Box

@@ -21,6 +21,7 @@ import Meal from "./pages/Meal/MealDashboard";
 import Staff from "./pages/Staff/StaffDashboard";
 import ContactForm from "./pages/ContactForm/ContactDashboard";
 import ReportForm from "./pages/Report/ReportForm";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/ContactDashboard" element={<ContactForm />} />
         <Route path="/mealDashboard" element={<Meal />} />
         <Route path="/ReportForm/:childId" element={<ReportForm/>}/>
+        <Route path="/ContactUs" element={<ContactUs/>}/>
       </Routes>
     </BrowserRouter>
   );
