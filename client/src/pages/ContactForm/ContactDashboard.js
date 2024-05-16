@@ -26,72 +26,72 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
+import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 
 function ContactForm() {
-    const [contactforms, setContactForms] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
-    const [selectedContactForm, setSelectedContactForm] = useState(null);
-    const [editedEmail, setEditedEmail] = useState("");
-    const [editedMessage, setEditedMessage] = useState("");
-    const [editedDateCreated, setEditedDateCreated] = useState("");
-    const [editedSubject, setEditedSubject] = useState("");
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [isNewContactForm, setIsNewContactForm] = useState(false); 
+  const [contactforms, setContactForms] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedContactForm, setSelectedContactForm] = useState(null);
+  const [editedEmail, setEditedEmail] = useState("");
+  const [editedMessage, setEditedMessage] = useState("");
+  const [editedDateCreated, setEditedDateCreated] = useState("");
+  const [editedSubject, setEditedSubject] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isNewContactForm, setIsNewContactForm] = useState(false);
 
-    useEffect(() => {
-        fetch("/contactform/getContactForm")
-          .then((response) => response.json())
-          .then((data) => setContactForms(data.data))
-          .catch((error) => console.error("Error fetching data:", error));
-      }, []);
+  useEffect(() => {
+    fetch("/contactform/getContactForm")
+      .then((response) => response.json())
+      .then((data) => setContactForms(data.data))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-      const handleAddNew = () => {
-        setSelectedContactForm(null);
-        setEditedEmail("");
-        setEditedMessage("");
-        setEditedDateCreated("");
-        setEditedSubject("");
-        setIsNewContactForm(true);
-        setOpenModal(true);
-      };
+  const handleAddNew = () => {
+    setSelectedContactForm(null);
+    setEditedEmail("");
+    setEditedMessage("");
+    setEditedDateCreated("");
+    setEditedSubject("");
+    setIsNewContactForm(true);
+    setOpenModal(true);
+  };
 
-      const handleEdit = (contactform) => {
-        setSelectedContactForm(contactform);
-        setEditedEmail(contactform.Email);
-        setEditedMessage(contactform.Message);
-        setEditedDateCreated(contactform.DateCreated);
-        setEditedSubject(contactform.Subject);
-        setIsNewContactForm(false);
-        setOpenModal(true);
-      };
+  const handleEdit = (contactform) => {
+    setSelectedContactForm(contactform);
+    setEditedEmail(contactform.Email);
+    setEditedMessage(contactform.Message);
+    setEditedDateCreated(contactform.DateCreated);
+    setEditedSubject(contactform.Subject);
+    setIsNewContactForm(false);
+    setOpenModal(true);
+  };
 
-      const handleModalClose = () => {
-        setOpenModal(false);
-      };
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
 
-      const handleSaveChanges = () => {
-        const apiUrl = isNewContactForm
-          ? "/contactform/createContactForm"
-          : `/contactfrom/updateContactForm/${selectedContactForm.ContactFormId}`;
-    
-        const method = isNewContactForm ? "POST" : "PUT";
-    
-        fetch(apiUrl, {
-          method: method,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            Email: editedEmail,
-            Message: editedMessage,
-            DateCreated: editedDateCreated,
-            Subject: editedSubject,
-          }),
-        })
+  const handleSaveChanges = () => {
+    const apiUrl = isNewContactForm
+      ? "/contactform/createContactForm"
+      : `/contactfrom/updateContactForm/${selectedContactForm.ContactFormId}`;
 
-        .then((response) => response.json())
-        .then((data) => {
+    const method = isNewContactForm ? "POST" : "PUT";
+
+    fetch(apiUrl, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Email: editedEmail,
+        Message: editedMessage,
+        DateCreated: editedDateCreated,
+        Subject: editedSubject,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
         if (
@@ -137,7 +137,11 @@ function ContactForm() {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
         if (data.success) {
-          setContactForms(contactforms.filter((contactform) => contactform.ContactFormId !== ContactFormId));
+          setContactForms(
+            contactforms.filter(
+              (contactform) => contactform.ContactFormId !== ContactFormId
+            )
+          );
         }
       })
       .catch((error) => console.error("Error deleting contact:", error));
@@ -149,6 +153,7 @@ function ContactForm() {
 
   return (
     <ThemeProvider theme={theme}>
+      <DashboardSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
@@ -208,16 +213,25 @@ function ContactForm() {
                 {contactforms.map((contactform) => (
                   <TableRow key={contactform.ContactFormId}>
                     <TableCell>
-                      <Typography variant="body1">{contactform.Email}</Typography>
+                      <Typography variant="body1">
+                        {contactform.Email}
+                      </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1"> {contactform.Message} </Typography>
+                      <Typography variant="body1">
+                        {" "}
+                        {contactform.Message}{" "}
+                      </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">{contactform.DateCreated}</Typography>
+                      <Typography variant="body1">
+                        {contactform.DateCreated}
+                      </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">{contactform.Subject}</Typography>
+                      <Typography variant="body1">
+                        {contactform.Subject}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <IconButton

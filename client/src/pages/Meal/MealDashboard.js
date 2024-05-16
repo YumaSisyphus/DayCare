@@ -26,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
+import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 
 function MealDashboard() {
   const [meals, setMeals] = useState([]);
@@ -133,6 +134,7 @@ function MealDashboard() {
 
   return (
     <ThemeProvider theme={theme}>
+      <DashboardSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,

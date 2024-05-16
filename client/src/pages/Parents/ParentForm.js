@@ -35,9 +35,7 @@ const ParentForm = ({ setParents }) => {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const result = await axios.get(
-          "http://localhost:5000/children/getChildren"
-        );
+        const result = await axios.get("/children/getChildren");
         setChildren(result.data.children);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -59,7 +57,7 @@ const ParentForm = ({ setParents }) => {
     try {
       const { childId, ...parentData } = formData;
       const createParentResponse = await axios.post(
-        "http://localhost:5000/parents/createParent",
+        "/parents/createParent",
         parentData
       );
 
@@ -67,7 +65,7 @@ const ParentForm = ({ setParents }) => {
         // Parent created successfully, now assign the children to the parent
         const parentId = createParentResponse.data.data.id;
         const assignChildResponse = await axios.post(
-          "http://localhost:5000/parents/assignChildToParent",
+          "/parents/assignChildToParent",
           { parentId, childIds: childId } // Ensure childIds is an array
         );
 
@@ -121,17 +119,17 @@ const ParentForm = ({ setParents }) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-            }}
+      }}
     >
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: Colors.secondary, p: 3, marginLeft:"20%"}}
+        sx={{ flexGrow: 1, bgcolor: Colors.secondary, p: 3, marginLeft: "20%" }}
       >
-        <Paper elevation={3} sx={{ padding: 2, width:"67%" }}>
+        <Paper elevation={3} sx={{ padding: 2, width: "67%" }}>
           <Typography variant="h6" gutterBottom>
             Register a Parent
           </Typography>
-          <form onSubmit={handleCreateParent} >
+          <form onSubmit={handleCreateParent}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
