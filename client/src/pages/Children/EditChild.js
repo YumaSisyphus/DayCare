@@ -41,9 +41,7 @@ const EditChild = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/children/getClasses"
-        );
+        const response = await axios.get("/children/getClasses");
         setClasses(response.data.class);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -55,11 +53,9 @@ const EditChild = () => {
   useEffect(() => {
     const fetchChildData = async () => {
       try {
-        const responseChild = await axios.get(
-          `http://localhost:5000/children/getChild/${childId}`
-        );
+        const responseChild = await axios.get(`/children/getChild/${childId}`);
         const responseClass = await axios.get(
-          `http://localhost:5000/children/getChildClass/${childId}`
+          `/children/getChildClass/${childId}`
         );
         const fetchedChild = responseChild.data.child[0];
         const fetchClass = responseClass.data.class[0];
@@ -107,10 +103,7 @@ const EditChild = () => {
           ? dayjs(child.birthday).format("YYYY-MM-DD")
           : null,
       };
-      const response = await axios.put(
-        `http://localhost:5000/children/updateChild`,
-        formattedChild
-      );
+      const response = await axios.put(`/children/updateChild`, formattedChild);
       if (response.data.success) {
         console.log(response);
         const childIdsWithClassIds = {
@@ -118,7 +111,7 @@ const EditChild = () => {
           classId: child.classId,
         };
 
-        await axios.put("http://localhost:5000/children/updateChildToClass", {
+        await axios.put("/children/updateChildToClass", {
           childIdsWithClassIds,
         });
       }

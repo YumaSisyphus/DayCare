@@ -4,7 +4,7 @@ export const Colors = {
   lightbg: "#fff0ec",
   cleanLightBlack: "#4a4a4a",
   white: "#ffffff",
-  black: "#000000",
+  black: "#292929",
   redlet: "#da1737",
   tomato: "#ff735e",
   pastelPurple: "#e0b6c7",

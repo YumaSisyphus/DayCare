@@ -97,7 +97,7 @@ const Login = () => {
     }
 
     axios
-      .post("http://localhost:5000/login", { username, password })
+      .post("/login", { username, password })
       .then((res) => {
         if (res.data.success) {
           Cookies.set("token", res.data.token, { expires: 1 / 24 });

@@ -34,9 +34,7 @@ const EditParent = () => {
   useEffect(() => {
     const fetchParentData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/parents/getParent/${parentId}`
-        );
+        const response = await axios.get(`/parents/getParent/${parentId}`);
         const fetchedParent = response.data.data[0]; // Destructuring the fetched data
         setParent({
           name: fetchedParent.Name,
@@ -68,7 +66,7 @@ const EditParent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/parents/updateParent`, parent);
+      await axios.put(`/parents/updateParent`, parent);
       navigate("/DashboardParents"); // Navigate to the parent dashboard after editing
     } catch (error) {
       console.error("Error updating parent:", error);
@@ -77,22 +75,22 @@ const EditParent = () => {
 
   return (
     <Box
-    sx={{
-      bgcolor: Colors.secondary,
-      backgroundImage: `url(${DashboardBg})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}
-    height={"100vh"}
-    display={"flex"}
-    justifyContent={"center"}
-    alignItems={"center"}
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      height={"100vh"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
     >
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3 , marginTop:-10}}
+        sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3, marginTop: -10 }}
       >
-              <Grid container justifyContent="center">
+        <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>

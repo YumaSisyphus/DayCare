@@ -128,7 +128,7 @@ function ResponsiveAppBar() {
       position="static"
       sx={{ backgroundColor: Colors.white, color: Colors.black }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="2xl">
         <Toolbar
           disableGutters
           sx={{
@@ -152,66 +152,45 @@ function ResponsiveAppBar() {
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
-              justifyContent: "space-around",
+              justifyContent: "flex-start",
               alignItems: "center",
-              width: "70%",
+              width: "100%",
             }}
           >
-             <Box sx={{ display: "flex", gap: "1rem" }}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
+            <Box
+              sx={{ display: "flex", gap: "1rem" }}
+              alignItems={"center"}
+              justifyContent={"flex-start"}
             >
-              LET.
-            </Typography>
-           
-            <a href={"/activities"} className="link-header">
-              Activities
-            </a>
-            <a href={"/AboutUs"} className="link-header">
-              AboutUs
-            </a>
-
-            <a href={"/fooddashboard"} className="link-header">
-              Food
-            </a>
-
-            <a href={"/mealdashboard"} className="link-header">
-              Meal
-            </a>
-            <a href={"/StaffDashboard"} className="link-header">
-              Staff
-            </a>
-            <a href={"/ContactDashboard"} className="link-header">
-              Contact
-            </a>
-            <a href={"/DashboardParents"} className="link-header">
-              Parents
-            </a>
-            <a href={"/DashboardChildren"} className="link-header">
-              Children
-            </a>
-            <a href={"/ClassDashboard"} className="link-header">
-              Class
-            </a>
-            <a href={"/AgeGroupDashboard"} className="link-header">
-              Age Group
-            </a>
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                LET
+              </Typography>
             </Box>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box
+            sx={{ flexGrow: 0 }}
+            display={"flex"}
+            alignItems={"center"}
+            gap={3}
+          >
+            <a href={"/activities"} className="link-header">
+              Dashboard
+            </a>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
