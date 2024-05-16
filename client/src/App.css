@@ -3,6 +3,11 @@
   height: 58%;
   border-radius: 5px;
   filter: drop-shadow(rgba(224, 182, 199, 0.7) 0px 8px 24px);
+  transition: 0.4s;
+}
+
+.welcome-screen-img:hover {
+  transform: scale(1.08);
 }
 
 .welcome-screen-img2 {
@@ -10,6 +15,11 @@
   height: 38%;
   border-radius: 5px;
   filter: drop-shadow(rgba(163, 208, 252, 0.7) 0px 8px 24px);
+  transition: 0.4s;
+}
+
+.welcome-screen-img2:hover {
+  transform: scale(1.08);
 }
 
 .aboutUs-img {
