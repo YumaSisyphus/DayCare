@@ -36,6 +36,7 @@ function Meal() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewMeal, setIsNewMeal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/meal/getMeal")
@@ -44,6 +45,15 @@ function Meal() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+
+  const filteredMeals = meals.filter((meal) =>
+    meal.Name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
   const handleAddNew = () => {
     setSelectedMeal(null);
     setEditedName("");
@@ -140,34 +150,42 @@ function Meal() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
-      <Box
-        sx={{
-          bgcolor: Colors.secondary,
-          backgroundImage: `url(${DashboardBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        height={"100vh"}
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <Container>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Typography variant="h4" gutterBottom>
-              Meal Dashboard
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
-          </Box>
+    <DashboardSidebar />
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      height={"100vh"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <Container>
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+          <Typography variant="h4" gutterBottom>
+            Meal Dashboard
+          </Typography>
+          <Box display="flex" alignItems="center" sx={{ marginBottom: 2 }}>
+  <TextField
+    label="Search"
+    variant="outlined"
+    value={searchQuery}
+    onChange={handleSearch}
+    sx={{ mr: 2 }}
+  />
+  <Button
+    variant="contained"
+    color="primary"
+    startIcon={<AddIcon />}
+    onClick={handleAddNew}
+  >
+    Add New
+  </Button>
+</Box>
+</Box>
 
           <TableContainer
             component={Paper}
@@ -190,33 +208,32 @@ function Meal() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {meals.map((meal) => (
-                  <TableRow key={meal.MealId}>
-                    <TableCell>
-                      <Typography variant="body1">
-                        {meal.Name}
-                      </Typography>
-                    </TableCell>
-                
-                    <TableCell>
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        onClick={() => handleEdit(meal)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        aria-label="delete"
-                        onClick={() => handleDelete(meal.MealId)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+  {filteredMeals.map((meal) => (
+    <TableRow key={meal.MealId}>
+      <TableCell>
+        <Typography variant="body1">
+          {meal.Name}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <IconButton
+          color="primary"
+          aria-label="edit"
+          onClick={() => handleEdit(meal)}
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          color="primary"
+          aria-label="delete"
+          onClick={() => handleDelete(meal.MealId)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
             </Table>
           </TableContainer>
           <Dialog open={openModal} onClose={handleModalClose}>
