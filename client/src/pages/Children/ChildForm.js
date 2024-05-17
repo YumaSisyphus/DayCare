@@ -30,7 +30,8 @@ const ChildForm = () => {
       gender: "t",
       allergies: "",
       vaccines: "",
-      photo: "",
+      photo: null,
+      photoName: "",
       payments: "",
       active: "t",
       classId: "t",
@@ -61,6 +62,22 @@ const ChildForm = () => {
         };
         return newDataList;
       });
+    } else if (e.target.name === "photo") {
+      const fd = new FormData();
+      fd.append("photo", JSON.stringify(e.target.files[0]));
+      setFormDataList((prevFormDataList) => {
+        const newDataList = [...prevFormDataList];
+        newDataList[index] = {
+          ...newDataList[index],
+          photo: fd,
+          photoName: e.target.files[0].name,
+        };
+        return newDataList;
+      });
+      // for (let [key, value] of fd) {
+      //   console.log(`${key}: ${value}`);
+      // }
+      console.log(e.target.files[0]);
     } else {
       const { name, value } = e.target;
       setFormDataList((prevFormDataList) => {
@@ -111,7 +128,8 @@ const ChildForm = () => {
           gender: "t",
           allergies: "",
           vaccines: "",
-          photo: "",
+          photo: null,
+          photoName: "",
           payments: "",
           active: "t",
           classId: "t",
@@ -133,7 +151,8 @@ const ChildForm = () => {
         gender: "t",
         allergies: "",
         vaccines: "",
-        photo: "",
+        photo: null,
+        photoName: "",
         payments: "",
         active: "t",
         classId: "t",
@@ -151,7 +170,8 @@ const ChildForm = () => {
           gender: "t",
           allergies: "",
           vaccines: "",
-          photo: "",
+          photo: null,
+          photoName: "",
           payments: "",
           active: "t",
           classId: "t",
@@ -185,17 +205,26 @@ const ChildForm = () => {
                 <Typography variant="h6" gutterBottom>
                   Register a Child {index + 1}
                 </Typography>
-                <form onSubmit={handleCreateChildren}>
+                <form
+                  onSubmit={handleCreateChildren}
+                  enctype="multipart/form-data"
+                >
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                      <TextField
+                      <input
+                        type="file"
+                        name="photo"
+                        onChange={(e) => handleChange(index, e)}
+                      />
+                      {/* <TextField
                         label="Photo"
                         name="photo"
                         value={formData.photo}
                         onChange={(e) => handleChange(index, e)}
                         required
                         fullWidth
-                      />
+                      /> */}
+                      <Typography>{formData.photoName}</Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField

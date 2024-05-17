@@ -2,6 +2,8 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2");
+const multer = require("multer");
+const upload = multer({ dest: "upload/" });
 
 router.use(express.json());
 router.use(cookieParser());
@@ -70,11 +72,12 @@ router.delete("/deleteChildren", (req, res) => {
   });
 });
 
-router.post("/createChildren", (req, res) => {
+router.post("/createChildren", upload.array("photo"), (req, res) => {
+  console.log(req.files);
   const childrenData = req.body.map((child) => [
     child.birthday,
     child.gender,
-    child.photo,
+    child.photoName,
     child.allergies,
     child.vaccines,
     child.name,
@@ -82,6 +85,7 @@ router.post("/createChildren", (req, res) => {
     child.payments,
     child.active,
   ]);
+
   const sql = `
     INSERT INTO child 
     (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) 
@@ -96,7 +100,6 @@ router.post("/createChildren", (req, res) => {
         { length: req.body.length },
         (_, index) => data.insertId + index
       );
-      console.log(childIds);
       return res.json({
         success: true,
         message: "Create children successful",
@@ -189,7 +192,6 @@ router.get("/getChildClass/:id", (req, res) => {
 });
 
 router.post("/assignChildToClass", (req, res) => {
-  console.log(req.body);
   const values = req.body.childIdsWithClassIds.map((child) => [
     child.childId,
     child.classId,

@@ -42,6 +42,7 @@ export default function DashboardChildren() {
         const result = await axios.get(
           "http://localhost:5000/children/getChildren"
         );
+        console.log(result);
         const filteredRows = result.data.children.filter((data) =>
           `${data.Name} ${data.Surname}`
             .toLowerCase()
