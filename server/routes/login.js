@@ -9,6 +9,7 @@ router.use(express.json());
 router.use(cookieParser());
 
 const secretKey = crypto.randomBytes(64).toString("hex");
+const refreshTokenSecretKey = crypto.randomBytes(64).toString("hex");
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -31,7 +32,7 @@ router.post("/", (req, res) => {
     }
 
     if (staffData && staffData.length > 0) {
-      const token = jwt.sign(
+      const accessToken = jwt.sign(
         {
           userId: staffData[0].StaffId,
           username: staffData[0].Username,
@@ -39,20 +40,34 @@ router.post("/", (req, res) => {
           role: staffData[0].Role,
         },
         secretKey,
-        {
-          expiresIn: "1h",
-        }
+        { expiresIn: "1h" }
       );
 
-      res.cookie("token", token, {
+      const refreshToken = jwt.sign(
+        {
+          userId: staffData[0].StaffId,
+          username: staffData[0].Username,
+          userType: "staff",
+          role: staffData[0].Role,
+        },
+        refreshTokenSecretKey,
+        { expiresIn: "7d" }
+      );
+
+      res.cookie("token", accessToken, {
         httpOnly: true,
         maxAge: 3600000, // 1 hour
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 604800000, // 7 days
       });
 
       return res.json({
         success: true,
         message: "Login Successful",
-        token: token,
+        token: accessToken,
       });
     } else {
       // Check in parent table
@@ -67,27 +82,40 @@ router.post("/", (req, res) => {
         }
 
         if (parentData && parentData.length > 0) {
-          const token = jwt.sign(
+          const accessToken = jwt.sign(
             {
               userId: parentData[0].ParentId,
               username: parentData[0].Username,
               userType: "parent",
             },
             secretKey,
-            {
-              expiresIn: "1h",
-            }
+            { expiresIn: "1h" }
           );
 
-          res.cookie("token", token, {
+          const refreshToken = jwt.sign(
+            {
+              userId: parentData[0].ParentId,
+              username: parentData[0].Username,
+              userType: "parent",
+            },
+            refreshTokenSecretKey,
+            { expiresIn: "7d" }
+          );
+
+          res.cookie("token", accessToken, {
             httpOnly: true,
-            maxAge: 3600000, // 1 hour
+            maxAge: 5000, // 1 hour  3600000
+          });
+
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 604800000, // 7 days
           });
 
           return res.json({
             success: true,
             message: "Login Successful",
-            token: token,
+            token: accessToken,
           });
         } else {
           return res.json({
@@ -123,8 +151,44 @@ router.get("/auth/status", (req, res) => {
   }
 });
 
+router.post("/token/refresh", (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (refreshToken) {
+    try {
+      const decoded = jwt.verify(refreshToken, refreshTokenSecretKey);
+      const newAccessToken = jwt.sign(
+        {
+          userId: decoded.userId,
+          username: decoded.username,
+          userType: decoded.userType,
+          role: decoded.role,
+        },
+        secretKey,
+        { expiresIn: "1h" }
+      );
+
+      res.cookie("token", newAccessToken, {
+        httpOnly: true,
+        maxAge: 3600000, // 1 hour
+      });
+
+      res.json({
+        success: true,
+        message: "Token Refreshed",
+        token: newAccessToken,
+      });
+    } catch (err) {
+      console.error("Refresh token verification error:", err);
+      res.status(403).json({ success: false, message: "Invalid refresh token" });
+    }
+  } else {
+    res.status(403).json({ success: false, message: "No refresh token provided" });
+  }
+});
+
 router.post("/logout", (req, res) => {
   res.clearCookie("token");
+  res.clearCookie("refreshToken");
   res.json({ success: true, message: "Logout successful" });
 });
 
