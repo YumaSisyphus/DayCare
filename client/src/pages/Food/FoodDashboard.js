@@ -52,7 +52,7 @@ function Food() {
       .then((data) => {
         setFoods(data.data);
   
-        // Extract unique allergens from the foods data
+   
         const allergens = data.data.reduce((allergens, food) => {
           const foodAllergens = food.Allergens.split(',').map((allergen) => allergen.trim());
           return [...new Set([...allergens, ...foodAllergens])];

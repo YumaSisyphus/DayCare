@@ -28,7 +28,7 @@ import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 
-function MealDashboard() {
+function Meal() {
   const [meals, setMeals] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
@@ -76,6 +76,7 @@ function MealDashboard() {
       },
       body: JSON.stringify({
         Name: editedName,
+
       }),
     })
       .then((response) => response.json())
@@ -95,6 +96,7 @@ function MealDashboard() {
                   ? {
                       ...meal,
                       Name: editedName,
+                
                     }
                   : meal
               )
@@ -113,8 +115,8 @@ function MealDashboard() {
       });
   };
 
-  const handleDelete = (mealId) => {
-    fetch(`/meal/deleteFood/${mealId}`, {
+  const handleDelete = (MealId) => {
+    fetch(`meal/deleteMeal/${MealId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
@@ -122,7 +124,11 @@ function MealDashboard() {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
         if (data.success) {
-          setMeals(meals.filter((meal) => meal.MealId !== mealId));
+          setMeals(
+            meals.filter(
+              (meal) => meal.MealId !== MealId
+            )
+          );
         }
       })
       .catch((error) => console.error("Error deleting meal:", error));
@@ -176,6 +182,8 @@ function MealDashboard() {
                   <TableCell>
                     <Typography fontWeight={"bold"}>Name</Typography>
                   </TableCell>
+                
+          
                   <TableCell>
                     <Typography fontWeight={"bold"}>Actions</Typography>
                   </TableCell>
@@ -185,8 +193,11 @@ function MealDashboard() {
                 {meals.map((meal) => (
                   <TableRow key={meal.MealId}>
                     <TableCell>
-                      <Typography variant="body1">{meal.Name}</Typography>
+                      <Typography variant="body1">
+                        {meal.Name}
+                      </Typography>
                     </TableCell>
+                
                     <TableCell>
                       <IconButton
                         color="primary"
@@ -218,8 +229,11 @@ function MealDashboard() {
                 label="Name"
                 fullWidth
                 value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
+                onChange={(c) => setEditedName(c.target.value)}
               />
+       
+
+    
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
@@ -250,5 +264,4 @@ function MealDashboard() {
     </ThemeProvider>
   );
 }
-
-export default MealDashboard;
+export default Meal;
