@@ -21,6 +21,7 @@ import { Colors } from "../../utils/colors";
 import { groupParents } from "../../utils/groupParents"; // Adjust the path as per your project structure
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import { theme } from "../../utils/theme";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
@@ -66,8 +67,7 @@ const ParentsList = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
-
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,

@@ -36,6 +36,7 @@ router.post("/", (req, res) => {
           userId: staffData[0].id,
           username: staffData[0].Username,
           userType: "staff",
+          role: staffData[0].Role,
         },
         secretKey,
         {
@@ -97,6 +98,33 @@ router.post("/", (req, res) => {
       });
     }
   });
+});
+
+router.get("/auth/status", (req, res) => {
+  const token = req.cookies.token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      res.json({
+        isAuthenticated: true,
+        user: {
+          id: decoded.userId,
+          username: decoded.username,
+          userType: decoded.userType,
+          role: decoded.role,
+        },
+      });
+    } catch (err) {
+      res.json({ isAuthenticated: false, user: null });
+    }
+  } else {
+    res.json({ isAuthenticated: false, user: null });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ success: true, message: "Logout successful" });
 });
 
 module.exports = router;

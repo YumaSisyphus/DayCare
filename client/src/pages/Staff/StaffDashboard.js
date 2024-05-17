@@ -27,6 +27,7 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 function Staff() {
   const [staffList, setStaffList] = useState([]);
@@ -204,7 +205,7 @@ function Staff() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,

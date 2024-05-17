@@ -28,6 +28,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
@@ -98,7 +99,7 @@ export default function DashboardChildren() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           display: "flex",

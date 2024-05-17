@@ -30,6 +30,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
+import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 function ClassDashboard() {
   const [classes, setClasses] = useState([]);
@@ -163,6 +165,7 @@ function ClassDashboard() {
 
   return (
     <ThemeProvider theme={theme}>
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
