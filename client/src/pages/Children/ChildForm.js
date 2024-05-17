@@ -41,9 +41,7 @@ const ChildForm = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const result = await axios.get(
-          "http://localhost:5000/children/getClasses"
-        );
+        const result = await axios.get("/children/getClasses");
         setClasses(result.data.class);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -104,7 +102,7 @@ const ChildForm = () => {
         };
       });
       const response = await axios.post(
-        "http://localhost:5000/children/createChildren",
+        "/children/createChildren",
         formattedChildrenData
       );
       if (response.data.success) {
@@ -116,7 +114,7 @@ const ChildForm = () => {
         );
         console.log(childIdsWithClassIds);
         await axios.post(
-          "http://localhost:5000/children/assignChildToClass",
+          "/children/assignChildToClass",
           { childIdsWithClassIds } // Ensure childIds is an array
         );
       }

@@ -30,6 +30,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
+import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 function ClassDashboard() {
   const [classes, setClasses] = useState([]);
@@ -41,6 +43,7 @@ function ClassDashboard() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewClass, setIsNewClass] = useState(false);
+  const [staff, setStaff] = useState([]);
 
   useEffect(() => {
     fetch("/class")
@@ -52,6 +55,11 @@ function ClassDashboard() {
       .then((response) => response.json())
       .then((data) => setAgeGroups(data))
       .catch((error) => console.error("Error fetching age groups:", error));
+
+    fetch("/class/staffByClass")
+      .then((response) => response.json())
+      .then((data) => setStaff(data))
+      .catch((error) => console.error("Error fetching staff:", error));
   }, []);
 
   const handleAddNew = () => {
@@ -157,6 +165,7 @@ function ClassDashboard() {
 
   return (
     <ThemeProvider theme={theme}>
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
@@ -199,7 +208,10 @@ function ClassDashboard() {
                     <Typography fontWeight={"bold"}>Name</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Age Group Name</Typography>
+                    <Typography fontWeight={"bold"}>Age Group</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography fontWeight={"bold"}>Teachers</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography fontWeight={"bold"} textAlign={"right"}>
@@ -219,6 +231,15 @@ function ClassDashboard() {
                         {cls.AgeGroupName}
                       </Typography>
                     </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">
+                        {staff
+                          .filter((s) => s.ClassId === cls.ClassId)
+                          .map((s) => s.StaffName)
+                          .join(", ")}
+                      </Typography>
+                    </TableCell>
+
                     <TableCell sx={{ textAlign: "right" }}>
                       <IconButton
                         color="primary"

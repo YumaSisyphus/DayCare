@@ -26,6 +26,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
+import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 function Staff() {
   const [staffList, setStaffList] = useState([]);
@@ -203,6 +205,7 @@ function Staff() {
 
   return (
     <ThemeProvider theme={theme}>
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
@@ -238,8 +241,8 @@ function Staff() {
               component={Paper}
               sx={{
                 backdropFilter: "blur(10px)",
-                marginLeft:"-3.5rem",
-                width:"80rem",
+                marginLeft: "-3.5rem",
+                width: "80rem",
                 backgroundColor: "rgba(255, 255, 255, 0.6)",
               }}
             >
@@ -288,10 +291,14 @@ function Staff() {
                         <Typography variant="body1">{member.Name}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1">{member.Surname}</Typography>
+                        <Typography variant="body1">
+                          {member.Surname}
+                        </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1">{member.Birthday}</Typography>
+                        <Typography variant="body1">
+                          {member.Birthday}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body1">{member.Gender}</Typography>
@@ -300,19 +307,27 @@ function Staff() {
                         <Typography variant="body1">{member.Email}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1">{member.PhoneNumber}</Typography>
+                        <Typography variant="body1">
+                          {member.PhoneNumber}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body1">{member.Role}</Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1">{member.Username}</Typography>
+                        <Typography variant="body1">
+                          {member.Username}
+                        </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1">{member.Address}</Typography>
+                        <Typography variant="body1">
+                          {member.Address}
+                        </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body1">{member.Password}</Typography>
+                        <Typography variant="body1">
+                          {member.Password}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <IconButton

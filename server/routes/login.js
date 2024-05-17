@@ -33,9 +33,10 @@ router.post("/", (req, res) => {
     if (staffData && staffData.length > 0) {
       const token = jwt.sign(
         {
-          userId: staffData[0].id,
+          userId: staffData[0].StaffId,
           username: staffData[0].Username,
           userType: "staff",
+          role: staffData[0].Role,
         },
         secretKey,
         {
@@ -68,7 +69,7 @@ router.post("/", (req, res) => {
         if (parentData && parentData.length > 0) {
           const token = jwt.sign(
             {
-              userId: parentData[0].id,
+              userId: parentData[0].ParentId,
               username: parentData[0].Username,
               userType: "parent",
             },
@@ -97,6 +98,34 @@ router.post("/", (req, res) => {
       });
     }
   });
+});
+
+router.get("/auth/status", (req, res) => {
+  const token = req.cookies.token;
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      res.json({
+        isAuthenticated: true,
+        user: {
+          id: decoded.userId,
+          username: decoded.username,
+          userType: decoded.userType,
+          role: decoded.role,
+        },
+      });
+    } catch (err) {
+      console.error("Token verification error:", err);
+      res.json({ isAuthenticated: false, user: null });
+    }
+  } else {
+    res.json({ isAuthenticated: false, user: null });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ success: true, message: "Logout successful" });
 });
 
 module.exports = router;

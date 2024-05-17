@@ -42,7 +42,7 @@ function ChildParent() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/parents/getchildparent")
+      .get("/parents/getchildparent")
       .then((res) => {
         const parents = {};
         res.data.forEach((relationship) => {
@@ -64,13 +64,11 @@ function ChildParent() {
         console.error("Error fetching child-parent relationships:", error);
       });
   }, []);
-  
+
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const result = await axios.get(
-          "http://localhost:5000/children/getChildren"
-        );
+        const result = await axios.get("/children/getChildren");
         setChildren(result.data.children);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -121,7 +119,6 @@ function ChildParent() {
             <Typography variant="h4" gutterBottom>
               Child-Parent Relationships
             </Typography>
-          
           </Box>
 
           <TableContainer
@@ -140,7 +137,6 @@ function ChildParent() {
                   <TableCell>
                     <Typography fontWeight={"bold"}>Children</Typography>
                   </TableCell>
-                 
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -156,7 +152,6 @@ function ChildParent() {
                         </Typography>
                       ))}
                     </TableCell>
-                   
                   </TableRow>
                 ))}
               </TableBody>

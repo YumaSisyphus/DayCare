@@ -18,8 +18,10 @@ import ListItemText from "@mui/material/ListItemText";
 import { Colors } from "../utils/colors";
 import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
+import { useAuth } from "../utils/authContext";
+import useLogout from "../utils/useLogout";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -51,6 +53,9 @@ function ResponsiveAppBar() {
     setIsDrawerOpen(open);
   };
 
+  const { authState } = useAuth();
+  const handleLogout = useLogout();
+
   const drawerList = (
     <List>
       <ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
@@ -62,7 +67,6 @@ function ResponsiveAppBar() {
         to="/activities"
         onClick={toggleDrawer(false)}
       >
-        
         <ListItemText primary="Activities" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
@@ -87,7 +91,7 @@ function ResponsiveAppBar() {
         to="/StaffDashboard"
         onClick={toggleDrawer(false)}
       >
- <ListItemText primary="ContactFrom" sx={{ textAlign: "center" }} />
+        <ListItemText primary="ContactFrom" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
         button
@@ -95,7 +99,7 @@ function ResponsiveAppBar() {
         to="/ContactDashboard"
         onClick={toggleDrawer(false)}
       >
-<ListItemText primary="Meal" sx={{ textAlign: "center" }} />
+        <ListItemText primary="Meal" sx={{ textAlign: "center" }} />
       </ListItem>
       <ListItem
         button
@@ -122,7 +126,6 @@ function ResponsiveAppBar() {
         <ListItemText primary="Children" sx={{ textAlign: "center" }} />
       </ListItem>
     </List>
-    
   );
 
   return (
@@ -130,7 +133,7 @@ function ResponsiveAppBar() {
       position="static"
       sx={{ backgroundColor: Colors.white, color: Colors.black }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="2xl">
         <Toolbar
           disableGutters
           sx={{
@@ -154,66 +157,89 @@ function ResponsiveAppBar() {
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
-              justifyContent: "space-around",
+              justifyContent: "flex-start",
               alignItems: "center",
-              width: "40%",
+              width: "100%",
             }}
           >
+            <Box
+              sx={{ display: "flex", gap: "1rem" }}
+              alignItems={"center"}
+              justifyContent={"flex-start"}
+            >
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                LET
+              </Typography>
+            </Box>
             <Typography
-              variant="h6"
+              variant="h5"
               noWrap
               component="a"
-              href="/"
+              href="/AboutUs"
               sx={{
                 mr: 2,
+                mt: 0.5,
                 display: { xs: "none", md: "flex" },
                 fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
+                fontWeight: 500,
                 color: "inherit",
                 textDecoration: "none",
+                fontSize: "15px",
               }}
             >
-              LET
+              About us
             </Typography>
-            <a href={"/activities"} className="link-header">
-              Activities
-            </a>
-            <a href={"/AboutUs"} className="link-header">
-              AboutUs
-            </a>
-
-            <a href={"/fooddashboard"} className="link-header">
-              Food
-            </a>
-
-            <a href={"/mealdashboard"} className="link-header">
-              Meal
-            </a>
-            <a href={"/StaffDashboard"} className="link-header">
-              Staff
-            </a>
-            <a href={"/ContactDashboard"} className="link-header">
-              Contact
-            </a>
-            <a href={"/DashboardParents"} className="link-header">
-              Parents
-            </a>
-            <a href={"/DashboardChildren"} className="link-header">
-              Children
-            </a>
-            <a href={"/ClassDashboard"} className="link-header">
-              Class
-            </a>
-            <a href={"/AgeGroupDashboard"} className="link-header">
-              Age Group
-            </a>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/ContactUs"
+              sx={{
+                mr: 2,
+                mt: 0.5,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 500,
+                color: "inherit",
+                textDecoration: "none",
+                fontSize: "15px",
+              }}
+            >
+              Contact us
+            </Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box
+            sx={{ flexGrow: 0 }}
+            display={"flex"}
+            alignItems={"center"}
+            gap={3}
+          >
+            {/* {authState.isAuthenticated && authState.user.role === "Admin" && ( */}
+            <a href={"/activities"} className="link-header">
+              Dashboard
+            </a>
+            {/* )} */}
+            <a href={"/ClassDashboard"} className="link-header">
+              School
+            </a>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -237,6 +263,15 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+
+              <MenuItem
+                onClick={() => {
+                  handleLogout();
+                  handleCloseUserMenu();
+                }}
+              >
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <Drawer

@@ -26,6 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
+import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 
 function Activity() {
   const [activities, setActivities] = useState([]);
@@ -65,6 +66,12 @@ function Activity() {
   };
 
   const handleSaveChanges = () => {
+    if (!editedName.trim()) {
+      setSnackbarMessage("Name cannot be empty");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const apiUrl = isNewActivity
       ? "/activity"
       : `/activity/${selectedActivity.ActivityId}`;
@@ -141,12 +148,13 @@ function Activity() {
 
   return (
     <ThemeProvider theme={theme}>
+      <DashboardSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
           backgroundImage: `url(${DashboardBg})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "top",
         }}
         height={"100vh"}
         display={"flex"}
