@@ -3,7 +3,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../utils/authContext";
 
-const RoleBasedRoute = ({ children, allowedRoles }) => {
+const RoleBasedRoute = ({ children, allowedRoles, allowedSpecificRoles }) => {
   const { authState } = useAuth();
 
   if (authState.isAuthenticated === null) {
@@ -13,7 +13,7 @@ const RoleBasedRoute = ({ children, allowedRoles }) => {
   if (
     !authState.isAuthenticated ||
     !allowedRoles.includes(authState.user.userType) ||
-    !allowedRoles.includes(authState.user.role)
+    !allowedSpecificRoles.includes(authState.user.role)
   ) {
     return <Navigate to="/" />;
   }

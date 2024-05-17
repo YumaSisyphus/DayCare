@@ -54,7 +54,7 @@ function App() {
             element={
               <RoleBasedRoute
                 allowedRoles={["staff"]}
-                allowedSpecificRoles={["admin"]}
+                allowedSpecificRoles={["Admin"]}
               >
                 <AgeGroupDashboard />
               </RoleBasedRoute>

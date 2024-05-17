@@ -33,7 +33,7 @@ router.post("/", (req, res) => {
     if (staffData && staffData.length > 0) {
       const token = jwt.sign(
         {
-          userId: staffData[0].id,
+          userId: staffData[0].StaffId,
           username: staffData[0].Username,
           userType: "staff",
           role: staffData[0].Role,
@@ -69,7 +69,7 @@ router.post("/", (req, res) => {
         if (parentData && parentData.length > 0) {
           const token = jwt.sign(
             {
-              userId: parentData[0].id,
+              userId: parentData[0].ParentId,
               username: parentData[0].Username,
               userType: "parent",
             },
@@ -115,6 +115,7 @@ router.get("/auth/status", (req, res) => {
         },
       });
     } catch (err) {
+      console.error("Token verification error:", err);
       res.json({ isAuthenticated: false, user: null });
     }
   } else {
