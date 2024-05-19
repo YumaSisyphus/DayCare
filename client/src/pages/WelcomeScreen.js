@@ -24,6 +24,7 @@ import useLogout from "../utils/useLogout";
 import useCheckAuth from "../utils/useCheckAuth";
 
 const WelcomeScreen = () => {
+// needed for refresh token implementation
   const [modalOpen, setModalOpen] = useState(false);
   const { authState, loading } = useCheckAuth();
   const handleLogout = useLogout();
@@ -39,7 +40,7 @@ const WelcomeScreen = () => {
       handleLogout();
     }
   }, [loading, authState]);
-
+//
   return (
     <ThemeProvider theme={theme}>
       <Box width={"100%"} mb={5}>

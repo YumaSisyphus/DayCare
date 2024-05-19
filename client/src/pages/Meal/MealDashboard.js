@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,6 +37,8 @@ function MealDashboard() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewMeal, setIsNewMeal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetch("/meal/getMeal")
@@ -132,6 +135,10 @@ function MealDashboard() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
@@ -182,7 +189,13 @@ function MealDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {meals.map((meal) => (
+                {(rowsPerPage > 0
+                  ? meals.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : meals
+                ).map((meal) => (
                   <TableRow key={meal.MealId}>
                     <TableCell>
                       <Typography variant="body1">{meal.Name}</Typography>
@@ -208,6 +221,13 @@ function MealDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(meals.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewMeal ? "Add New Meal" : "Edit Meal"}

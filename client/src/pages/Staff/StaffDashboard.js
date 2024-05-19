@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -47,6 +48,8 @@ function Staff() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewStaff, setIsNewStaff] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     setLoading(true);
@@ -203,6 +206,10 @@ function Staff() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSchoolSidebar />
@@ -285,7 +292,13 @@ function Staff() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {staffList.map((member) => (
+                  {(rowsPerPage > 0
+                    ? staffList.slice(
+                        (page - 1) * rowsPerPage,
+                        (page - 1) * rowsPerPage + rowsPerPage
+                      )
+                    : staffList
+                  ).map((member) => (
                     <TableRow key={member.StaffId}>
                       <TableCell>
                         <Typography variant="body1">{member.Name}</Typography>
@@ -351,7 +364,13 @@ function Staff() {
               </Table>
             </TableContainer>
           )}
-
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(staffList.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewStaff ? "Add New Staff" : "Edit Staff"}
