@@ -12,8 +12,6 @@ import {
 import { Colors } from "../utils/colors";
 import ChildrenPlaying from "../images/ChildrenPlaying.png";
 import ChildrenLearning from "../images/ChildrenLearning.png";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import SchoolIcon from "@mui/icons-material/School";
 import ServiceBoxImg from "../images/geometricbg.png";
 import BedroomBabyIcon from "@mui/icons-material/BedroomBaby";
@@ -22,43 +20,25 @@ import ChildCareIcon from "@mui/icons-material/ChildCare";
 import { theme } from "../utils/theme";
 import Footer from "../components/Footer";
 import SessionModal from "../components/SessionModal";
-import axios from "axios";
-import { useAuth } from "../utils/authContext";
 import useLogout from "../utils/useLogout";
+import useCheckAuth from "../utils/useCheckAuth";
 
 const WelcomeScreen = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState } = useAuth();
-  const navigate = useNavigate();
-
+  const { authState, loading } = useCheckAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
     setModalOpen(true);
   };
 
-  //this option works fully
-  
-  // useEffect(() => {
-  //   const checkAuthStatus = async () => {
-  //     try {
-  //       const response = await axios.get("/login/auth/status");
-  //       if (!response.data.isAuthenticated) {
-  //         handleOpenModal();
-  //       }
-  //     } catch (error) {
-  //       console.error("Couldn't authenticate you", error);
-  //     }
-  //   };
-  //   checkAuthStatus();
-  // }, []);
-
   useEffect(() => {
-    console.log(authState); //when initial log in, authState.isAuthenticated = false. After refresh 1st time null, 2nd time true
-    if (!authState.isAuthenticated && authState.isAuthenticated != null) {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
       handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
     }
-  }, [authState]);
+  }, [loading, authState]);
 
   return (
     <ThemeProvider theme={theme}>

@@ -9,7 +9,10 @@ const PrivateRoute = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  if (!authState.isAuthenticated) {
+  if (
+    (!authState.isAuthenticated && !authState.isRefreshToken) ||
+    (authState.isAuthenticated && !authState.isRefreshToken)
+  ) {
     return <Navigate to="/login" />;
   }
 

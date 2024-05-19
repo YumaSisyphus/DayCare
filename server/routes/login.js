@@ -130,11 +130,13 @@ router.post("/", (req, res) => {
 
 router.get("/auth/status", (req, res) => {
   const token = req.cookies.token;
-  if (token) {
+  const refreshToken = req.cookies.refreshToken;
+  if (token && refreshToken) {
     try {
       const decoded = jwt.verify(token, secretKey);
       res.json({
         isAuthenticated: true,
+        isRefreshToken: true,
         user: {
           id: decoded.userId,
           username: decoded.username,
@@ -144,10 +146,12 @@ router.get("/auth/status", (req, res) => {
       });
     } catch (err) {
       console.error("Token verification error:", err);
-      res.json({ isAuthenticated: false, user: null });
+      res.json({ isAuthenticated: false, isRefreshToken: false, user: null });
     }
+  } else if (!token && refreshToken) {
+    res.json({ isAuthenticated: false, isRefreshToken: true, user: null });
   } else {
-    res.json({ isAuthenticated: false, user: null });
+    res.json({ isAuthenticated: false, isRefreshToken: false, user: null });
   }
 });
 
@@ -179,10 +183,14 @@ router.post("/token/refresh", (req, res) => {
       });
     } catch (err) {
       console.error("Refresh token verification error:", err);
-      res.status(403).json({ success: false, message: "Invalid refresh token" });
+      res
+        .status(403)
+        .json({ success: false, message: "Invalid refresh token" });
     }
   } else {
-    res.status(403).json({ success: false, message: "No refresh token provided" });
+    res
+      .status(403)
+      .json({ success: false, message: "No refresh token provided" });
   }
 });
 
