@@ -15,7 +15,7 @@ const useLogout = () => {
       setAuthState({ isAuthenticated: false, user: null });
 
       Cookies.remove("token");
-
+      
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);

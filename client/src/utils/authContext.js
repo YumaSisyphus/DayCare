@@ -17,11 +17,11 @@ export const AuthProvider = ({ children }) => {
           isAuthenticated: response.data.isAuthenticated,
           user: response.data.user,
         });
+        console.log(response);
       } catch (error) {
         setAuthState({ isAuthenticated: false, user: null });
       }
     };
-
     checkAuthStatus();
   }, []);
 

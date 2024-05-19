@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -9,28 +10,55 @@ import {
   TextField,
 } from "@mui/material";
 import { Colors } from "../utils/colors";
-import Children from "../images/ChildrenVector.png";
 import ChildrenPlaying from "../images/ChildrenPlaying.png";
+import ChildrenLearning from "../images/ChildrenLearning.png";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import PlayfulBg from "../images/PlayfulBackground.jpg";
+import Cookies from "js-cookie";
 import SchoolIcon from "@mui/icons-material/School";
 import ServiceBoxImg from "../images/geometricbg.png";
 import BedroomBabyIcon from "@mui/icons-material/BedroomBaby";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
-import ChildrenLearning from "../images/ChildrenLearning.png";
 import { theme } from "../utils/theme";
-import Cookies from "js-cookie";
 import Footer from "../components/Footer";
+import SessionModal from "../components/SessionModal";
+import axios from "axios";
+import { useAuth } from "../utils/authContext";
+import useLogout from "../utils/useLogout";
 
 const WelcomeScreen = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/Login");
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
   };
+
+  //this option works fully
+  
+  // useEffect(() => {
+  //   const checkAuthStatus = async () => {
+  //     try {
+  //       const response = await axios.get("/login/auth/status");
+  //       if (!response.data.isAuthenticated) {
+  //         handleOpenModal();
+  //       }
+  //     } catch (error) {
+  //       console.error("Couldn't authenticate you", error);
+  //     }
+  //   };
+  //   checkAuthStatus();
+  // }, []);
+
+  useEffect(() => {
+    console.log(authState); //when initial log in, authState.isAuthenticated = false. After refresh 1st time null, 2nd time true
+    if (!authState.isAuthenticated && authState.isAuthenticated != null) {
+      handleOpenModal();
+    }
+  }, [authState]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -358,6 +386,7 @@ const WelcomeScreen = () => {
         </Container>
       </Box>
       <Footer />
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 };

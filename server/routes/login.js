@@ -104,7 +104,7 @@ router.post("/", (req, res) => {
 
           res.cookie("token", accessToken, {
             httpOnly: true,
-            maxAge: 5000, // 1 hour  3600000
+            maxAge: 3600000, // 1 hour  3600000
           });
 
           res.cookie("refreshToken", refreshToken, {
