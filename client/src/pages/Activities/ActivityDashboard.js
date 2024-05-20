@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  TableSortLabel
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -37,7 +38,8 @@ function Activity() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewActivity, setIsNewActivity] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "Name", direction: "asc" });
 
   useEffect(() => {
     fetch("/activity")
@@ -147,8 +149,26 @@ function Activity() {
     setSnackbarOpen(false);
   };
 
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedActivities = [...activities].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
   // Filter activities based on search query
-  const filteredActivities = activities.filter(
+  const filteredActivities = sortedActivities.filter(
     (activity) =>
       activity.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       activity.Description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -203,10 +223,22 @@ function Activity() {
               <TableHead>
                 <TableRow>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Name</Typography>
+                    <TableSortLabel
+                      active={sortConfig.key === 'Name'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('Name')}
+                    >
+                      <Typography fontWeight={"bold"}>Name</Typography>
+                    </TableSortLabel>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Description</Typography>
+                    <TableSortLabel
+                      active={sortConfig.key === 'Description'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('Description')}
+                    >
+                      <Typography fontWeight={"bold"}>Description</Typography>
+                    </TableSortLabel>
                   </TableCell>
                   <TableCell>
                     <Typography fontWeight={"bold"} textAlign={"right"}>
