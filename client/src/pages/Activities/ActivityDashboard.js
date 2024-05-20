@@ -37,6 +37,7 @@ function Activity() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewActivity, setIsNewActivity] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
   useEffect(() => {
     fetch("/activity")
@@ -146,6 +147,13 @@ function Activity() {
     setSnackbarOpen(false);
   };
 
+  // Filter activities based on search query
+  const filteredActivities = activities.filter(
+    (activity) =>
+      activity.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.Description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
@@ -176,7 +184,14 @@ function Activity() {
               Add New
             </Button>
           </Box>
-
+          <TextField
+            fullWidth
+            label="Search Activities"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            margin="normal"
+          />
           <TableContainer
             component={Paper}
             sx={{
@@ -201,7 +216,7 @@ function Activity() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {activities.map((activity) => (
+                {filteredActivities.map((activity) => (
                   <TableRow key={activity.ActivityId}>
                     <TableCell>
                       <Typography variant="body1">{activity.Name}</Typography>
