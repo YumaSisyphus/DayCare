@@ -101,14 +101,26 @@ const Login = () => {
       .then((res) => {
         if (res.data.success) {
           Cookies.set("token", res.data.token, { expires: 1 / 24 });
-          navigate("/");
+          const userRole = res.data.user.role;
+          const userType = res.data.user.userType;
+
+          if (userRole === "Admin") {
+            navigate("/adminDashboard");
+          } else if (userRole === "Teacher") {
+            navigate("/staffDashboard");
+          } else if (userType === "parent") {
+            navigate("/parentDashboard");
+          } else {
+            navigate("/");
+          }
         } else {
           setErrorMessage(res.data.message);
           setOpenSnackbar(true);
         }
       })
       .catch((err) => {
-        setErrorMessage("An error occurred");
+        console.log(err);
+        setErrorMessage("An error occurred", err);
         setOpenSnackbar(true);
       });
   };

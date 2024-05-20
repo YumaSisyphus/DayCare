@@ -53,6 +53,12 @@ router.post("/", (req, res) => {
         success: true,
         message: "Login Successful",
         token: token,
+        user: {
+          id: staffData[0].StaffId,
+          username: staffData[0].Username,
+          role: staffData[0].Role, // This line is important
+          userType: "staff",
+        },
       });
     } else {
       // Check in parent table
@@ -88,6 +94,11 @@ router.post("/", (req, res) => {
             success: true,
             message: "Login Successful",
             token: token,
+            user: {
+              id: parentData[0].ParentId,
+              username: parentData[0].Username,
+              userType: "parent",
+            },
           });
         } else {
           return res.json({

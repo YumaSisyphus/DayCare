@@ -24,6 +24,7 @@ import ReportForm from "./pages/Report/ReportForm";
 import ContactUs from "./pages/ContactUs";
 import { AuthProvider } from "./utils/authContext";
 import RoleBasedRoute from "./utils/roleBasedRoute";
+import AuthRoute from "./utils/authRoute";
 
 function App() {
   return (
@@ -32,7 +33,14 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<WelcomeScreen />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={
+              <AuthRoute>
+                <Login />
+              </AuthRoute>
+            }
+          />
           <Route
             path="/DashboardParents"
             element={
