@@ -11,7 +11,8 @@ const RoleBasedRoute = ({ children, allowedRoles, allowedSpecificRoles }) => {
   }
 
   if (
-    !authState.isAuthenticated ||
+    (!authState.isAuthenticated && !authState.isRefreshToken) ||
+    (authState.isAuthenticated && !authState.isRefreshToken) ||
     !allowedRoles.includes(authState.user.userType) ||
     !allowedSpecificRoles.includes(authState.user.role)
   ) {

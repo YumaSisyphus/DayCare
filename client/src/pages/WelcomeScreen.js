@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -9,29 +10,37 @@ import {
   TextField,
 } from "@mui/material";
 import { Colors } from "../utils/colors";
-import Children from "../images/ChildrenVector.png";
 import ChildrenPlaying from "../images/ChildrenPlaying.png";
-import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import PlayfulBg from "../images/PlayfulBackground.jpg";
+import ChildrenLearning from "../images/ChildrenLearning.png";
 import SchoolIcon from "@mui/icons-material/School";
 import ServiceBoxImg from "../images/geometricbg.png";
 import BedroomBabyIcon from "@mui/icons-material/BedroomBaby";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
-import ChildrenLearning from "../images/ChildrenLearning.png";
 import { theme } from "../utils/theme";
-import Cookies from "js-cookie";
 import Footer from "../components/Footer";
+import SessionModal from "../components/SessionModal";
+import useLogout from "../utils/useLogout";
+import useCheckAuth from "../utils/useCheckAuth";
 
 const WelcomeScreen = () => {
-  const navigate = useNavigate();
+// needed for refresh token implementation
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    navigate("/Login");
+  const handleOpenModal = () => {
+    setModalOpen(true);
   };
 
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
+//
   return (
     <ThemeProvider theme={theme}>
       <Box width={"100%"} mb={5}>
@@ -358,6 +367,7 @@ const WelcomeScreen = () => {
         </Container>
       </Box>
       <Footer />
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 };

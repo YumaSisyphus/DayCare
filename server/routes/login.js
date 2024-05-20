@@ -9,6 +9,7 @@ router.use(express.json());
 router.use(cookieParser());
 
 const secretKey = crypto.randomBytes(64).toString("hex");
+const refreshTokenSecretKey = crypto.randomBytes(64).toString("hex");
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -31,7 +32,7 @@ router.post("/", (req, res) => {
     }
 
     if (staffData && staffData.length > 0) {
-      const token = jwt.sign(
+      const accessToken = jwt.sign(
         {
           userId: staffData[0].StaffId,
           username: staffData[0].Username,
@@ -39,19 +40,34 @@ router.post("/", (req, res) => {
           role: staffData[0].Role,
         },
         secretKey,
-        {
-          expiresIn: "1h",
-        }
+        { expiresIn: "1h" }
       );
 
-      res.cookie("token", token, {
+      const refreshToken = jwt.sign(
+        {
+          userId: staffData[0].StaffId,
+          username: staffData[0].Username,
+          userType: "staff",
+          role: staffData[0].Role,
+        },
+        refreshTokenSecretKey,
+        { expiresIn: "7d" }
+      );
+
+      res.cookie("token", accessToken, {
         httpOnly: true,
         maxAge: 3600000, // 1 hour
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 604800000, // 7 days
       });
 
       return res.json({
         success: true,
         message: "Login Successful",
+        token: accessToken,
         token: token,
         user: {
           id: staffData[0].StaffId,
@@ -73,26 +89,40 @@ router.post("/", (req, res) => {
         }
 
         if (parentData && parentData.length > 0) {
-          const token = jwt.sign(
+          const accessToken = jwt.sign(
             {
               userId: parentData[0].ParentId,
               username: parentData[0].Username,
               userType: "parent",
             },
             secretKey,
-            {
-              expiresIn: "1h",
-            }
+            { expiresIn: "1h" }
           );
 
-          res.cookie("token", token, {
+          const refreshToken = jwt.sign(
+            {
+              userId: parentData[0].ParentId,
+              username: parentData[0].Username,
+              userType: "parent",
+            },
+            refreshTokenSecretKey,
+            { expiresIn: "7d" }
+          );
+
+          res.cookie("token", accessToken, {
             httpOnly: true,
-            maxAge: 3600000, // 1 hour
+            maxAge: 3600000, // 1 hour  3600000
+          });
+
+          res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            maxAge: 604800000, // 7 days
           });
 
           return res.json({
             success: true,
             message: "Login Successful",
+            token: accessToken,
             token: token,
             user: {
               id: parentData[0].ParentId,
@@ -113,11 +143,13 @@ router.post("/", (req, res) => {
 
 router.get("/auth/status", (req, res) => {
   const token = req.cookies.token;
-  if (token) {
+  const refreshToken = req.cookies.refreshToken;
+  if (token && refreshToken) {
     try {
       const decoded = jwt.verify(token, secretKey);
       res.json({
         isAuthenticated: true,
+        isRefreshToken: true,
         user: {
           id: decoded.userId,
           username: decoded.username,
@@ -127,15 +159,57 @@ router.get("/auth/status", (req, res) => {
       });
     } catch (err) {
       console.error("Token verification error:", err);
-      res.json({ isAuthenticated: false, user: null });
+      res.json({ isAuthenticated: false, isRefreshToken: false, user: null });
+    }
+  } else if (!token && refreshToken) {
+    res.json({ isAuthenticated: false, isRefreshToken: true, user: null });
+  } else {
+    res.json({ isAuthenticated: false, isRefreshToken: false, user: null });
+  }
+});
+
+router.post("/token/refresh", (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (refreshToken) {
+    try {
+      const decoded = jwt.verify(refreshToken, refreshTokenSecretKey);
+      const newAccessToken = jwt.sign(
+        {
+          userId: decoded.userId,
+          username: decoded.username,
+          userType: decoded.userType,
+          role: decoded.role,
+        },
+        secretKey,
+        { expiresIn: "1h" }
+      );
+
+      res.cookie("token", newAccessToken, {
+        httpOnly: true,
+        maxAge: 3600000, // 1 hour
+      });
+
+      res.json({
+        success: true,
+        message: "Token Refreshed",
+        token: newAccessToken,
+      });
+    } catch (err) {
+      console.error("Refresh token verification error:", err);
+      res
+        .status(403)
+        .json({ success: false, message: "Invalid refresh token" });
     }
   } else {
-    res.json({ isAuthenticated: false, user: null });
+    res
+      .status(403)
+      .json({ success: false, message: "No refresh token provided" });
   }
 });
 
 router.post("/logout", (req, res) => {
   res.clearCookie("token");
+  res.clearCookie("refreshToken");
   res.json({ success: true, message: "Logout successful" });
 });
 

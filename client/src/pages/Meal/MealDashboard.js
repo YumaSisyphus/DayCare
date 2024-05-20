@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,7 +37,8 @@ function Meal() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewMeal, setIsNewMeal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetch("/meal/getMeal")
@@ -148,6 +150,10 @@ function Meal() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <ThemeProvider theme={theme}>
     <DashboardSidebar />
@@ -208,34 +214,45 @@ function Meal() {
                 </TableRow>
               </TableHead>
               <TableBody>
-  {filteredMeals.map((meal) => (
-    <TableRow key={meal.MealId}>
-      <TableCell>
-        <Typography variant="body1">
-          {meal.Name}
-        </Typography>
-      </TableCell>
-      <TableCell>
-        <IconButton
-          color="primary"
-          aria-label="edit"
-          onClick={() => handleEdit(meal)}
-        >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          color="primary"
-          aria-label="delete"
-          onClick={() => handleDelete(meal.MealId)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
+                {(rowsPerPage > 0
+                  ? meals.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : meals
+                ).map((meal) => (
+                  <TableRow key={meal.MealId}>
+                    <TableCell>
+                      <Typography variant="body1">{meal.Name}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="primary"
+                        aria-label="edit"
+                        onClick={() => handleEdit(meal)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        color="primary"
+                        aria-label="delete"
+                        onClick={() => handleDelete(meal.MealId)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </TableContainer>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(meals.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewMeal ? "Add New Meal" : "Edit Meal"}

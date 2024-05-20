@@ -1,14 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../utils/authContext";
 
-const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
-  const [authState, setAuthState] = useState({
-    isAuthenticated: null,
-    isRefreshToken: null,
-    user: null,
-  });
+const useCheckAuth = () => {
+  const [loading, setLoading] = useState(true);
+  const { authState, setAuthState } = useAuth();
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -19,23 +15,20 @@ export const AuthProvider = ({ children }) => {
           isRefreshToken: response.data.isRefreshToken,
           user: response.data.user,
         });
-        console.log(response);
       } catch (error) {
         setAuthState({
           isAuthenticated: false,
           isRefreshToken: false,
           user: null,
         });
+      } finally {
+        setLoading(false);
       }
     };
     checkAuthStatus();
-  }, []);
+  }, [setAuthState]);
 
-  return (
-    <AuthContext.Provider value={{ authState, setAuthState }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return { authState, loading };
 };
 
-export const useAuth = () => useContext(AuthContext);
+export default useCheckAuth;

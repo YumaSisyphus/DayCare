@@ -23,6 +23,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -44,6 +45,8 @@ function ClassDashboard() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewClass, setIsNewClass] = useState(false);
   const [staff, setStaff] = useState([]);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetch("/class")
@@ -163,6 +166,10 @@ function ClassDashboard() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSchoolSidebar />
@@ -221,7 +228,13 @@ function ClassDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {classes.map((cls) => (
+                {(rowsPerPage > 0
+                  ? classes.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : classes
+                ).map((cls) => (
                   <TableRow key={cls.ClassId}>
                     <TableCell>
                       <Typography variant="body1">{cls.Name}</Typography>
@@ -261,7 +274,13 @@ function ClassDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
-
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(classes.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewClass ? "Add New Class" : "Edit Class"}

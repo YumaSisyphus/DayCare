@@ -12,9 +12,14 @@ const useLogout = () => {
     try {
       await axios.post("/login/logout");
 
-      setAuthState({ isAuthenticated: false, user: null });
+      setAuthState({
+        isAuthenticated: false,
+        isRefreshToken: false,
+        user: null,
+      });
 
       Cookies.remove("token");
+      Cookies.remove("refreshToken");
 
       navigate("/login");
     } catch (error) {

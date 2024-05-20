@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -39,6 +40,8 @@ function ContactForm() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewContactForm, setIsNewContactForm] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetch("/contactform/getContactForm")
@@ -151,6 +154,10 @@ function ContactForm() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
@@ -210,7 +217,13 @@ function ContactForm() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {contactforms.map((contactform) => (
+                {(rowsPerPage > 0
+                  ? contactforms.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : contactforms
+                ).map((contactform) => (
                   <TableRow key={contactform.ContactFormId}>
                     <TableCell>
                       <Typography variant="body1">
@@ -254,6 +267,13 @@ function ContactForm() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(contactforms.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewContactForm ? "Add New Contact" : "Edit Contact"}
