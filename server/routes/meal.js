@@ -16,11 +16,11 @@ router.get("/getMeal", (req, res) => {
   db.query(sql, [], (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Fetch meal failed" });
+      return res.json({ success: false, message: "Fetch meal data failed" });
     } else {
       return res.json({
         success: true,
-        message: "Fetch meal succesful",
+        message: "Fetch meal data succesful",
         data,
       });
     }
@@ -29,15 +29,15 @@ router.get("/getMeal", (req, res) => {
 
 router.get("/getMealId", (req, res) => {
   const sql = "SELECT * FROM meal WHERE MealId=?";
-  const values = [req.body.parentId];
+  const values = [req.body.id];
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Fetch parent failed" });
+      return res.json({ success: false, message: "Fetch meal data failed" });
     } else {
       return res.json({
         success: true,
-        message: "Fetch parent succesful",
+        message: "Fetch meal data succesful",
         data,
       });
     }
@@ -46,12 +46,12 @@ router.get("/getMealId", (req, res) => {
 
 router.put("/updateMeal/:id", (req, res) => {
   const { id } = req.params;
-  const { Name } = req.body;
+  const { Name} = req.body;
 
   const query =
-    "UPDATE meal SET Name = ? WHERE MealId = ?";
+    "UPDATE meal SET Name = ?";
 
-  db.query(query, [Name,  id], (err, result) => {
+  db.query(query, [Name, id], (err, result) => {
     if (err) {
       console.error("Error updating meal:", err);
       return res
@@ -71,60 +71,51 @@ router.put("/updateMeal/:id", (req, res) => {
 });
 
 router.post("/createMeal", (req, res) => {
-  const { Name} = req.body;
-
-  const query =
+  const sql =
     "INSERT INTO meal (Name) VALUES (?)";
-
-  db.query(query, [Name], (err, result) => {
+  const values = [
+    req.body.name,
+ 
+  ];
+  db.query(sql, [values], (err, result) => {
     if (err) {
-      console.error("Error adding new meal:", err);
-      return res
-        .status(500)
-        .json({ message: "Error adding new meal", error: err });
-    }
-
-    if (result.affectedRows > 0) {
-      return res.status(200).json({
-        message: "Meal added successfully",
-        newMeal: {
-          MealId: result.insertId,
-          Name: Name,
-     
-        },
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Create meal  failed",
       });
     } else {
-      return res.status(400).json({ message: "Failed to add new meal" });
+      const insertedMeal = {
+        id: result.insertId,
+        name: req.body.name,
+     
+      };
+      return res.json({
+        success: true,
+        message: "Create meal successful",
+        data: insertedMeal,
+      });
     }
   });
 });
 
-router.delete("/deleteFood/:mealId", (req, res) => {
+router.delete("/deleteMeal/:MealId", (req, res) => {
   const deleteMealsSql = "DELETE FROM food_calendar_meal WHERE MealId=?";
   const deleteMealSql = "DELETE FROM meal WHERE MealId=?";
 
-  const values = [req.params.foodId];
+  const values = [req.params.MealId];
 
-  db.query(deleteMealsSql, values, (err, data) => {
+  db.query(deleteMealSql, values, (err, data) => {
     if (err) {
       console.error("Database error:", err);
       return res
         .status(500)
-        .json({ success: false, message: "Delete meals failed" });
+        .json({ success: false, message: "Delete meal failed" });
+    } else {
+      return res
+        .status(200)
+        .json({ success: true, message: "Delete meal successful" });
     }
-
-    db.query(deleteMealSql, values, (err, data) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Delete meal failed" });
-      } else {
-        return res
-          .status(200)
-          .json({ success: true, message: "Delete meal successful" });
-      }
-    });
   });
 });
 

@@ -28,7 +28,7 @@ import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 
-function MealDashboard() {
+function Meal() {
   const [meals, setMeals] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState(null);
@@ -36,6 +36,7 @@ function MealDashboard() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewMeal, setIsNewMeal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/meal/getMeal")
@@ -44,6 +45,15 @@ function MealDashboard() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
+
+  const filteredMeals = meals.filter((meal) =>
+    meal.Name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
   const handleAddNew = () => {
     setSelectedMeal(null);
     setEditedName("");
@@ -76,6 +86,7 @@ function MealDashboard() {
       },
       body: JSON.stringify({
         Name: editedName,
+
       }),
     })
       .then((response) => response.json())
@@ -95,6 +106,7 @@ function MealDashboard() {
                   ? {
                       ...meal,
                       Name: editedName,
+                
                     }
                   : meal
               )
@@ -113,8 +125,8 @@ function MealDashboard() {
       });
   };
 
-  const handleDelete = (mealId) => {
-    fetch(`/meal/deleteFood/${mealId}`, {
+  const handleDelete = (MealId) => {
+    fetch(`meal/deleteMeal/${MealId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
@@ -122,7 +134,11 @@ function MealDashboard() {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
         if (data.success) {
-          setMeals(meals.filter((meal) => meal.MealId !== mealId));
+          setMeals(
+            meals.filter(
+              (meal) => meal.MealId !== MealId
+            )
+          );
         }
       })
       .catch((error) => console.error("Error deleting meal:", error));
@@ -134,34 +150,42 @@ function MealDashboard() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
-      <Box
-        sx={{
-          bgcolor: Colors.secondary,
-          backgroundImage: `url(${DashboardBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        height={"100vh"}
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <Container>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Typography variant="h4" gutterBottom>
-              Meal Dashboard
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
-          </Box>
+    <DashboardSidebar />
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      height={"100vh"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
+    >
+      <Container>
+        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+          <Typography variant="h4" gutterBottom>
+            Meal Dashboard
+          </Typography>
+          <Box display="flex" alignItems="center" sx={{ marginBottom: 2 }}>
+  <TextField
+    label="Search"
+    variant="outlined"
+    value={searchQuery}
+    onChange={handleSearch}
+    sx={{ mr: 2 }}
+  />
+  <Button
+    variant="contained"
+    color="primary"
+    startIcon={<AddIcon />}
+    onClick={handleAddNew}
+  >
+    Add New
+  </Button>
+</Box>
+</Box>
 
           <TableContainer
             component={Paper}
@@ -176,36 +200,40 @@ function MealDashboard() {
                   <TableCell>
                     <Typography fontWeight={"bold"}>Name</Typography>
                   </TableCell>
+                
+          
                   <TableCell>
                     <Typography fontWeight={"bold"}>Actions</Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {meals.map((meal) => (
-                  <TableRow key={meal.MealId}>
-                    <TableCell>
-                      <Typography variant="body1">{meal.Name}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        onClick={() => handleEdit(meal)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="primary"
-                        aria-label="delete"
-                        onClick={() => handleDelete(meal.MealId)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+  {filteredMeals.map((meal) => (
+    <TableRow key={meal.MealId}>
+      <TableCell>
+        <Typography variant="body1">
+          {meal.Name}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <IconButton
+          color="primary"
+          aria-label="edit"
+          onClick={() => handleEdit(meal)}
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          color="primary"
+          aria-label="delete"
+          onClick={() => handleDelete(meal.MealId)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
             </Table>
           </TableContainer>
           <Dialog open={openModal} onClose={handleModalClose}>
@@ -218,8 +246,11 @@ function MealDashboard() {
                 label="Name"
                 fullWidth
                 value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
+                onChange={(c) => setEditedName(c.target.value)}
               />
+       
+
+    
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
@@ -250,5 +281,4 @@ function MealDashboard() {
     </ThemeProvider>
   );
 }
-
-export default MealDashboard;
+export default Meal;

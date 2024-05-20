@@ -27,6 +27,9 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import { MenuItem } from "@mui/material";
+
+
 
 function Food() {
   const [foods, setFoods] = useState([]);
@@ -38,13 +41,36 @@ function Food() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewFood, setIsNewFood] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState("");
+  const [allergens, setAllergens] = useState([]);
+
 
   useEffect(() => {
     fetch("/food/getFood")
       .then((response) => response.json())
-      .then((data) => setFoods(data.data))
+      .then((data) => {
+        setFoods(data.data);
+  
+   
+        const allergens = data.data.reduce((allergens, food) => {
+          const foodAllergens = food.Allergens.split(',').map((allergen) => allergen.trim());
+          return [...new Set([...allergens, ...foodAllergens])];
+        }, []);
+  
+        setAllergens(allergens);
+      })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+  const filteredFoods = foods
+    .filter((food) =>
+      food.Name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .filter(
+      (food) =>
+        selectedAllergenFilter === "" ||
+        food.Allergens.toLowerCase().includes(selectedAllergenFilter.toLowerCase())
+    );
 
   const handleAddNew = () => {
     setSelectedFood(null);
@@ -142,88 +168,78 @@ function Food() {
     setSnackbarOpen(false);
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleAllergenFilterChange = (e) => {
+    setSelectedAllergenFilter(e.target.value);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
       <Box
-        sx={{
-          bgcolor: Colors.secondary,
-          backgroundImage: `url(${DashboardBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        height={"100vh"}
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
+  sx={{
+    bgcolor: Colors.secondary,
+    backgroundImage: `url(${DashboardBg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+  minHeight="100vh"
+  display="flex"
+  justifyContent="center"
+  alignItems="center"
+>
         <Container>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Typography variant="h4" gutterBottom>
-              Food Dashboard
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
-          </Box>
-
-          <TableContainer
-            component={Paper}
-            sx={{
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.6)",
-            }}
-          >
+          <Typography variant="h4" gutterBottom>
+            Food Dashboard
+          </Typography>
+          <TextField
+  label="Search"
+  variant="outlined"
+  value={searchQuery}
+  onChange={handleSearch}
+  fullWidth
+  InputLabelProps={{ shrink: true }}
+  sx={{ width: "20%", marginRight: "16px" }} // Adjust width and margins as needed
+/>
+<TextField
+  select
+  label="Filter by Allergen"
+  variant="outlined"
+  value={selectedAllergenFilter}
+  onChange={handleAllergenFilterChange}
+  fullWidth
+  InputLabelProps={{ shrink: true }}
+  sx={{ width: "40%" }} 
+>
+  <MenuItem value="">All</MenuItem>
+  {allergens.map((allergen) => (
+    <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
+  ))}
+</TextField>
+          <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Typography fontWeight={"bold"}>Name</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight={"bold"}>Description</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight={"bold"}>Allergens</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight={"bold"}>Actions</Typography>
-                  </TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Allergens</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {foods.map((food) => (
+                {filteredFoods.map((food) => (
                   <TableRow key={food.FoodId}>
+                    <TableCell>{food.Name}</TableCell>
+                    <TableCell>{food.Description}</TableCell>
+                    <TableCell>{food.Allergens}</TableCell>
                     <TableCell>
-                      <Typography variant="body1">{food.Name}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">
-                        {food.Description}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{food.Allergens}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        color="primary"
-                        aria-label="edit"
-                        onClick={() => handleEdit(food)}
-                      >
+                      <IconButton onClick={() => handleEdit(food)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton
-                        color="primary"
-                        aria-label="delete"
-                        onClick={() => handleDelete(food.FoodId)}
-                      >
+                      <IconButton onClick={() => handleDelete(food.FoodId)}>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -243,23 +259,6 @@ function Food() {
                 fullWidth
                 value={editedName}
                 onChange={(e) => setEditedName(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Description"
-                fullWidth
-                multiline
-                rows={4}
-                value={editedDescription}
-                onChange={(e) => setEditedDescription(e.target.value)}
-              />
-
-              <TextField
-                margin="normal"
-                label="Allergens"
-                fullWidth
-                value={editedAllergens}
-                onChange={(e) => setEditedAllergens(e.target.value)}
               />
             </DialogContent>
             <DialogActions>
