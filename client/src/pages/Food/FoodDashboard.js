@@ -20,6 +20,7 @@ import {
   TextField,
   Snackbar,
   Pagination,
+  MenuItem
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -28,9 +29,6 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
-import { MenuItem } from "@mui/material";
-
-
 
 function Food() {
   const [foods, setFoods] = useState([]);
@@ -44,7 +42,7 @@ function Food() {
   const [isNewFood, setIsNewFood] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [searchQuery, setSearchQuery] = useState(""); 
+  const [nameSearchQuery, setNameSearchQuery] = useState("");
   const [selectedAllergenFilter, setSelectedAllergenFilter] = useState(""); 
   const [allergens, setAllergens] = useState([]);
 
@@ -53,18 +51,16 @@ function Food() {
       .then((response) => response.json())
       .then((data) => {
         setFoods(data.data);
-  
-   
+
         const allergens = data.data.reduce((allergens, food) => {
           const foodAllergens = food.Allergens.split(',').map((allergen) => allergen.trim());
           return [...new Set([...allergens, ...foodAllergens])];
         }, []);
-  
+
         setAllergens(allergens);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
-
 
   const handleAddNew = () => {
     setSelectedFood(null);
@@ -74,8 +70,6 @@ function Food() {
     setIsNewFood(true);
     setOpenModal(true);
   };
-
-
 
   const handleEdit = (food) => {
     setSelectedFood(food);
@@ -168,72 +162,75 @@ function Food() {
     setSnackbarOpen(false);
   };
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+  const handleNameSearch = (e) => {
+    setNameSearchQuery(e.target.value);
   };
 
   const handleAllergenFilterChange = (e) => {
     setSelectedAllergenFilter(e.target.value);
   };
-  const filteredFoods = foods
-    .filter((food) =>
-      food.Name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedAllergenFilter === "" ||
-      food.Allergens.toLowerCase().includes(selectedAllergenFilter.toLowerCase()))
-    );
 
+  const nameFilter = foods.filter((food) =>
+    food.Name.toLowerCase().includes(nameSearchQuery.toLowerCase())
+  );
+
+  const allergenFilter = nameFilter.filter((food) =>
+    selectedAllergenFilter === "" ||
+    food.Allergens.toLowerCase().includes(selectedAllergenFilter.toLowerCase())
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
       <Box
-  sx={{
-    bgcolor: Colors.secondary,
-    backgroundImage: `url(${DashboardBg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
-  minHeight="100vh"
-  display="flex"
-  justifyContent="center"
-  alignItems="center"
->
-<Container>
-  <Typography variant="h4" gutterBottom>
-    Food Dashboard
-  </Typography>
-  <TextField
-    label="Search"
-    variant="outlined"
-    value={searchQuery}
-    onChange={handleSearch}
-    fullWidth
-    InputLabelProps={{ shrink: true }}
-    sx={{ width: "20%", marginRight: "16px" }}
-  />
-  <TextField
-    select
-    label="Filter by Allergen"
-    variant="outlined"
-    value={selectedAllergenFilter}
-    onChange={handleAllergenFilterChange}
-    fullWidth
-    InputLabelProps={{ shrink: true }}
-    sx={{ width: "40%" }}
-  >
-    <MenuItem value="">All</MenuItem>
-    {allergens.map((allergen) => (
-      <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
-    ))}
-  </TextField>
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<AddIcon />}
-    onClick={handleAddNew}
-  >
-    Add New
-  </Button>
+        sx={{
+          bgcolor: Colors.secondary,
+          backgroundImage: `url(${DashboardBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        minHeight="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Container>
+          <Typography variant="h4" gutterBottom>
+            Food Dashboard
+          </Typography>
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            value={nameSearchQuery}
+            onChange={handleNameSearch}
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            sx={{ marginBottom: "16px" }}
+          />
+          <TextField
+            select
+            label="Filter by Allergen"
+            variant="outlined"
+            value={selectedAllergenFilter}
+            onChange={handleAllergenFilterChange}
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            sx={{ marginBottom: "16px" }}
+          >
+            <MenuItem value="">All</MenuItem>
+            {allergens.map((allergen) => (
+              <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
+            ))}
+          </TextField>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAddNew}
+            sx={{ marginBottom: "16px" }}
+          >
+            Add New
+          </Button>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -245,13 +242,7 @@ function Food() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
-                  ? foods.slice(
-                      (page - 1) * rowsPerPage,
-                      (page - 1) * rowsPerPage + rowsPerPage
-                    )
-                  : foods
-                ).map((food) => (
+                {allergenFilter.map((food) => (
                   <TableRow key={food.FoodId}>
                     <TableCell>{food.Name}</TableCell>
                     <TableCell>{food.Description}</TableCell>
@@ -277,42 +268,41 @@ function Food() {
             />
           </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
-  <DialogTitle>
-    {isNewFood ? "Add New Food" : "Edit Food"}
-  </DialogTitle>
-  <DialogContent>
-    <TextField
-      margin="normal"
-      label="Name"
-      fullWidth
-      value={editedName}
-      onChange={(e) => setEditedName(e.target.value)}
-    />
-    <TextField
-      margin="normal"
-      label="Description"
-      fullWidth
-      value={editedDescription}
-      onChange={(e) => setEditedDescription(e.target.value)}
-    />
-    <TextField
-      margin="normal"
-      label="Allergens"
-      fullWidth
-      value={editedAllergens}
-      onChange={(e) => setEditedAllergens(e.target.value)}
-    />
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={handleModalClose} color="primary">
-      Cancel
-    </Button>
-    <Button onClick={handleSaveChanges} color="primary">
-      Save Changes
-    </Button>
-  </DialogActions>
-</Dialog>
-
+            <DialogTitle>
+              {isNewFood ? "Add New Food" : "Edit Food"}
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                margin="normal"
+                label="Name"
+                fullWidth
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                label="Description"
+                fullWidth
+                value={editedDescription}
+                onChange={(e) => setEditedDescription(e.target.value)}
+              />
+              <TextField
+                margin="normal"
+                label="Allergens"
+                fullWidth
+                value={editedAllergens}
+                onChange={(e) => setEditedAllergens(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleModalClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleSaveChanges} color="primary">
+                Save Changes
+              </Button>
+            </DialogActions>
+          </Dialog>
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={6000}
