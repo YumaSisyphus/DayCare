@@ -46,6 +46,8 @@ function Staff() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewStaff, setIsNewStaff] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  
 
   useEffect(() => {
     setLoading(true);
@@ -202,6 +204,16 @@ function Staff() {
     setSnackbarOpen(false);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredStaffList = staffList.filter((staff) =>
+    `${staff.Name} ${staff.Surname}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
@@ -218,20 +230,29 @@ function Staff() {
         alignItems={"center"}
       >
         <Container>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Typography variant="h4" gutterBottom>
-              Staff Dashboard
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
-          </Box>
+ 
+<Box display={"flex"} justifyContent={"space-between"} mb={2} marginTop={15}>
+  <Typography variant="h4" gutterBottom>
+    Staff Dashboard
+  </Typography>
+  <Button
+    variant="contained"
+    color="primary"
+    startIcon={<AddIcon />}
+    onClick={handleAddNew}
+    sx={{ height: "20%" }}
+  >
+    Add New
+  </Button>
+</Box>
+
+<TextField
+  margin="normal"
+  label="Search Staff"
+  value={searchTerm}
+  onChange={handleSearchChange}
+  sx={{ width: "200px" }} 
+/>
 
           {loading ? (
             <Typography>Loading...</Typography>
@@ -284,62 +305,28 @@ function Staff() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {staffList.map((member) => (
-                    <TableRow key={member.StaffId}>
-                      <TableCell>
-                        <Typography variant="body1">{member.Name}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {member.Surname}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {member.Birthday}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{member.Gender}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{member.Email}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {member.PhoneNumber}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{member.Role}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {member.Username}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {member.Address}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {member.Password}
-                        </Typography>
-                      </TableCell>
+                  {filteredStaffList.map((staff) => (
+                    <TableRow key={staff.StaffId}>
+                      <TableCell>{staff.Name}</TableCell>
+                      <TableCell>{staff.Surname}</TableCell>
+                      <TableCell>{staff.Birthday}</TableCell>
+                      <TableCell>{staff.Gender}</TableCell>
+                      <TableCell>{staff.Email}</TableCell>
+                      <TableCell>{staff.PhoneNumber}</TableCell>
+                      <TableCell>{staff.Role}</TableCell>
+                      <TableCell>{staff.Username}</TableCell>
+                      <TableCell>{staff.Address}</TableCell>
+                      <TableCell>{staff.Password}</TableCell>
                       <TableCell>
                         <IconButton
                           color="primary"
-                          aria-label="edit"
-                          onClick={() => handleEdit(member)}
+                          onClick={() => handleEdit(staff)}
                         >
                           <EditIcon />
                         </IconButton>
                         <IconButton
-                          color="primary"
-                          aria-label="delete"
-                          onClick={() => handleDelete(member.StaffId)}
+                          color="secondary"
+                          onClick={() => handleDelete(staff.StaffId)}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -350,113 +337,98 @@ function Staff() {
               </Table>
             </TableContainer>
           )}
-
-          <Dialog open={openModal} onClose={handleModalClose}>
-            <DialogTitle>
-              {isNewStaff ? "Add New Staff" : "Edit Staff"}
-            </DialogTitle>
-            <DialogContent>
-              <TextField
-                margin="normal"
-                label="Name"
-                fullWidth
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Surname"
-                fullWidth
-                value={editedSurname}
-                onChange={(e) => setEditedSurname(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Birthday"
-                type="date"
-                fullWidth
-                value={editedBirthday}
-                onChange={(e) => setEditedBirthday(e.target.value)}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                margin="normal"
-                label="Gender"
-                fullWidth
-                value={editedGender}
-                onChange={(e) => setEditedGender(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Email"
-                fullWidth
-                value={editedEmail}
-                onChange={(e) => setEditedEmail(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Phone Number"
-                fullWidth
-                value={editedPhoneNumber}
-                onChange={(e) => setEditedPhoneNumber(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Role"
-                fullWidth
-                value={editedRole}
-                onChange={(e) => setEditedRole(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Username"
-                fullWidth
-                value={editedUsername}
-                onChange={(e) => setEditedUsername(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Address"
-                fullWidth
-                value={editedAddress}
-                onChange={(e) => setEditedAddress(e.target.value)}
-              />
-              <TextField
-                margin="normal"
-                label="Password"
-                fullWidth
-                type="password"
-                value={editedPassword}
-                onChange={(e) => setEditedPassword(e.target.value)}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleSaveChanges} color="primary">
-                Save Changes
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={6000}
-            onClose={handleCloseSnackbar}
-            message={snackbarMessage}
-            action={
-              <Button
-                color="secondary"
-                size="small"
-                onClick={handleCloseSnackbar}
-              >
-                Close
-              </Button>
-            }
-          />
         </Container>
+        <Dialog open={openModal} onClose={handleModalClose}>
+          <DialogTitle>
+            {selectedStaff ? "Edit Staff" : "Add New Staff"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              margin="normal"
+              label="Name"
+              fullWidth
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Surname"
+              fullWidth
+              value={editedSurname}
+              onChange={(e) => setEditedSurname(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Birthday"
+              fullWidth
+              value={editedBirthday}
+              onChange={(e) => setEditedBirthday(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Gender"
+              fullWidth
+              value={editedGender}
+              onChange={(e) => setEditedGender(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Email"
+              fullWidth
+              value={editedEmail}
+              onChange={(e) => setEditedEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="PhoneNumber"
+              fullWidth
+              value={editedPhoneNumber}
+              onChange={(e) => setEditedPhoneNumber(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Role"
+              fullWidth
+              value={editedRole}
+              onChange={(e) => setEditedRole(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Username"
+              fullWidth
+              value={editedUsername}
+              onChange={(e) => setEditedUsername(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Address"
+              fullWidth
+              value={editedAddress}
+              onChange={(e) => setEditedAddress(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              label="Password"
+              fullWidth
+              value={editedPassword}
+              onChange={(e) => setEditedPassword(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleModalClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleSaveChanges} color="primary">
+              Save Changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          message={snackbarMessage}
+        />
       </Box>
     </ThemeProvider>
   );
