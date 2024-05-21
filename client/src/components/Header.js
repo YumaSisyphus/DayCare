@@ -229,6 +229,11 @@ function ResponsiveAppBar() {
             alignItems={"center"}
             gap={3}
           >
+            {authState.isAuthenticated && authState.user.role === "Teacher" && (
+              <a href={"/teacherhome"} className="link-header">
+                Home
+              </a>
+            )}
             {/* {authState.isAuthenticated && authState.user.role === "Admin" && ( */}
             <a href={"/activities"} className="link-header">
               Dashboard

@@ -68,7 +68,6 @@ router.post("/", (req, res) => {
         success: true,
         message: "Login Successful",
         token: accessToken,
-        token: token,
         user: {
           id: staffData[0].StaffId,
           username: staffData[0].Username,
@@ -123,7 +122,6 @@ router.post("/", (req, res) => {
             success: true,
             message: "Login Successful",
             token: accessToken,
-            token: token,
             user: {
               id: parentData[0].ParentId,
               username: parentData[0].Username,
