@@ -32,7 +32,7 @@ const ContactUs = () => {
         formData
       );
       if (response.data.success) {
-        // Contact form submitted successfully
+     
         console.log("Contact form submitted successfully!");
       }
     } catch (error) {
