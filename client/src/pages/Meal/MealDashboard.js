@@ -39,6 +39,7 @@ function Meal() {
   const [isNewMeal, setIsNewMeal] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/meal/getMeal")

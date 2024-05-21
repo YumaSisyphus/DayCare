@@ -44,6 +44,9 @@ function Food() {
   const [isNewFood, setIsNewFood] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState(""); 
+  const [allergens, setAllergens] = useState([]);
 
   useEffect(() => {
     fetch("/food/getFood")
