@@ -61,15 +61,7 @@ function Food() {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
-  const filteredFoods = foods
-    .filter((food) =>
-      food.Name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter(
-      (food) =>
-        selectedAllergenFilter === "" ||
-        food.Allergens.toLowerCase().includes(selectedAllergenFilter.toLowerCase())
-    );
+
 
   const handleAddNew = () => {
     setSelectedFood(null);
@@ -79,6 +71,8 @@ function Food() {
     setIsNewFood(true);
     setOpenModal(true);
   };
+
+
 
   const handleEdit = (food) => {
     setSelectedFood(food);
@@ -178,6 +172,13 @@ function Food() {
   const handleAllergenFilterChange = (e) => {
     setSelectedAllergenFilter(e.target.value);
   };
+  const filteredFoods = foods
+    .filter((food) =>
+      food.Name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedAllergenFilter === "" ||
+      food.Allergens.toLowerCase().includes(selectedAllergenFilter.toLowerCase()))
+    );
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -194,34 +195,42 @@ function Food() {
   justifyContent="center"
   alignItems="center"
 >
-        <Container>
-          <Typography variant="h4" gutterBottom>
-            Food Dashboard
-          </Typography>
-          <TextField
-  label="Search"
-  variant="outlined"
-  value={searchQuery}
-  onChange={handleSearch}
-  fullWidth
-  InputLabelProps={{ shrink: true }}
-  sx={{ width: "20%", marginRight: "16px" }} // Adjust width and margins as needed
-/>
-<TextField
-  select
-  label="Filter by Allergen"
-  variant="outlined"
-  value={selectedAllergenFilter}
-  onChange={handleAllergenFilterChange}
-  fullWidth
-  InputLabelProps={{ shrink: true }}
-  sx={{ width: "40%" }} 
->
-  <MenuItem value="">All</MenuItem>
-  {allergens.map((allergen) => (
-    <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
-  ))}
-</TextField>
+<Container>
+  <Typography variant="h4" gutterBottom>
+    Food Dashboard
+  </Typography>
+  <TextField
+    label="Search"
+    variant="outlined"
+    value={searchQuery}
+    onChange={handleSearch}
+    fullWidth
+    InputLabelProps={{ shrink: true }}
+    sx={{ width: "20%", marginRight: "16px" }}
+  />
+  <TextField
+    select
+    label="Filter by Allergen"
+    variant="outlined"
+    value={selectedAllergenFilter}
+    onChange={handleAllergenFilterChange}
+    fullWidth
+    InputLabelProps={{ shrink: true }}
+    sx={{ width: "40%" }}
+  >
+    <MenuItem value="">All</MenuItem>
+    {allergens.map((allergen) => (
+      <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
+    ))}
+  </TextField>
+  <Button
+    variant="contained"
+    color="primary"
+    startIcon={<AddIcon />}
+    onClick={handleAddNew}
+  >
+    Add New
+  </Button>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
@@ -265,27 +274,42 @@ function Food() {
             />
           </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
-            <DialogTitle>
-              {isNewFood ? "Add New Food" : "Edit Food"}
-            </DialogTitle>
-            <DialogContent>
-              <TextField
-                margin="normal"
-                label="Name"
-                fullWidth
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleSaveChanges} color="primary">
-                Save Changes
-              </Button>
-            </DialogActions>
-          </Dialog>
+  <DialogTitle>
+    {isNewFood ? "Add New Food" : "Edit Food"}
+  </DialogTitle>
+  <DialogContent>
+    <TextField
+      margin="normal"
+      label="Name"
+      fullWidth
+      value={editedName}
+      onChange={(e) => setEditedName(e.target.value)}
+    />
+    <TextField
+      margin="normal"
+      label="Description"
+      fullWidth
+      value={editedDescription}
+      onChange={(e) => setEditedDescription(e.target.value)}
+    />
+    <TextField
+      margin="normal"
+      label="Allergens"
+      fullWidth
+      value={editedAllergens}
+      onChange={(e) => setEditedAllergens(e.target.value)}
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleModalClose} color="primary">
+      Cancel
+    </Button>
+    <Button onClick={handleSaveChanges} color="primary">
+      Save Changes
+    </Button>
+  </DialogActions>
+</Dialog>
+
           <Snackbar
             open={snackbarOpen}
             autoHideDuration={6000}
