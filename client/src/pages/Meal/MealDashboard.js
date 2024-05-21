@@ -39,6 +39,7 @@ function Meal() {
   const [isNewMeal, setIsNewMeal] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/meal/getMeal")
@@ -53,9 +54,10 @@ function Meal() {
   );
 
   
-  const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
-  };
+ const handleSearch = (event) => {
+  setSearchQuery(event.target.value);
+};
+
   const handleAddNew = () => {
     setSelectedMeal(null);
     setEditedName("");
@@ -214,12 +216,12 @@ function Meal() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
-                  ? meals.slice(
+              {(rowsPerPage > 0
+                  ? filteredMeals.slice(
                       (page - 1) * rowsPerPage,
                       (page - 1) * rowsPerPage + rowsPerPage
                     )
-                  : meals
+                  : filteredMeals
                 ).map((meal) => (
                   <TableRow key={meal.MealId}>
                     <TableCell>

@@ -19,7 +19,8 @@ import {
   Button,
   TextField,
   Snackbar,
-  Pagination,
+  TableSortLabel,
+  Pagination
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -38,7 +39,9 @@ function Activity() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewActivity, setIsNewActivity] = useState(false);
-  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "Name", direction: "asc" });
+  const [page, setPage] = useState(1); // Define page state
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
@@ -68,6 +71,9 @@ function Activity() {
     setOpenModal(false);
   };
 
+  const handleChangePage = (event, newPage) => { // Define handleChangePage function
+    setPage(newPage);
+  };
   const handleSaveChanges = () => {
     if (!editedName.trim()) {
       setSnackbarMessage("Name cannot be empty");
@@ -149,9 +155,30 @@ function Activity() {
     setSnackbarOpen(false);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
   };
+
+  const sortedActivities = [...activities].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
+  // Filter activities based on search query
+  const filteredActivities = sortedActivities.filter(
+    (activity) =>
+      activity.Name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.Description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <ThemeProvider theme={theme}>
@@ -183,7 +210,14 @@ function Activity() {
               Add New
             </Button>
           </Box>
-
+          <TextField
+            fullWidth
+            label="Search Activities"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            margin="normal"
+          />
           <TableContainer
             component={Paper}
             sx={{
@@ -195,10 +229,22 @@ function Activity() {
               <TableHead>
                 <TableRow>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Name</Typography>
+                    <TableSortLabel
+                      active={sortConfig.key === 'Name'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('Name')}
+                    >
+                      <Typography fontWeight={"bold"}>Name</Typography>
+                    </TableSortLabel>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight={"bold"}>Description</Typography>
+                    <TableSortLabel
+                      active={sortConfig.key === 'Description'}
+                      direction={sortConfig.direction}
+                      onClick={() => handleSort('Description')}
+                    >
+                      <Typography fontWeight={"bold"}>Description</Typography>
+                    </TableSortLabel>
                   </TableCell>
                   <TableCell>
                     <Typography fontWeight={"bold"} textAlign={"right"}>
@@ -208,13 +254,7 @@ function Activity() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
-                  ? activities.slice(
-                      (page - 1) * rowsPerPage,
-                      (page - 1) * rowsPerPage + rowsPerPage
-                    )
-                  : activities
-                ).map((activity) => (
+                {filteredActivities.map((activity) => (
                   <TableRow key={activity.ActivityId}>
                     <TableCell>
                       <Typography variant="body1">{activity.Name}</Typography>
