@@ -220,6 +220,7 @@ function Food() {
       <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
     ))}
   </TextField>
+  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
   <Button
     variant="contained"
     color="primary"
@@ -228,6 +229,7 @@ function Food() {
   >
     Add New
   </Button>
+</div>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
