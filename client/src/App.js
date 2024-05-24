@@ -25,6 +25,7 @@ import ContactUs from "./pages/ContactUs";
 import { AuthProvider } from "./utils/authContext";
 import RoleBasedRoute from "./utils/roleBasedRoute";
 import AuthRoute from "./utils/authRoute";
+import TeacherHome from "./pages/TeacherPages/TeacherHome";
 
 function App() {
   return (
@@ -65,6 +66,17 @@ function App() {
                 allowedSpecificRoles={["Admin"]}
               >
                 <AgeGroupDashboard />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/teacherhome"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Teacher"]}
+              >
+                <TeacherHome />
               </RoleBasedRoute>
             }
           />

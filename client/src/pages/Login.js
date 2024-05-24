@@ -106,13 +106,21 @@ const Login = () => {
           const userType = res.data.user.userType;
 
           if (userRole === "Admin") {
-            navigate("/adminDashboard");
+            setTimeout(() => {
+              navigate("/adminDashboard");
+            }, 1000);
           } else if (userRole === "Teacher") {
-            navigate("/staffDashboard");
+            setTimeout(() => {
+              navigate("/teacherhome");
+            }, 1000);
           } else if (userType === "parent") {
-            navigate("/parentDashboard");
+            setTimeout(() => {
+              navigate("/parentDashboard");
+            }, 1000);
           } else {
-            navigate("/");
+            setTimeout(() => {
+              navigate("/");
+            }, 1000);
           }
         } else {
           setErrorMessage(res.data.message);
