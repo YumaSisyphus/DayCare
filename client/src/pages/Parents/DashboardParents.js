@@ -244,6 +244,7 @@ const ParentsList = () => {
                           >
                             Edit
                           </Button>
+            
                         </Box>
                       </TableCell>
                     </TableRow>

@@ -48,8 +48,7 @@ function Food() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [nameSearchQuery, setNameSearchQuery] = useState("");
-  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState(""); 
-  const [allergens, setAllergens] = useState([]);
+
 
 
 

@@ -155,9 +155,7 @@ function Activity() {
     setSnackbarOpen(false);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+
 
   const handleSort = (key) => {
     let direction = 'asc';
