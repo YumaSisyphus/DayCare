@@ -19,8 +19,8 @@ import {
   Button,
   TextField,
   Snackbar,
-  Pagination,
-  TableSortLabel
+  TableSortLabel,
+  Pagination
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -39,10 +39,10 @@ function Activity() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewActivity, setIsNewActivity] = useState(false);
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "Name", direction: "asc" });
+  const [page, setPage] = useState(1); // Define page state
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetch("/activity")
@@ -71,6 +71,9 @@ function Activity() {
     setOpenModal(false);
   };
 
+  const handleChangePage = (event, newPage) => { // Define handleChangePage function
+    setPage(newPage);
+  };
   const handleSaveChanges = () => {
     if (!editedName.trim()) {
       setSnackbarMessage("Name cannot be empty");

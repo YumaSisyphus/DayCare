@@ -54,9 +54,10 @@ function Meal() {
   );
 
   
-  const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
-  };
+ const handleSearch = (event) => {
+  setSearchQuery(event.target.value);
+};
+
   const handleAddNew = () => {
     setSelectedMeal(null);
     setEditedName("");
@@ -215,32 +216,36 @@ function Meal() {
                 </TableRow>
               </TableHead>
               <TableBody>
-  {filteredMeals.map((meal) => (
-    <TableRow key={meal.MealId}>
-      <TableCell>
-        <Typography variant="body1">
-          {meal.Name}
-        </Typography>
-      </TableCell>
-      <TableCell>
-        <IconButton
-          color="primary"
-          aria-label="edit"
-          onClick={() => handleEdit(meal)}
-        >
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          color="primary"
-          aria-label="delete"
-          onClick={() => handleDelete(meal.MealId)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
+              {(rowsPerPage > 0
+                  ? filteredMeals.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : filteredMeals
+                ).map((meal) => (
+                  <TableRow key={meal.MealId}>
+                    <TableCell>
+                      <Typography variant="body1">{meal.Name}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="primary"
+                        aria-label="edit"
+                        onClick={() => handleEdit(meal)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        color="primary"
+                        aria-label="delete"
+                        onClick={() => handleDelete(meal.MealId)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </TableContainer>
           <Box mt={2} display="flex" justifyContent="center">

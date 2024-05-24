@@ -51,9 +51,6 @@ function Staff() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
-
-
-
   
 
   useEffect(() => {
