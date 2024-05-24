@@ -18,8 +18,10 @@ import ListItemText from "@mui/material/ListItemText";
 import { Colors } from "../utils/colors";
 import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
+import { useAuth } from "../utils/authContext";
+import useLogout from "../utils/useLogout";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Account", "Dashboard"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -50,6 +52,9 @@ function ResponsiveAppBar() {
     }
     setIsDrawerOpen(open);
   };
+
+  const { authState } = useAuth();
+  const handleLogout = useLogout();
 
   const drawerList = (
     <List>
@@ -181,41 +186,41 @@ function ResponsiveAppBar() {
               </Typography>
             </Box>
             <Typography
-                variant="h5"
-                noWrap
-                component="a"
-                href="/AboutUs"
-                sx={{
-                  mr: 2,
-                  mt:0.5,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 500,
-                  color: "inherit", 
-                  textDecoration: "none",
-                  fontSize:"15px"
-                }}
-              >
-                About us
-              </Typography>
-              <Typography
-                variant="h5"
-                noWrap
-                component="a"
-                href="/ContactUs"
-                sx={{
-                  mr: 2,
-                  mt:0.5,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 500,
-                  color: "inherit", 
-                  textDecoration: "none",
-                  fontSize:"15px"
-                }}
-              >
-                Contact us
-              </Typography>
+              variant="h5"
+              noWrap
+              component="a"
+              href="/AboutUs"
+              sx={{
+                mr: 2,
+                mt: 0.5,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 500,
+                color: "inherit",
+                textDecoration: "none",
+                fontSize: "15px",
+              }}
+            >
+              About us
+            </Typography>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/ContactUs"
+              sx={{
+                mr: 2,
+                mt: 0.5,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 500,
+                color: "inherit",
+                textDecoration: "none",
+                fontSize: "15px",
+              }}
+            >
+              Contact us
+            </Typography>
           </Box>
 
           <Box
@@ -224,8 +229,13 @@ function ResponsiveAppBar() {
             alignItems={"center"}
             gap={3}
           >
+            {/* {authState.isAuthenticated && authState.user.role === "Admin" && ( */}
             <a href={"/activities"} className="link-header">
               Dashboard
+            </a>
+            {/* )} */}
+            <a href={"/ClassDashboard"} className="link-header">
+              School
             </a>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -253,6 +263,15 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+
+              <MenuItem
+                onClick={() => {
+                  handleLogout();
+                  handleCloseUserMenu();
+                }}
+              >
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <Drawer

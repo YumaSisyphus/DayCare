@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -41,10 +42,15 @@ function Food() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewFood, setIsNewFood] = useState(false);
+<<<<<<< HEAD
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAllergenFilter, setSelectedAllergenFilter] = useState("");
   const [allergens, setAllergens] = useState([]);
 
+=======
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+>>>>>>> 9129760e2800b8c645a6eb31364222ac34db9e27
 
   useEffect(() => {
     fetch("/food/getFood")
@@ -86,6 +92,10 @@ function Food() {
 
   const handleModalClose = () => {
     setOpenModal(false);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
   const handleSaveChanges = () => {
@@ -241,7 +251,17 @@ function Food() {
                 </TableRow>
               </TableHead>
               <TableBody>
+<<<<<<< HEAD
                 {filteredFoods.map((food) => (
+=======
+                {(rowsPerPage > 0
+                  ? foods.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : foods
+                ).map((food) => (
+>>>>>>> 9129760e2800b8c645a6eb31364222ac34db9e27
                   <TableRow key={food.FoodId}>
                     <TableCell>{food.Name}</TableCell>
                     <TableCell>{food.Description}</TableCell>
@@ -259,6 +279,13 @@ function Food() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(foods.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
   <DialogTitle>
     {isNewFood ? "Add New Food" : "Edit Food"}

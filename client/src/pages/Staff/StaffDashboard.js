@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -27,6 +28,7 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 function Staff() {
   const [staffList, setStaffList] = useState([]);
@@ -46,6 +48,8 @@ function Staff() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewStaff, setIsNewStaff] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
 
 
@@ -207,6 +211,10 @@ function Staff() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -219,7 +227,7 @@ function Staff() {
 
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
@@ -340,7 +348,13 @@ function Staff() {
               </Table>
             </TableContainer>
           )}
-        </Container>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(staffList.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>        </Container>
         <Dialog open={openModal} onClose={handleModalClose}>
           <DialogTitle>
             {selectedStaff ? "Edit Staff" : "Add New Staff"}

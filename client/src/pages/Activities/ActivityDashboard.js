@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
   TableSortLabel
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -38,6 +39,8 @@ function Activity() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewActivity, setIsNewActivity] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "Name", direction: "asc" });
 
@@ -147,6 +150,10 @@ function Activity() {
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
   const handleSort = (key) => {
@@ -279,6 +286,13 @@ function Activity() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(activities.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewActivity ? "Add New Activity" : "Edit Activity"}

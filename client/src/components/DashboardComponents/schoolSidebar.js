@@ -5,7 +5,7 @@ import RightArrow from "../../images/rightArrow.png";
 import Staff from "../../images/manager.png";
 import { StyledLink } from "../styledCustomComponents";
 
-const DashboardSidebar = () => {
+const DashboardSchoolSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -33,12 +33,13 @@ const DashboardSidebar = () => {
         <Typography variant="h6" mb={3} ml={3} mt={4}>
           Dashboards
         </Typography>
+        <Box width={"100%"} display={"flex"}>
+          <StyledLink href="/staffDashboard">Staff</StyledLink>
+        </Box>
+        <StyledLink href="/ClassDashboard">Class</StyledLink>
 
-        <StyledLink href="/activities">Activities</StyledLink>
-        <StyledLink href="/fooddashboard">Food</StyledLink>
-        <StyledLink href="/mealdashboard">Meal</StyledLink>
-        <StyledLink href="/AgeGroupDashboard">Age Group</StyledLink>
-        <StyledLink href="/ContactDashboard">Contact</StyledLink>
+        <StyledLink href="/DashboardParents">Parents</StyledLink>
+        <StyledLink href="/DashboardChildren">Children</StyledLink>
       </Box>
       <Button
         display="flex"
@@ -74,4 +75,4 @@ const DashboardSidebar = () => {
   );
 };
 
-export default DashboardSidebar;
+export default DashboardSchoolSidebar;

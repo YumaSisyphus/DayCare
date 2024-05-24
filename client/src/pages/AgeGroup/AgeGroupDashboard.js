@@ -19,6 +19,7 @@ import {
   Button,
   TextField,
   Snackbar,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -36,6 +37,8 @@ function AgeGroupDashboard() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewAgeGroup, setIsNewAgeGroup] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     fetch("/agegroup")
@@ -142,6 +145,9 @@ function AgeGroupDashboard() {
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -195,7 +201,13 @@ function AgeGroupDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {ageGroups.map((ageGroup) => (
+                {(rowsPerPage > 0
+                  ? ageGroups.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : ageGroups
+                ).map((ageGroup) => (
                   <TableRow key={ageGroup.AgeGroupId}>
                     <TableCell>
                       <Typography variant="body1">{ageGroup.RangeG}</Typography>
@@ -221,7 +233,13 @@ function AgeGroupDashboard() {
               </TableBody>
             </Table>
           </TableContainer>
-
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(ageGroups.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
           <Dialog open={openModal} onClose={handleModalClose}>
             <DialogTitle>
               {isNewAgeGroup ? "Add New Age Group" : "Edit Age Group"}

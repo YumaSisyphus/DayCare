@@ -14,6 +14,7 @@ import {
   Container,
   Toolbar,
   ThemeProvider,
+  Pagination,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import DashboardBg from "../../images/geometricbg.png";
@@ -21,10 +22,13 @@ import { Colors } from "../../utils/colors";
 import { groupParents } from "../../utils/groupParents"; // Adjust the path as per your project structure
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import { theme } from "../../utils/theme";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchParents = async () => {
@@ -64,10 +68,13 @@ const ParentsList = () => {
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <DashboardSidebar />
-
+      <DashboardSchoolSidebar />
       <Box
         sx={{
           bgcolor: Colors.secondary,
@@ -161,7 +168,13 @@ const ParentsList = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {parents.length > 0 ? (
+                {(rowsPerPage > 0
+                  ? parents.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : parents
+                ).length > 0 ? (
                   parents.map((parent) => (
                     <TableRow key={parent.ParentId}>
                       <TableCell>
@@ -243,6 +256,13 @@ const ParentsList = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(parents.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>
         </Container>
       </Box>
     </ThemeProvider>
