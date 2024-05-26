@@ -1,12 +1,11 @@
-const cookieParser = require("cookie-parser");
 const express = require("express");
+const cron = require("node-cron");
 const router = express.Router();
 const mysql = require("mysql2");
 const multer = require("multer");
 const upload = multer({ dest: "upload/" });
 
 router.use(express.json());
-router.use(cookieParser());
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -245,37 +244,44 @@ router.put("/updateChildToClass", (req, res) => {
 });
 
 router.post("/createReport", (req, res) => {
-
   const sql = `
     INSERT INTO raport 
     (ChildId, Description) 
     VALUES (?)
   `;
-  const values = [
-    req.body.childId, 
-    req.body.description
-  ];
+  const values = [req.body.childId, req.body.description];
 
-    db.query(sql, [values], (err, result) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.json({ success: false, message: "Create report failed" });
-      } else {
-        const insertedReport = {
-          id: result.insertId,
-          childId:req.body.childId,
-          description: req.body.description,
-         
-        };
-        return res.json({
-          success: true,
-          message: "Create report successful",
-          data: insertedReport,
-        });
-      }
-    });
+  db.query(sql, [values], (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({ success: false, message: "Create report failed" });
+    } else {
+      const insertedReport = {
+        id: result.insertId,
+        childId: req.body.childId,
+        description: req.body.description,
+      };
+      return res.json({
+        success: true,
+        message: "Create report successful",
+        data: insertedReport,
+      });
+    }
   });
+});
 
-
+cron.schedule(
+  "00 00 1 * *", // minute hour date month day-of-the-week (military time)
+  () => {
+    const query = "UPDATE child SET Payments = Payments + 100 WHERE Active = 1";
+    db.query(query, (err, results) => {
+      if (err) throw err;
+      console.log("Payments updated for all children.");
+    });
+  },
+  {
+    timezone: "Europe/Berlin",
+  }
+);
 
 module.exports = router;
