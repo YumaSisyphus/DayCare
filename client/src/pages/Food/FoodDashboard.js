@@ -40,11 +40,17 @@ function Food() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewFood, setIsNewFood] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState("");
+  const [allergens, setAllergens] = useState([]);
+
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [nameSearchQuery, setNameSearchQuery] = useState("");
-  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState(""); 
-  const [allergens, setAllergens] = useState([]);
+
+
+
 
   useEffect(() => {
     fetch("/food/getFood")
@@ -183,55 +189,54 @@ function Food() {
     <ThemeProvider theme={theme}>
       <DashboardSidebar />
       <Box
-  sx={{
-    bgcolor: Colors.secondary,
-    backgroundImage: `url(${DashboardBg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
-  minHeight="100vh"
-  display="flex"
-  justifyContent="center"
-  alignItems="center"
->
-<Container>
-  <Typography variant="h4" gutterBottom>
-    Food Dashboard
-  </Typography>
-  <TextField
-    label="Search"
-    variant="outlined"
-    value={searchQuery}
-    onChange={handleSearch}
-    fullWidth
-    InputLabelProps={{ shrink: true }}
-    sx={{ width: "20%", marginRight: "16px" }}
-  />
-  <TextField
-    select
-    label="Filter by Allergen"
-    variant="outlined"
-    value={selectedAllergenFilter}
-    onChange={handleAllergenFilterChange}
-    fullWidth
-    InputLabelProps={{ shrink: true }}
-    sx={{ width: "40%" }}
-  >
-    <MenuItem value="">All</MenuItem>
-    {allergens.map((allergen) => (
-      <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
-    ))}
-  </TextField>
-  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<AddIcon />}
-    onClick={handleAddNew}
-  >
-    Add New
-  </Button>
-</div>
+        sx={{
+          bgcolor: Colors.secondary,
+          backgroundImage: `url(${DashboardBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        minHeight="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Container>
+          <Typography variant="h4" gutterBottom>
+            Food Dashboard
+          </Typography>
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            value={nameSearchQuery}
+            onChange={handleNameSearch}
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            sx={{ marginBottom: "16px" }}
+          />
+          <TextField
+            select
+            label="Filter by Allergen"
+            variant="outlined"
+            value={selectedAllergenFilter}
+            onChange={handleAllergenFilterChange}
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            sx={{ marginBottom: "16px" }}
+          >
+            <MenuItem value="">All</MenuItem>
+            {allergens.map((allergen) => (
+              <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
+            ))}
+          </TextField>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAddNew}
+            sx={{ marginBottom: "16px" }}
+          >
+            Add New
+          </Button>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>

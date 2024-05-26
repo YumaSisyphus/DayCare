@@ -155,6 +155,8 @@ function Activity() {
     setSnackbarOpen(false);
   };
 
+
+
   const handleSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {

@@ -48,10 +48,9 @@ function Staff() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewStaff, setIsNewStaff] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
-
-
-
   
 
   useEffect(() => {
@@ -209,6 +208,10 @@ function Staff() {
     setSnackbarOpen(false);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -342,7 +345,13 @@ function Staff() {
               </Table>
             </TableContainer>
           )}
-        </Container>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Pagination
+              count={Math.ceil(staffList.length / rowsPerPage)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Box>        </Container>
         <Dialog open={openModal} onClose={handleModalClose}>
           <DialogTitle>
             {selectedStaff ? "Edit Staff" : "Add New Staff"}
