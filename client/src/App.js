@@ -45,9 +45,9 @@ function App() {
           <Route
             path="/DashboardParents"
             element={
-              <RoleBasedRoute allowedRoles={["parent"]}>
+             // <RoleBasedRoute allowedRoles={["parent"]}>
                 <DashboardParents />
-              </RoleBasedRoute>
+            //  </RoleBasedRoute>
             }
           />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
@@ -61,23 +61,23 @@ function App() {
           <Route
             path="/AgeGroupDashboard"
             element={
-              <RoleBasedRoute
+             /* <RoleBasedRoute
                 allowedRoles={["staff"]}
                 allowedSpecificRoles={["Admin"]}
-              >
+              >*/
                 <AgeGroupDashboard />
-              </RoleBasedRoute>
+            /*  </RoleBasedRoute>*/
             }
           />
           <Route
             path="/teacherhome"
             element={
-              <RoleBasedRoute
-                allowedRoles={["staff"]}
-                allowedSpecificRoles={["Teacher"]}
-              >
+             // <RoleBasedRoute
+               // allowedRoles={["staff"]}
+               // allowedSpecificRoles={["Teacher"]}
+             // >
                 <TeacherHome />
-              </RoleBasedRoute>
+             // </RoleBasedRoute>
             }
           />
           <Route path="/AddChild" element={<ChildForm />} />
@@ -86,9 +86,9 @@ function App() {
           <Route
             path="/ContactDashboard"
             element={
-              <PrivateRoute>
+            //  <PrivateRoute>
                 <ContactForm />
-              </PrivateRoute>
+            //  </PrivateRoute>
             }
           />
           <Route path="/mealDashboard" element={<Meal />} />
