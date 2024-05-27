@@ -19,12 +19,18 @@ import {
   Checkbox,
   FormControlLabel,
   Pagination,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
   ThemeProvider,
 } from "@mui/material";
 import SearchBar from "../../components/Searchbar";
 import DashboardBg from "../../images/geometricbg.png";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
@@ -37,6 +43,9 @@ export default function DashboardChildren() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [statusFilter, setStatusFilter] = useState("all");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,6 +105,52 @@ export default function DashboardChildren() {
     navigate(`/ReportForm/${childId}`);
   };
 
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedChildren = [...children].sort((a, b) => {
+    if (sortConfig.key) {
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+      if (sortConfig.direction === "asc") {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    }
+    return 0;
+  });
+
+  const filteredChildren = sortedChildren.filter((child) => {
+    if (statusFilter === "active") {
+      return child.Active;
+    } else if (statusFilter === "inactive") {
+      return !child.Active;
+    } else {
+      return true;
+    }
+  });
+
+  const renderSortIcon = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === "asc" ? (
+        <ArrowDropUpIcon />
+      ) : (
+        <ArrowDropDownIcon />
+      );
+    }
+    return null;
+  };
+
+  const handleStatusFilterChange = (event) => {
+    setStatusFilter(event.target.value);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <DashboardSchoolSidebar />
@@ -108,7 +163,7 @@ export default function DashboardChildren() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           maxWidth: "100%",
-          height: "99.6vh",
+          height: "100%",
         }}
       >
         <Box
@@ -135,7 +190,33 @@ export default function DashboardChildren() {
           >
             Add Child
           </Button>
-          <SearchBar label="Search..." onSearch={handleSearch} />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 2,
+              border: "2px solid black",
+            }}
+          >
+            <SearchBar label="Search..." onSearch={handleSearch} />
+            <FormControl sx={{ minWidth: 120, marginLeft: 2 }} size="small">
+              <InputLabel>Status</InputLabel>
+              <Select value={statusFilter} onChange={handleStatusFilterChange}>
+                <MenuItem value="all">Show All</MenuItem>
+                <MenuItem value="active">Show Active</MenuItem>
+                <MenuItem value="inactive">Show Inactive</MenuItem>
+              </Select>
+            </FormControl>
+            <Box sx={{ flexGrow: 1 }} />
+            <Button
+              variant="contained"
+              onClick={handleDeleteChildModalOpen}
+              disabled={selectedChildren.length === 0}
+            >
+              Delete Selected Children
+            </Button>
+          </Box>
           <TableContainer
             component={Paper}
             sx={{
@@ -155,42 +236,87 @@ export default function DashboardChildren() {
                   <TableCell>
                     <Typography fontWeight="bold">Photo</Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Name</Typography>
+                  <TableCell onClick={() => handleSort("Name")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Name {renderSortIcon("Name")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Surname")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Surname {renderSortIcon("Surname")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Gender")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Gender {renderSortIcon("Gender")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Birthday")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Birthday {renderSortIcon("Birthday")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Allergies")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Allergies {renderSortIcon("Allergies")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Vaccines")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Vaccines {renderSortIcon("Vaccines")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Payments")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Payments {renderSortIcon("Payments")}
+                    </Typography>
+                  </TableCell>
+                  <TableCell onClick={() => handleSort("Active")}>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Active {renderSortIcon("Active")}
+                    </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight="bold">Surname</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Gender</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Birthday</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Allergies</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Vaccines</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Payments</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Active</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Actions</Typography>
+                    <Typography
+                      fontWeight="bold"
+                      sx={{ display: "flex", alignItems: "center" }}
+                    >
+                      Actions
+                    </Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? children.slice(
+                  ? filteredChildren.slice(
                       (page - 1) * rowsPerPage,
                       (page - 1) * rowsPerPage + rowsPerPage
                     )
-                  : children
+                  : filteredChildren
                 ).map((child) => (
                   <TableRow key={child.ChildId}>
                     <TableCell>
@@ -260,17 +386,11 @@ export default function DashboardChildren() {
           </TableContainer>
           <Box mt={2} display="flex" justifyContent="center">
             <Pagination
-              count={Math.ceil(children.length / rowsPerPage)}
+              count={Math.ceil(filteredChildren.length / rowsPerPage)}
               page={page}
               onChange={handleChangePage}
             />
           </Box>
-          <Button
-            onClick={handleDeleteChildModalOpen}
-            disabled={selectedChildren.length === 0}
-          >
-            Delete Selected Children
-          </Button>
           <Dialog
             open={deleteChildModalOpen}
             onClose={handleDeleteChildModalClose}
