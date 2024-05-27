@@ -4,3 +4,4 @@ server/package-lock.json
 server/node_modules
 client/package.json
 client/package-lock.json
+server/server.js
