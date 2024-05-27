@@ -147,6 +147,7 @@ router.put("/updateParent", (req, res) => {
       return res.json({
         success: true,
         message: "Update parent successful",
+        data:data,
       });
     }
   });
@@ -184,14 +185,36 @@ router.post("/assignChildToParent", (req, res) => {
   });
 });
      
+router.get("/getChildren", (req, res) => {
+  const sql = `
+    SELECT ChildId, Name
+    FROM child
+  `;
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Error fetching children",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Fetch children successful",
+        child: data,
+      });
+    }
+  });
+});
 router.get("/getchildparent/:id", (req, res) => {
   const values = [req.params.id];
   const sql = `
-    SELECT cp.ChildId, cp.ParentId, c.Name AS ChildName, c.Surname AS Surname, p.Name AS Name, p.Surname AS Surname
+    SELECT cp.ChildId, cp.ParentId, c.Name AS ChildName
     FROM child_parent cp
-    JOIN child c ON cp.ChildId = c.ChildId
     JOIN parent p ON cp.ParentId = p.ParentId
-  `;
+    JOIN child c ON cp.ChildId = c.ChildId
+    WHERE p.ParentId=?
+      `;
   db.query(sql, [values], (err, data) => {
     if (err) {
       console.error("Database error:", err);
@@ -203,7 +226,7 @@ router.get("/getchildparent/:id", (req, res) => {
       return res.json({
         success: true,
         message: "Update parent successful",
-        class: data,
+        child: data,
       });
     }
   });

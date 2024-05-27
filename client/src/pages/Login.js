@@ -107,7 +107,7 @@ const Login = () => {
 
           if (userRole === "Admin") {
             setTimeout(() => {
-              navigate("/adminDashboard");
+              navigate("/adminhome");
             }, 1000);
           } else if (userRole === "Teacher") {
             setTimeout(() => {
@@ -115,7 +115,7 @@ const Login = () => {
             }, 1000);
           } else if (userType === "parent") {
             setTimeout(() => {
-              navigate("/parentDashboard");
+              navigate("/parenthome");
             }, 1000);
           } else {
             setTimeout(() => {
