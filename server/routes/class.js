@@ -11,11 +11,14 @@ const db = mysql.createConnection({
   database: "daycare",
 });
 
+
 router.get("/", (req, res) => {
   const query = `
-      SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName
+      SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, s.Name as StaffName
       FROM class c
       JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
+      LEFT JOIN staff_class sc ON c.ClassId = sc.ClassId
+      LEFT JOIN staff s ON sc.StaffId = s.StaffId
     `;
 
   db.query(query, (err, result) => {
@@ -24,8 +27,9 @@ router.get("/", (req, res) => {
   });
 });
 
+
 router.post("/", (req, res) => {
-  const { Name, AgeGroupId } = req.body;
+  const { Name, AgeGroupId, StaffId } = req.body;
   const query = "INSERT INTO class (Name, AgeGroupId) VALUES (?, ?)";
 
   db.query(query, [Name, AgeGroupId], (err, result) => {
@@ -41,6 +45,14 @@ router.post("/", (req, res) => {
 
     db.query(getClassQuery, [newClassId], (err, classResult) => {
       if (err) throw err;
+      
+      if (StaffId) {
+        const staffClassQuery = "INSERT INTO staff_class (StaffId, ClassId) VALUES (?, ?)";
+        db.query(staffClassQuery, [StaffId, newClassId], (err) => {
+          if (err) throw err;
+        });
+      }
+
       res.json({
         message: "Class added successfully",
         newClass: classResult[0],
@@ -52,43 +64,39 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { Name, AgeGroupId } = req.body;
-  const query = "UPDATE class SET Name = ?, AgeGroupId = ? WHERE ClassId = ?";
+  const { Name, AgeGroupId, StaffId } = req.body; // Extract StaffId from request body
+  const query = "UPDATE class SET Name = ?, AgeGroupId = ?, StaffId = ? WHERE ClassId = ?";
 
-  db.query(query, [Name, AgeGroupId, id], (err, result) => {
-    if (err) throw err;
-
-    const getClassQuery = `
-        SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, c.AgeGroupId
+  db.query(query, [Name, AgeGroupId, StaffId, id], (err, result) => {
+    if (err) {
+      console.error("Error updating class:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      const getClassQuery = `
+        SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, c.AgeGroupId, c.StaffId
         FROM class c
         JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
         WHERE c.ClassId = ?
       `;
-
-    db.query(getClassQuery, [id], (err, classResult) => {
-      if (err) throw err;
-      res.json({
-        message: "Class updated successfully",
-        updatedClass: classResult[0],
-        affectedRows: result.affectedRows,
+      
+      db.query(getClassQuery, [id], (err, classResult) => {
+        if (err) {
+          console.error("Error fetching updated class:", err);
+          res.status(500).json({ message: "Internal Server Error" });
+        } else {
+          res.json({
+            message: "Class updated successfully",
+            updatedClass: classResult[0],
+            affectedRows: result.affectedRows,
+          });
+        }
       });
-    });
+    }
   });
 });
 
-router.get("/staffByClass", (req, res) => {
-  const query = `
-    SELECT s.StaffId, s.Name as StaffName, c.ClassId, c.Name as ClassName
-    FROM staff_class sc
-    JOIN staff s ON sc.StaffId = s.StaffId
-    JOIN class c ON sc.ClassId = c.ClassId
-  `;
 
-  db.query(query, (err, result) => {
-    if (err) throw err;
-    res.json(result);
-  });
-});
+
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
