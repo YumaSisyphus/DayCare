@@ -8,6 +8,7 @@ import {
   Container,
   Paper,
 } from "@mui/material";
+import contactImage from "../images/children.gif";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,6 @@ const ContactUs = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log(formData.email);
   };
 
   const handleSubmit = async (e) => {
@@ -32,7 +32,6 @@ const ContactUs = () => {
         formData
       );
       if (response.data.success) {
-     
         console.log("Contact form submitted successfully!");
       }
     } catch (error) {
@@ -43,90 +42,105 @@ const ContactUs = () => {
 
   return (
     <Container
-      maxWidth=""
+      maxWidth="md"
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#eaf2d7",
+        minHeight: "100vh",
       }}
     >
-      <Paper
+      <Box
+        component={Paper}
         elevation={3}
-        style={{
-          padding: "20px 40px",
-          margin: "0px 430px",
-          backgroundColor: "#C0D8C0",
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "20px",
+          borderRadius: "10px",
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          Contact Us
+        <Typography variant="h4" gutterBottom>
+          Get in Touch
         </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <TextField
-            label="Subject"
-            variant="outlined"
-            fullWidth
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <TextField
-            label=""
-            variant="outlined"
-            fullWidth
-            type="date"
-            name="dateCreated"
-            value={formData.dateCreated}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <TextField
-            label="Message"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#90caf9",
-              color: "#ffffff",
-            }}
-          >
-            Submit
-          </Button>
-        </form>
-      </Paper>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            mt: 3,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            {/* Your image here */}
+            <img
+              src={contactImage}
+              alt="contact-us-image"
+              style={{ maxWidth: "100%", borderRadius: "5px" }}
+            />
+          </Box>
+          <Box sx={{ flex: 1, ml: 3 }}>
+            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                margin="normal"
+              />
+              <TextField
+                label="Subject"
+                variant="outlined"
+                fullWidth
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                margin="normal"
+              />
+              <TextField
+                label="Date"
+                variant="outlined"
+                fullWidth
+                type="date"
+                name="dateCreated"
+                value={formData.dateCreated}
+                onChange={handleChange}
+                required
+                margin="normal"
+              />
+              <TextField
+                label="Message"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                margin="normal"
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Submit
+              </Button>
+            </form>
+          </Box>
+        </Box>
+      </Box>
     </Container>
   );
 };
