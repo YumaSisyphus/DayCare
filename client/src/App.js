@@ -1,6 +1,9 @@
 import "./App.css";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Elements } from "@stripe/react-stripe-js"; // Import Elements
+import { loadStripe } from "@stripe/stripe-js"; // Import loadStripe
+
 import WelcomeScreen from "../src/pages/WelcomeScreen";
 import Login from "./pages/Login";
 import DashboardParents from "./pages/Parents/DashboardParents";
@@ -26,6 +29,10 @@ import { AuthProvider } from "./utils/authContext";
 import RoleBasedRoute from "./utils/roleBasedRoute";
 import AuthRoute from "./utils/authRoute";
 import TeacherHome from "./pages/TeacherPages/TeacherHome";
+import PaymentForm from "./pages/Parents/PaymentForm";
+import SuccessPage from "./pages/Parents/SuccessPage";
+
+const stripePromise = loadStripe("pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck");
 
 function App() {
   return (
@@ -52,12 +59,14 @@ function App() {
           />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
           <Route path="/activities" element={<Activity />} />
+          <Route path="/SuccessPage" element={<SuccessPage />} />
           <Route path="/ParentForm" element={<ParentForm />} />
           <Route path="/EditParents/:parentId" element={<EditParent />} />
           <Route path="/ChildParent" element={<ChildParent />} />
           <Route path="/foodDashboard" element={<Food />} />
           <Route path="/ClassDashboard" element={<ClassDashboard />} />
           <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/PaymentForm" element={<Elements stripe={stripePromise}><PaymentForm /></Elements>} />
           <Route
             path="/AgeGroupDashboard"
             element={
