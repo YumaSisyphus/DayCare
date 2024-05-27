@@ -29,6 +29,9 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import useLogout from "../../utils/useLogout";
+import useCheckAuth from "../../utils/useCheckAuth";
+import SessionModal from "../../components/SessionModal";
 
 function Activity() {
   const [activities, setActivities] = useState([]);
@@ -43,6 +46,21 @@ function Activity() {
   const [sortConfig, setSortConfig] = useState({ key: "Name", direction: "asc" });
   const [page, setPage] = useState(1); // Define page state
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     fetch("/activity")
@@ -342,6 +360,7 @@ function Activity() {
           />
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

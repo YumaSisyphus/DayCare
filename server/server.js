@@ -1,12 +1,20 @@
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const app = express();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); // Initialize Stripe with your API key
 
   app.use(cors());
   app.use(express.json()); // Add this line to parse JSON bodies
   app.use(express.urlencoded({ extended: true })); // Add this line to parse URL-encoded bodies
+
+  mongoose.connect("mongodb://localhost:27017/daycare", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB connected"))
+.catch((err) => console.error("MongoDB connection error:", err));
   
   const loginRoutes = require("./routes/login");
   const childrenRoutes = require("./routes/children");
