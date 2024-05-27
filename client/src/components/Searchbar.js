@@ -8,7 +8,7 @@ export default function SearchBar({ label, onSearch }) {
         variant="outlined"
         onChange={debounce((e) => {
           onSearch(e.target.value);
-        }, 200)}
+        }, 100)}
         size="small"
         // InputProps={{
         //   style: {

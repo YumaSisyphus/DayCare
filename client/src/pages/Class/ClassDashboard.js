@@ -47,6 +47,9 @@ function ClassDashboard() {
   const [staff, setStaff] = useState([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [staffMembers, setStaffMembers] = useState([]);
+  const [selectedStaffId, setSelectedStaffId] = useState("");
+
 
   useEffect(() => {
     fetch("/class")
@@ -59,10 +62,14 @@ function ClassDashboard() {
       .then((data) => setAgeGroups(data))
       .catch((error) => console.error("Error fetching age groups:", error));
 
-    fetch("/class/staffByClass")
+      fetch("/staff/getStaff")
       .then((response) => response.json())
-      .then((data) => setStaff(data))
-      .catch((error) => console.error("Error fetching staff:", error));
+      .then((data) => {
+        console.log(data); 
+        setStaffMembers(data.data); 
+      })
+      .catch((error) => console.error("Error fetching staff members:", error));
+      
   }, []);
 
   const handleAddNew = () => {
@@ -83,6 +90,8 @@ function ClassDashboard() {
 
   const handleModalClose = () => {
     setOpenModal(false);
+    setSelectedStaffId(""); // Reset selected staff id when closing the modal
+
   };
 
   const handleSaveChanges = () => {
@@ -108,6 +117,8 @@ function ClassDashboard() {
       body: JSON.stringify({
         Name: editedName,
         AgeGroupId: parseInt(editedAgeGroupId),
+        StaffId: parseInt(selectedStaffId), // Add selected staff ID
+
       }),
     })
       .then((response) => response.json())
@@ -128,6 +139,9 @@ function ClassDashboard() {
                       AgeGroupName: ageGroups.find(
                         (ag) => ag.AgeGroupId === parseInt(editedAgeGroupId)
                       ).RangeG,
+                      StaffName: staffMembers.find(
+                        (staff) => staff.StaffId === parseInt(selectedStaffId)
+                      ).Name,
                     }
                   : cls
               )
@@ -308,6 +322,21 @@ function ClassDashboard() {
                   ))}
                 </Select>
               </FormControl>
+              <FormControl fullWidth margin="normal">
+              <InputLabel id="staff-label">Staff</InputLabel>
+              <Select
+                labelId="staff-label"
+                value={selectedStaffId}
+                label="Staff"
+                onChange={(e) => setSelectedStaffId(e.target.value)}
+              >
+                {staffMembers.map((staff) => (
+                  <MenuItem key={staff.StaffId} value={staff.StaffId}>
+                    {`${staff.Name} ${staff.Surname}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
