@@ -40,11 +40,17 @@ function Food() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewFood, setIsNewFood] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState("");
+  const [allergens, setAllergens] = useState([]);
+
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [nameSearchQuery, setNameSearchQuery] = useState("");
-  const [selectedAllergenFilter, setSelectedAllergenFilter] = useState(""); 
-  const [allergens, setAllergens] = useState([]);
+
+
+
 
   useEffect(() => {
     fetch("/food/getFood")
