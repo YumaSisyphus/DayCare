@@ -8,8 +8,8 @@ const mysql = require("mysql2");
 router.use(express.json());
 router.use(cookieParser());
 
-const secretKey = crypto.randomBytes(64).toString("hex");
-const refreshTokenSecretKey = crypto.randomBytes(64).toString("hex");
+const secretKey = process.env.SECRET_KEY;
+const refreshTokenSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY;
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -170,6 +170,7 @@ router.post("/token/refresh", (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (refreshToken) {
     try {
+      console.log(refreshTokenSecretKey);
       const decoded = jwt.verify(refreshToken, refreshTokenSecretKey);
       const newAccessToken = jwt.sign(
         {
