@@ -8,7 +8,7 @@ import {
   Container,
   Paper,
 } from "@mui/material";
-import contactImage from "../images/children.gif";
+import contactImage from "../images/children70.png";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -61,9 +61,17 @@ const ContactUs = () => {
           borderRadius: "10px",
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Get in Touch
-        </Typography>
+          <Typography
+                    variant="h4"
+                    color="#7CB9E8"
+                    style={{
+                      fontFamily: "'Baloo 2', sans-serif",
+                      marginTop: "18px",
+                    }}
+                    gutterBottom
+                  >
+                    Contact Us
+                  </Typography>
         <Box
           sx={{
             display: "flex",
@@ -103,17 +111,22 @@ const ContactUs = () => {
                 required
                 margin="normal"
               />
-              <TextField
-                label="Date"
-                variant="outlined"
-                fullWidth
-                type="date"
-                name="dateCreated"
-                value={formData.dateCreated}
-                onChange={handleChange}
-                required
-                margin="normal"
-              />
+            <TextField
+               label="Date"
+               variant="outlined"
+               fullWidth
+               type="date"
+               name="dateCreated"
+               value={formData.dateCreated}
+               onChange={handleChange}
+               required
+               margin="normal"
+               InputLabelProps={{ shrink: true }}
+               InputProps={{
+               placeholder: "mm/dd/yyyy",
+               style: { paddingRight: "8px" } // Add right padding to avoid overlap
+                    }}
+                  />
               <TextField
                 label="Message"
                 variant="outlined"

@@ -66,13 +66,13 @@ const PaymentForm = () => {
 
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <Typography variant="h4" style={{ marginTop: 200, fontFamily: 'Arial, sans-serif', color: '#0077c0', fontWeight: 'bold' }}>
+              <Typography variant="h4" style={{ marginTop: 200, fontFamily: "'Baloo 2', sans-serif", color: '#0077c0' }}>
                 Hi Dear Customer
               </Typography>
               <Typography variant="h6" gutterBottom style={{ color: '#0288d1', fontStyle: 'italic', textDecoration: 'none' }}>
                 You Can Make Your Payments Here
               </Typography>
-              <Typography variant="subtitle1" gutterBottom style={{ fontFamily: 'Arial, sans-serif' }}>
+              <Typography variant="subtitle1" gutterBottom style={{ fontFamily: "'Baloo 2', sans-serif" }}>
                 If you want to make payments with cash, click below:
               </Typography>
               <Button variant="contained" startIcon={<CashIcon />} onClick={() => console.log("Clicked")}>
@@ -80,7 +80,7 @@ const PaymentForm = () => {
               </Button>
             </Grid>
             <Grid item xs={12} md={6} >
-              <Typography variant="h5" style={{ marginTop: 50, fontFamily: 'Arial, sans-serif', color: '#0077c0', fontWeight: 'bold', marginBottom: 20 ,textAlign:"center" }}>
+              <Typography variant="h5" style={{ marginTop: 50, fontFamily: "'Baloo 2', sans-serif", color: '#0077c0', fontWeight: 'bold', marginBottom: 20 ,textAlign:"center" }}>
                 Or you can make payments online
               </Typography>
               <form onSubmit={handleSubmit}>
