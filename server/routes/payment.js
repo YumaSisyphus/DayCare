@@ -9,17 +9,16 @@ const db = mysql.createConnection({
   password: "password",
   database: "daycare",
 });
-// Payment route
+
 router.post("/", async (req, res) => {
-  const { ChildId ,Name, Surname, PhoneNumber, Amount, PaymentMethodId } = req.body;
+  const { ChildId, Name, Surname, PhoneNumber, Amount, PaymentMethodId } = req.body;
 
   try {
-    // Create a payment intent with the payment method
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Amount * 100, // Stripe requires amount in cents
+      amount: Amount * 100, 
       currency: "usd",
-      payment_method: PaymentMethodId, // Attach payment method to the payment intent
-      confirm: true, // Confirm the payment intent immediately
+      payment_method: PaymentMethodId,
+      confirm: true, 
       description: `Payment for ${Name} ${Surname}`,
       metadata: {
         childId: ChildId,
@@ -27,22 +26,33 @@ router.post("/", async (req, res) => {
         surname: Surname,
         phoneNumber: PhoneNumber,
       },
-      return_url: "https://localhost:3000/Parents/SuccessPage.js" // Specify your return URL here
+      return_url: "https://localhost:3000/Parents/SuccessPage.js" 
     });
 
-    // Save payment details to database using raw SQL query
-    const sql = "INSERT INTO payment (ChildId, Date, Name, Surname, PhoneNumber, Amount) VALUES (?, NOW(), ?, ?, ?, ?)";
-    const values = [ChildId,Name, Surname, PhoneNumber, Amount];
-    
-    db.query(sql, values, (error, results) => {
+    // Update child's payment amount in the database
+    const updateSql = "UPDATE child SET Payments = Payments - ? WHERE ChildId = ?";
+    const updateValues = [Amount, ChildId];
+
+    db.query(updateSql, updateValues, (error, results) => {
       if (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
       } else {
-        const paymentId = results.insertId;
-        res.status(200).json({ 
-          client_secret: paymentIntent.client_secret,
-          paymentId: paymentId
+        // Save payment details to database using raw SQL query
+        const insertSql = "INSERT INTO payment (ChildId, Date, Name, Surname, PhoneNumber, Amount) VALUES (?, NOW(), ?, ?, ?, ?)";
+        const insertValues = [ChildId, Name, Surname, PhoneNumber, Amount];
+
+        db.query(insertSql, insertValues, (insertError, insertResults) => {
+          if (insertError) {
+            console.error(insertError);
+            res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            const paymentId = insertResults.insertId;
+            res.status(200).json({
+              client_secret: paymentIntent.client_secret,
+              paymentId: paymentId
+            });
+          }
         });
       }
     });

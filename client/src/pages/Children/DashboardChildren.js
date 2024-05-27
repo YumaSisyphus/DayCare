@@ -85,7 +85,7 @@ export default function DashboardChildren() {
 
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
-    setPage(1); // Reset page to 1 when searching
+    setPage(1); 
   };
 
   const handleChangePage = (event, newPage) => {
@@ -93,7 +93,6 @@ export default function DashboardChildren() {
   };
 
   const handleCreateReport = (childId) => {
-    // Redirect to the create report page with the childId
     navigate(`/ReportForm/${childId}`);
   };
 
