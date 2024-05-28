@@ -79,7 +79,7 @@ function AdminHome() {
               alignItems: "center", // Center items horizontally
             }}
           >
-            {/* Add decorative elements */}
+            {/* Adding decorative elements */}
             <Box
               sx={{
                 position: "absolute",

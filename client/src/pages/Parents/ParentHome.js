@@ -78,6 +78,47 @@ function ParentHome() {
               alignItems: "center",
             }}
           >
+            
+            {/* Adding decorative elements */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                bgcolor: Colors.primary,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-20px",
+                left: "10%",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                bgcolor: Colors.primary,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-30px",
+                right: "10%",
+                width: "60px",
+                height: "60px",
+                borderRadius: "50%",
+                bgcolor: Colors.primary,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            {/* End decorative elements */}
+
             <Box sx={{ marginRight: 4 }}>
               <Avatar
                 sx={{
