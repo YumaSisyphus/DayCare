@@ -14,29 +14,72 @@ const ContactUs = () => {
   const [formData, setFormData] = useState({
     email: "",
     subject: "",
-    dateCreated: null,
+    dateCreated: "",
     message: "",
   });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {};
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email should not be empty";
+      valid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+      valid = false;
+    }
+
+    // Subject validation
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject should not be empty";
+      valid = false;
+    } else if (formData.subject.trim().length > 50) {
+      newErrors.subject = "Subject should not exceed 50 characters";
+      valid = false;
+    }
+
+    // Date validation
+    if (!formData.dateCreated.trim()) {
+      newErrors.dateCreated = "Date should not be empty";
+      valid = false;
+    }
+
+    // Message validation
+    if (!formData.message.trim()) {
+      newErrors.message = "Message should not be empty";
+      valid = false;
+    } else if (formData.message.trim().length > 500) {
+      newErrors.message = "Message should not exceed 500 characters";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "/contactform/createContactForm",
-        formData
-      );
-      if (response.data.success) {
-        console.log("Contact form submitted successfully!");
+    if (validateForm()) {
+      try {
+        const response = await axios.post(
+          "/contactform/createContactForm",
+          formData
+        );
+        if (response.data.success) {
+          console.log("Contact form submitted successfully!");
+        }
+      } catch (error) {
+        console.error("Error submitting contact form:", error.message);
       }
-    } catch (error) {
-      setError("Error submitting contact form");
-      console.error("Error submitting contact form:", error.message);
     }
   };
 
@@ -61,17 +104,17 @@ const ContactUs = () => {
           borderRadius: "10px",
         }}
       >
-          <Typography
-                    variant="h4"
-                    color="#7CB9E8"
-                    style={{
-                      fontFamily: "'Baloo 2', sans-serif",
-                      marginTop: "18px",
-                    }}
-                    gutterBottom
-                  >
-                    Contact Us
-                  </Typography>
+        <Typography
+          variant="h4"
+          color="#7CB9E8"
+          style={{
+            fontFamily: "'Baloo 2', sans-serif",
+            marginTop: "18px",
+          }}
+          gutterBottom
+        >
+          Contact Us
+        </Typography>
         <Box
           sx={{
             display: "flex",
@@ -81,7 +124,6 @@ const ContactUs = () => {
           }}
         >
           <Box sx={{ flex: 1 }}>
-            {/* Your image here */}
             <img
               src={contactImage}
               alt="contact-us-image"
@@ -100,6 +142,8 @@ const ContactUs = () => {
                 onChange={handleChange}
                 required
                 margin="normal"
+                error={!!errors.email}
+                helperText={errors.email}
               />
               <TextField
                 label="Subject"
@@ -110,23 +154,27 @@ const ContactUs = () => {
                 onChange={handleChange}
                 required
                 margin="normal"
+                error={!!errors.subject}
+                helperText={errors.subject}
               />
-            <TextField
-               label="Date"
-               variant="outlined"
-               fullWidth
-               type="date"
-               name="dateCreated"
-               value={formData.dateCreated}
-               onChange={handleChange}
-               required
-               margin="normal"
-               InputLabelProps={{ shrink: true }}
-               InputProps={{
-               placeholder: "mm/dd/yyyy",
-               style: { paddingRight: "8px" } // Add right padding to avoid overlap
-                    }}
-                  />
+              <TextField
+                label="Date"
+                variant="outlined"
+                fullWidth
+                type="date"
+                name="dateCreated"
+                value={formData.dateCreated}
+                onChange={handleChange}
+                required
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  placeholder: "mm/dd/yyyy",
+                  style: { paddingRight: "8px" }
+                }}
+                error={!!errors.dateCreated}
+                helperText={errors.dateCreated}
+              />
               <TextField
                 label="Message"
                 variant="outlined"
@@ -138,6 +186,8 @@ const ContactUs = () => {
                 onChange={handleChange}
                 required
                 margin="normal"
+                error={!!errors.message}
+                helperText={errors.message}
               />
               <Button
                 type="submit"
