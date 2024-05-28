@@ -64,22 +64,66 @@ function AdminHome() {
           alignItems: "center",
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth="md" sx={{ marginTop: -2 }}>
           <Paper
             elevation={6}
             sx={{
               padding: 4,
               backdropFilter: "blur(10px)",
               backgroundColor: "rgba(255, 255, 255, 0.9)",
-              borderRadius: 20,
-              marginTop: 8,
+              borderRadius: 10, 
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Add box shadow
+              position: "relative", // Make the position relative for absolute elements
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
+              alignItems: "center", // Center items horizontally
             }}
           >
-            <Box sx={{ marginRight: 4 }}>
+            {/* Add decorative elements */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                bgcolor: Colors.primary,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-20px",
+                left: "10%",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                bgcolor: Colors.primary,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            <Box
+              sx={{
+                position: "absolute",
+                top: "-30px",
+                right: "10%",
+                width: "60px",
+                height: "60px",
+                borderRadius: "50%",
+                bgcolor: Colors.primary,
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+              }}
+            />
+            {/* End decorative elements */}
+
+            <Box sx={{ marginBottom: -4.5 }}>
               <Avatar
                 sx={{
+                  marginTop: 3,
+                  marginRight: 75,
                   width: 120,
                   height: 120,
                   mb: 2,
@@ -87,23 +131,29 @@ function AdminHome() {
                 }}
                 src="/path/to/admin-avatar.jpg"
               />
-              {adminData && (
-                <Box textAlign="center">
-                  <Typography variant="h6" gutterBottom>
-                    {adminData.Name}
-                  </Typography>
-                  <Typography variant="h6" gutterBottom>
-                    {adminData.Surname}
-                  </Typography>
-                </Box>
-              )}
             </Box>
-            <Divider orientation="vertical" flexItem sx={{ marginX: 2 }} />
-            <Box sx={{ flex: 1 }}>
+            {adminData && (
+              <Box sx={{ textAlign: "center", marginTop: -7, paddingBottom: 6, marginRight: 28 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
+                <Typography variant="h4" sx={{ marginRight: 1 }}>
+                  {adminData.Name}
+                </Typography>
+                <Typography variant="h4" sx={{  }}>
+                  {adminData.Surname}
+                </Typography>
+              </Box>
+            </Box>            
+            )}
+            <Divider sx={{ width: "100%" }} />
+            <Box sx={{ flex: 1, marginTop: 2 }}>
               {adminData ? (
                 <Grid container spacing={2}>
                   {Object.entries(adminData).map(([key, value]) => (
-                    key !== "StaffId" && key !== "Name" && key !== "Surname" && key !== "Role" && key !== "Password" && (
+                    key !== "StaffId" &&
+                    key !== "Name" &&
+                    key !== "Surname" &&
+                    key !== "Role" &&
+                    key !== "Password" && (
                       <Grid item xs={12} sm={6} key={key}>
                         <Paper
                           sx={{
@@ -114,7 +164,9 @@ function AdminHome() {
                           }}
                         >
                           <Typography variant="body1" gutterBottom>
-                            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                            <strong>
+                              {key.charAt(0).toUpperCase() + key.slice(1)}:
+                            </strong>{" "}
                             {value}
                           </Typography>
                         </Paper>
