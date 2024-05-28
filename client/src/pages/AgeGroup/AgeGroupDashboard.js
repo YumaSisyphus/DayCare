@@ -28,6 +28,9 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import SessionModal from "../../components/SessionModal";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
 
 function AgeGroupDashboard() {
   const [ageGroups, setAgeGroups] = useState([]);
@@ -39,6 +42,21 @@ function AgeGroupDashboard() {
   const [isNewAgeGroup, setIsNewAgeGroup] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     fetch("/agegroup")
@@ -280,6 +298,7 @@ function AgeGroupDashboard() {
           />
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

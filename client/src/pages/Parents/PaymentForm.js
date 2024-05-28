@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 import { FormControl, InputLabel, Select, MenuItem, TextField, Button, Grid, Typography, Container } from "@mui/material";
 import CashIcon from "@mui/icons-material/Money";
 
@@ -14,14 +17,30 @@ const PaymentForm = () => {
   const [error, setError] = useState(null);
   const stripe = useStripe();
   const elements = useElements();
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     // Fetch children from the server
-    axios.get("/children/getChildren")
-      .then(response => {
+    axios
+      .get("/children/getChildren")
+      .then((response) => {
         setChildren(response.data.children);
       })
-      .catch(error => {
+      .catch((error) => {
         setError(error.message);
       });
   }, []);
@@ -29,9 +48,11 @@ const PaymentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const selectedChildInfo = children.find(child => child.ChildId === selectedChild);
+      const selectedChildInfo = children.find(
+        (child) => child.ChildId === selectedChild
+      );
       const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: 'card',
+        type: "card",
         card: elements.getElement(CardElement),
       });
 
@@ -46,9 +67,9 @@ const PaymentForm = () => {
         Surname: surname,
         PhoneNumber: phoneNumber,
         Amount: amount,
-        PaymentMethodId: paymentMethod.id // Include payment method ID
+        PaymentMethodId: paymentMethod.id, // Include payment method ID
       };
-      
+
       // Make a request to your backend to process the payment
       const response = await axios.post("/payment", paymentData);
       // Redirect or show success message

@@ -19,28 +19,11 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
 import { theme } from "../utils/theme";
 import Footer from "../components/Footer";
-import SessionModal from "../components/SessionModal";
 import useLogout from "../utils/useLogout";
-import useCheckAuth from "../utils/useCheckAuth";
 
 const WelcomeScreen = () => {
-// needed for refresh token implementation
-  const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
   const handleLogout = useLogout();
 
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
-
-  useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
-    }
-  }, [loading, authState]);
-//
   return (
     <ThemeProvider theme={theme}>
       <Box width={"100%"} mb={5}>
@@ -367,7 +350,6 @@ const WelcomeScreen = () => {
         </Container>
       </Box>
       <Footer />
-      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 };

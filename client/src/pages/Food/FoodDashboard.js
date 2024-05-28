@@ -20,7 +20,7 @@ import {
   TextField,
   Snackbar,
   Pagination,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,6 +29,9 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import SessionModal from "../../components/SessionModal";
+import useLogout from "../../utils/useLogout";
+import useCheckAuth from "../../utils/useCheckAuth";
 
 function Food() {
   const [foods, setFoods] = useState([]);
@@ -49,8 +52,21 @@ function Food() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [nameSearchQuery, setNameSearchQuery] = useState("");
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
 
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
 
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     fetch("/food/getFood")
@@ -59,7 +75,9 @@ function Food() {
         setFoods(data.data);
 
         const allergens = data.data.reduce((allergens, food) => {
-          const foodAllergens = food.Allergens.split(',').map((allergen) => allergen.trim());
+          const foodAllergens = food.Allergens.split(",").map((allergen) =>
+            allergen.trim()
+          );
           return [...new Set([...allergens, ...foodAllergens])];
         }, []);
 
@@ -180,9 +198,12 @@ function Food() {
     food.Name.toLowerCase().includes(nameSearchQuery.toLowerCase())
   );
 
-  const allergenFilter = nameFilter.filter((food) =>
-    selectedAllergenFilter === "" ||
-    food.Allergens.toLowerCase().includes(selectedAllergenFilter.toLowerCase())
+  const allergenFilter = nameFilter.filter(
+    (food) =>
+      selectedAllergenFilter === "" ||
+      food.Allergens.toLowerCase().includes(
+        selectedAllergenFilter.toLowerCase()
+      )
   );
 
   return (
@@ -225,7 +246,9 @@ function Food() {
           >
             <MenuItem value="">All</MenuItem>
             {allergens.map((allergen) => (
-              <MenuItem key={allergen} value={allergen}>{allergen}</MenuItem>
+              <MenuItem key={allergen} value={allergen}>
+                {allergen}
+              </MenuItem>
             ))}
           </TextField>
           <Button
@@ -326,6 +349,7 @@ function Food() {
           />
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

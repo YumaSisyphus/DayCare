@@ -19,6 +19,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 
 const EditChild = () => {
   const navigate = useNavigate();
@@ -37,6 +40,21 @@ const EditChild = () => {
     childId: childId,
     classId: "t",
   });
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -307,6 +325,7 @@ const EditChild = () => {
           </Grid>
         </Grid>
       </Box>
+      <SessionModal open={modalOpen} />
     </Box>
   );
 };
