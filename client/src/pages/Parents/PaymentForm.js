@@ -60,7 +60,7 @@ const { authState,loading } = useAuth();
     if (!surname.trim()) {
       newErrors.surname = "Please enter a surname";
     }
-    if (!phoneNumber.trim() || !/^\d{10}$/i.test(phoneNumber.trim())) {
+    if (!phoneNumber.trim()) {
       newErrors.phoneNumber = "Please enter a valid phone number";
     }
     if (isNaN(amount) || amount <= 0) {
