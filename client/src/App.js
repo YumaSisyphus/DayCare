@@ -94,7 +94,7 @@ function App() {
             }
           />
           <Route
-            path="/ClassDashboard"
+            path="/TeacherHome"
             element={
               <RoleBasedRoute
                 allowedRoles={["staff"]}

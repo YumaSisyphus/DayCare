@@ -24,7 +24,6 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useAuth } from "../utils/authContext"; // Import useAuth
 
-
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -99,21 +98,22 @@ const Login = () => {
       return;
     }
 
-    axios.post("/login", { username, password })
-    .then((res) => {
-      if (res.data.success) {
-        Cookies.set("token", res.data.token, { expires: 1 / 24 });
-        setAuthState({
-          isAuthenticated: true,
-          isRefreshToken: true, // or however you define it
-          user: res.data.user,
-        });
+    axios
+      .post("/login", { username, password })
+      .then((res) => {
+        if (res.data.success) {
+          Cookies.set("token", res.data.token, { expires: 1 / 24 });
+          setAuthState({
+            isAuthenticated: true,
+            isRefreshToken: true, // or however you define it
+            user: res.data.user,
+          });
           const userRole = res.data.user.role;
           const userType = res.data.user.userType;
 
           if (userRole === "Teacher") {
             setTimeout(() => {
-              navigate("/ClassDashboard");
+              navigate("/TeacherHome");
             }, 1000);
           } else if (userRole === "Admin") {
             setTimeout(() => {

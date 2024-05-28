@@ -26,7 +26,7 @@ const { authState,loading } = useAuth();
   }, [loading, authState, handleLogout]);
   return (
     <Box>
-      <Typography></Typography>
+      <Typography>ass</Typography>
       <SessionModal open={modalOpen} />
     </Box>
   );
