@@ -34,7 +34,7 @@ const ParentsList = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {

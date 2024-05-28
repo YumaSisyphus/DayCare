@@ -51,7 +51,7 @@ export default function DashboardChildren() {
   const [statusFilter, setStatusFilter] = useState("all");
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {

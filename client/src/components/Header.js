@@ -29,11 +29,8 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [auth, setAuth] = React.useState({
-    isAuthenticated: false,
-    isRefreshToken: false,
-    user: null,
-  });
+  const { authState, loading } = useAuth();
+  const handleLogout = useLogout();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -60,14 +57,15 @@ function ResponsiveAppBar() {
     setIsDrawerOpen(open);
   };
 
-const { authState,loading } = useAuth();
-  const handleLogout = useLogout();
+  // useEffect(() => {
+  //   if (!loading) {
+  //     if (!authState.isAuthenticated && authState.isRefreshToken) {
 
-  useEffect(() => {
-    if (!loading && authState.isAuthenticated && authState.isRefreshToken) {
-      setAuth(authState);
-    }
-  }, [loading, authState]);
+  //     }
+  //   }
+  // }, [loading, authState, handleLogout]);
+
+
 
   const drawerList = (
     <List>
@@ -242,14 +240,14 @@ const { authState,loading } = useAuth();
             alignItems={"center"}
             gap={3}
           >
-            {auth.isAuthenticated && (
+            {authState.isAuthenticated && (
               <a
                 href={
-                  auth.user.role === "Teacher"
+                  authState.user.role === "Teacher"
                     ? "/TeacherHome"
-                    : auth.user.role === "Admin"
+                    : authState.user.role === "Admin"
                     ? "/AdminHome"
-                    : auth.user.role === "parent"
+                    : authState.user.role === "parent"
                     ? "/ParentHome"
                     : "#"
                 }
