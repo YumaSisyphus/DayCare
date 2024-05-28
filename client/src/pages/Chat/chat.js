@@ -18,6 +18,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { Colors } from "../../utils/colors";
 
 const socket = io("http://localhost:7000"); // Connect to your backend WebSocket server
 
@@ -38,7 +39,7 @@ const Chat = () => {
         let response;
         if (senderRole === "parent") {
           response = await axios.get("http://localhost:7000/staff/getStaff");
-        } else if (senderRole === "Teacher") {
+        } else if (senderRole === "staff") {
           response = await axios.get(
             "http://localhost:7000/parents/getParents"
           );
@@ -83,15 +84,14 @@ const Chat = () => {
 
   // Function to handle sending messages
   const sendMessage = () => {
-    if (!recipientId || !newMessage || !senderId) return;
-    // Emit send_message event to server
+    if (!recipientId || !newMessage) return;
+
     socket.emit("send_message", {
-      sender_id: senderId,
-      recipient_id: recipientId,
+      senderId,
+      recipientId,
       message: newMessage,
     });
 
-    // Add sent message to UI
     setMessages((prevMessages) => [
       ...prevMessages,
       { sender_id: senderId, recipient_id: recipientId, message: newMessage },
@@ -111,6 +111,10 @@ const Chat = () => {
     }
   };
 
+  useEffect(() => {
+    loadMessages(recipientId);
+  }, []);
+
   // Function to handle recipient selection
   const handleRecipientChange = (e) => {
     const selectedRecipientId = e.target.value;
@@ -119,8 +123,19 @@ const Chat = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} style={{ padding: 20, marginTop: 20 }}>
+    <Box
+      display={"flex"}
+      minHeight={"92vh"}
+      borderTop={`1px solid ${Colors.cleanLightBlack}`}
+    >
+      <Box
+        style={{ padding: 20, width: "20%" }}
+        minHeight={"100%"}
+        sx={{
+          backgroundColor: Colors.primary,
+          borderRight: `2px solid ${Colors.pastelPurple}`,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           Chat
         </Typography>
@@ -142,35 +157,56 @@ const Chat = () => {
             ))}
           </Select>
         </FormControl>
-        <List style={{ maxHeight: 300, overflow: "auto", marginBottom: 20 }}>
+      </Box>
+      <Box
+        width={"80%"}
+        bgcolor={Colors.primary}
+        minHeight={"100%"}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"space-between"}
+      >
+        <List style={{ height: "100%", overflow: "auto", marginBottom: 20 }}>
           {filteredMessages.map((msg, index) => (
             <ListItem key={index} alignItems="flex-start">
               <ListItemText
                 primary={msg.sender_id === senderId ? "You" : msg.sender_id}
                 secondary={msg.message}
+                sx={{
+                  bgcolor: Colors.pastelBlue,
+                  padding: 1.5,
+                  maxWidth: "400px",
+                  borderRadius: 5,
+                  whiteSpace: "pre-wrap",
+                  wordBreak: "break-word",
+                }}
               />
               <Divider variant="inset" component="li" />
             </ListItem>
           ))}
         </List>
-        <TextField
-          fullWidth
-          variant="outlined"
-          label="Type your message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          style={{ marginBottom: 20 }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={sendMessage}
-          fullWidth
-        >
-          Send
-        </Button>
-      </Paper>
-    </Container>
+        <Box display={"flex"}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Type your message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            style={{ backgroundColor: Colors.white }}
+            size="small"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={sendMessage}
+            sx={{ width: "10%" }}
+            size="small"
+          >
+            Send
+          </Button>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
