@@ -57,7 +57,10 @@ function App() {
           <Route
             path="/DashboardParents"
             element={
-              <RoleBasedRoute allowedRoles={["Admin"]}>
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
                 <DashboardParents />
               </RoleBasedRoute>
             }

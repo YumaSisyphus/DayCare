@@ -15,12 +15,31 @@ import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 import { useAuth } from "../../utils/authContext";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 
 function ParentHome() {
   const [parentData, setParentData] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const { authState } = useAuth();
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     // Fetch parent data and filter for the currently logged-in parent
@@ -184,6 +203,7 @@ function ParentHome() {
           message={snackbarMessage}
         />
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

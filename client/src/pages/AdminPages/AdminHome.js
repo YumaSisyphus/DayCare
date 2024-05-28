@@ -14,11 +14,32 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import { useAuth } from "../../utils/authContext";
+import useLogout from "../../utils/useLogout";
+import useCheckAuth from "../../utils/useCheckAuth";
+import SessionModal from "../../components/SessionModal";
 
 function AdminHome() {
   const [adminData, setAdminData] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     // Fetch staff data and filter for the admin
@@ -71,7 +92,7 @@ function AdminHome() {
               padding: 4,
               backdropFilter: "blur(10px)",
               backgroundColor: "rgba(255, 255, 255, 0.9)",
-              borderRadius: 10, 
+              borderRadius: 10,
               boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Add box shadow
               position: "relative", // Make the position relative for absolute elements
               display: "flex",
@@ -133,46 +154,60 @@ function AdminHome() {
               />
             </Box>
             {adminData && (
-              <Box sx={{ textAlign: "center", marginTop: -7, paddingBottom: 6, marginRight: 28 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-                <Typography variant="h4" sx={{ marginRight: 1 }}>
-                  {adminData.Name}
-                </Typography>
-                <Typography variant="h4" sx={{  }}>
-                  {adminData.Surname}
-                </Typography>
+              <Box
+                sx={{
+                  textAlign: "center",
+                  marginTop: -7,
+                  paddingBottom: 6,
+                  marginRight: 28,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 2,
+                  }}
+                >
+                  <Typography variant="h4" sx={{ marginRight: 1 }}>
+                    {adminData.Name}
+                  </Typography>
+                  <Typography variant="h4" sx={{}}>
+                    {adminData.Surname}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>            
             )}
             <Divider sx={{ width: "100%" }} />
             <Box sx={{ flex: 1, marginTop: 2 }}>
               {adminData ? (
                 <Grid container spacing={2}>
-                  {Object.entries(adminData).map(([key, value]) => (
-                    key !== "StaffId" &&
-                    key !== "Name" &&
-                    key !== "Surname" &&
-                    key !== "Role" &&
-                    key !== "Password" && (
-                      <Grid item xs={12} sm={6} key={key}>
-                        <Paper
-                          sx={{
-                            padding: 3,
-                            borderRadius: 10,
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                            backgroundColor: Colors.lightGrey,
-                          }}
-                        >
-                          <Typography variant="body1" gutterBottom>
-                            <strong>
-                              {key.charAt(0).toUpperCase() + key.slice(1)}:
-                            </strong>{" "}
-                            {value}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    )
-                  ))}
+                  {Object.entries(adminData).map(
+                    ([key, value]) =>
+                      key !== "StaffId" &&
+                      key !== "Name" &&
+                      key !== "Surname" &&
+                      key !== "Role" &&
+                      key !== "Password" && (
+                        <Grid item xs={12} sm={6} key={key}>
+                          <Paper
+                            sx={{
+                              padding: 3,
+                              borderRadius: 10,
+                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                              backgroundColor: Colors.lightGrey,
+                            }}
+                          >
+                            <Typography variant="body1" gutterBottom>
+                              <strong>
+                                {key.charAt(0).toUpperCase() + key.slice(1)}:
+                              </strong>{" "}
+                              {value}
+                            </Typography>
+                          </Paper>
+                        </Grid>
+                      )
+                  )}
                 </Grid>
               ) : (
                 <Typography>Loading...</Typography>
@@ -187,6 +222,7 @@ function AdminHome() {
           message={snackbarMessage}
         />
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

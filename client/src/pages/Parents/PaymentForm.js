@@ -6,6 +6,7 @@ import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { FormControl, InputLabel, Select, MenuItem, TextField, Button, Grid, Typography, Container } from "@mui/material";
 import CashIcon from "@mui/icons-material/Money";
+import { useAuth } from "../../utils/authContext";
 
 const PaymentForm = () => {
   const [children, setChildren] = useState([]);
@@ -18,7 +19,7 @@ const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -26,12 +27,14 @@ const PaymentForm = () => {
   };
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loading, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     // Fetch children from the server

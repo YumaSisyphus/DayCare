@@ -32,6 +32,7 @@ import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import SessionModal from "../../components/SessionModal";
 import useLogout from "../../utils/useLogout";
 import useCheckAuth from "../../utils/useCheckAuth";
+import { useAuth } from "../../utils/authContext";
 
 function Food() {
   const [foods, setFoods] = useState([]);
@@ -53,7 +54,7 @@ function Food() {
   const [nameSearchQuery, setNameSearchQuery] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -61,12 +62,14 @@ function Food() {
   };
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loading, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch("/food/getFood")

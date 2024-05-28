@@ -36,6 +36,7 @@ import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolS
 import SessionModal from "../../components/SessionModal";
 import useLogout from "../../utils/useLogout";
 import useCheckAuth from "../../utils/useCheckAuth";
+import { useAuth } from "../../utils/authContext";
 
 function ClassDashboard() {
   const [classes, setClasses] = useState([]);
@@ -53,13 +54,26 @@ function ClassDashboard() {
   const [staffMembers, setStaffMembers] = useState([]);
   const [selectedStaffId, setSelectedStaffId] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-  
+
+  console.log(authState);
+  console.log(loading);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
+
   useEffect(() => {
     fetch("/class")
       .then((response) => response.json())

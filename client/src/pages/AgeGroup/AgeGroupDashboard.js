@@ -31,6 +31,7 @@ import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import SessionModal from "../../components/SessionModal";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
+import { useAuth } from "../../utils/authContext";
 
 function AgeGroupDashboard() {
   const [ageGroups, setAgeGroups] = useState([]);
@@ -43,7 +44,7 @@ function AgeGroupDashboard() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -51,12 +52,14 @@ function AgeGroupDashboard() {
   };
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loading, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch("/agegroup")

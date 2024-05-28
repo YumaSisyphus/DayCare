@@ -14,12 +14,33 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import useCheckAuth from "../../utils/useCheckAuth";
+import { useAuth } from "../../utils/authContext";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 
 function ChildHome() {
   const [parentData, setParentData] = useState(null);
   const [childData, setChildData] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     // Fetch parent data
@@ -148,6 +169,7 @@ function ChildHome() {
           message={snackbarMessage}
         />
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }
