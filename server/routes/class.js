@@ -13,19 +13,22 @@ const db = mysql.createConnection({
 
 
 router.get("/", (req, res) => {
+  const { teacherId } = req.query; // Assuming you pass the teacher's ID as a query parameter
   const query = `
       SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, s.Name as StaffName
       FROM class c
       JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
       LEFT JOIN staff_class sc ON c.ClassId = sc.ClassId
       LEFT JOIN staff s ON sc.StaffId = s.StaffId
+      WHERE s.StaffId = ?
     `;
 
-  db.query(query, (err, result) => {
+  db.query(query, [teacherId], (err, result) => {
     if (err) throw err;
     res.json(result);
   });
 });
+
 
 
 router.post("/", (req, res) => {
