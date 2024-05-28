@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../utils/authContext";
+import Cookies from "js-cookie";
 
 const useCheckAuth = () => {
   const [loading, setLoading] = useState(true);
@@ -9,7 +10,20 @@ const useCheckAuth = () => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await axios.get("/login/auth/status");
+        const token = Cookies.get("token");
+        if (!token) {
+          setAuthState({
+            isAuthenticated: false,
+            isRefreshToken: false,
+            user: null,
+          });
+          setLoading(false);
+          return;
+        }
+
+        const response = await axios.get("/login/auth/status", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setAuthState({
           isAuthenticated: response.data.isAuthenticated,
           isRefreshToken: response.data.isRefreshToken,
@@ -25,6 +39,7 @@ const useCheckAuth = () => {
         setLoading(false);
       }
     };
+
     checkAuthStatus();
   }, [setAuthState]);
 
