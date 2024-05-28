@@ -246,7 +246,7 @@ const { authState,loading } = useAuth();
               <a
                 href={
                   auth.user.role === "Teacher"
-                    ? "/ClassDashboard"
+                    ? "/TeacherHome"
                     : auth.user.role === "Admin"
                     ? "/AdminHome"
                     : auth.user.role === "parent"

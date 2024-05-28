@@ -31,14 +31,15 @@ const DashboardSidebar = () => {
         flexDirection={"column"}
       >
         <Typography variant="h6" mb={3} ml={3} mt={4}>
-          Dashboards
+          Teacher's Dashboard
         </Typography>
 
         <StyledLink href="/activities">Activities</StyledLink>
         <StyledLink href="/fooddashboard">Food</StyledLink>
         <StyledLink href="/mealdashboard">Meal</StyledLink>
-        <StyledLink href="/AgeGroupDashboard">Age Group</StyledLink>
         <StyledLink href="/ContactDashboard">Contact</StyledLink>
+        <StyledLink href="/MyClasses">My Classes</StyledLink>
+
       </Box>
       <Button
         display="flex"
