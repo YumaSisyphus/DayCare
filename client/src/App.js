@@ -29,6 +29,9 @@ import { AuthProvider } from "./utils/authContext";
 import RoleBasedRoute from "./utils/roleBasedRoute";
 import AuthRoute from "./utils/authRoute";
 import TeacherHome from "./pages/TeacherPages/TeacherHome";
+import AdminHome from "./pages/AdminPages/AdminHome";
+import ParentHome from "./pages/Parents/ParentHome";
+import ChildHome from "./pages/Children/ChildHome";
 import PaymentForm from "./pages/Parents/PaymentForm";
 import SuccessPage from "./pages/Parents/SuccessPage";
 
@@ -89,6 +92,29 @@ function App() {
              // </RoleBasedRoute>
             }
           />
+          <Route
+            path="/adminhome"
+            element={
+             // <RoleBasedRoute
+               // allowedRoles={["staff"]}
+               // allowedSpecificRoles={["Admin"]}
+             // >
+                <AdminHome />
+             // </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/parenthome"
+            element={
+             // <RoleBasedRoute
+               // allowedRoles={["staff"]}
+               // allowedSpecificRoles={["Parent"]}
+             // >
+                <ParentHome />
+             // </RoleBasedRoute>
+            }
+          />
+          <Route path="/ChildHome" element={<ChildHome />} />
           <Route path="/AddChild" element={<ChildForm />} />
           <Route path="/EditChild/:childId" element={<EditChild />} />
           <Route path="/staffDashboard" element={<Staff />} />

@@ -79,7 +79,7 @@ const PaymentForm = () => {
 
   return (
     <div>
-      <form onSubmit={handlePayment}>
+      <form onSubmit={handleSubmit}>
         {error && <p>Error: {error}</p>}
         <div>
           <label htmlFor="child">Select Child:</label>
