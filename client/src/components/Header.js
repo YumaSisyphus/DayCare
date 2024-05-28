@@ -252,7 +252,7 @@ function ResponsiveAppBar() {
                     ? "/ClassDashboard"
                     : authState.user.role === "Admin"
                     ? "/AdminHome"
-                    : authState.user.userType === "parent"
+                    : authState.user.role === "parent"
                     ? "/ParentHome"
                     : "#"
                 }

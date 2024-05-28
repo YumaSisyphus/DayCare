@@ -53,7 +53,7 @@ function App() {
           <Route
             path="/DashboardParents"
             element={
-              <RoleBasedRoute allowedRoles={["parent"]}>
+              <RoleBasedRoute allowedRoles={["Admin"]}>
                 <DashboardParents />
              </RoleBasedRoute>
             }
@@ -105,8 +105,7 @@ function App() {
             path="/ParentHome"
             element={
               <RoleBasedRoute
-                allowedRoles={["staff"]}
-                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
               >
                 <ParentHome />
              </RoleBasedRoute>
