@@ -103,7 +103,7 @@ function AdminHome() {
               {adminData ? (
                 <Grid container spacing={2}>
                   {Object.entries(adminData).map(([key, value]) => (
-                    key !== "StaffId" && key !== "Name" && key !== "Surname" && (
+                    key !== "StaffId" && key !== "Name" && key !== "Surname" && key !== "Role" && key !== "Password" && (
                       <Grid item xs={12} sm={6} key={key}>
                         <Paper
                           sx={{
