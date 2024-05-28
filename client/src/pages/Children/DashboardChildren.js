@@ -213,6 +213,7 @@ export default function DashboardChildren() {
               flexDirection: "row",
               alignItems: "center",
               marginBottom: 2,
+              border: "2px solid black",
             }}
           >
             <SearchBar label="Search..." onSearch={handleSearch} />
@@ -255,11 +256,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Name")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Name {renderSortIcon("Name")}
                     </Typography>
@@ -267,11 +264,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Surname")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Surname {renderSortIcon("Surname")}
                     </Typography>
@@ -279,11 +272,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Gender")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Gender {renderSortIcon("Gender")}
                     </Typography>
@@ -291,11 +280,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Birthday")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Birthday {renderSortIcon("Birthday")}
                     </Typography>
@@ -303,11 +288,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Allergies")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Allergies {renderSortIcon("Allergies")}
                     </Typography>
@@ -315,11 +296,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Vaccines")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Vaccines {renderSortIcon("Vaccines")}
                     </Typography>
@@ -327,11 +304,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Payments")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Payments {renderSortIcon("Payments")}
                     </Typography>
@@ -339,11 +312,7 @@ export default function DashboardChildren() {
                   <TableCell onClick={() => handleSort("Active")}>
                     <Typography
                       fontWeight="bold"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                      }}
+                      sx={{ display: "flex", alignItems: "center" }}
                     >
                       Active {renderSortIcon("Active")}
                     </Typography>
