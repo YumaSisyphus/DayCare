@@ -9,6 +9,9 @@ const RoleBasedRoute = ({ children, allowedRoles, allowedSpecificRoles }) => {
   if (authState.isAuthenticated === null) {
     return <div>Loading...</div>;
   }
+console.log(authState.user.userType);
+console.log(authState.user.role);
+console.log(authState);
 
   if (
     (!authState.isAuthenticated && !authState.isRefreshToken) ||

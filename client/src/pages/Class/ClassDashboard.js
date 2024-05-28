@@ -59,15 +59,7 @@ function ClassDashboard() {
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-
-  useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
-    }
-  }, [loading, authState]);
-
+  
   useEffect(() => {
     fetch("/class")
       .then((response) => response.json())
