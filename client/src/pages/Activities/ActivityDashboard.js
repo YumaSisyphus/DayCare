@@ -32,6 +32,7 @@ import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import useLogout from "../../utils/useLogout";
 import useCheckAuth from "../../utils/useCheckAuth";
 import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 function Activity() {
   const [activities, setActivities] = useState([]);
@@ -47,7 +48,7 @@ function Activity() {
   const [page, setPage] = useState(1); // Define page state
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -55,12 +56,14 @@ function Activity() {
   };
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loading, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch("/activity")

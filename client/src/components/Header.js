@@ -23,15 +23,17 @@ import useLogout from "../utils/useLogout";
 import useCheckAuth from "../utils/useCheckAuth";
 import { useEffect } from "react";
 
-
 const settings = ["Profile", "Account", "Dashboard"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const[role, setRole]= React.useState("");
-  
+  const [auth, setAuth] = React.useState({
+    isAuthenticated: false,
+    isRefreshToken: false,
+    user: null,
+  });
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -58,19 +60,14 @@ function ResponsiveAppBar() {
     setIsDrawerOpen(open);
   };
 
-  const { authState,loading } = useCheckAuth();
-  console.log(authState);
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   useEffect(() => {
-    if(
-      !loading && !authState.isAuthenticated && authState.isRefreshToken
-    ){
-     setRole(authState.user.role)
-    } 
+    if (!loading && authState.isAuthenticated && authState.isRefreshToken) {
+      setAuth(authState);
+    }
   }, [loading, authState]);
-
- console.log(role);
 
   const drawerList = (
     <List>
@@ -79,7 +76,7 @@ function ResponsiveAppBar() {
       </ListItem>
       <ListItem
         button
-        component={ Link}
+        component={Link}
         to="/activities"
         onClick={toggleDrawer(false)}
       >
@@ -245,24 +242,23 @@ function ResponsiveAppBar() {
             alignItems={"center"}
             gap={3}
           >
-            {authState.isAuthenticated && (
+            {auth.isAuthenticated && (
               <a
                 href={
-                  authState.user.role === "Teacher"
-                    ? "/ClassDashboard"
-                    : authState.user.role === "Admin"
+                  auth.user.role === "Teacher"
+                    ? "/TeacherHome"
+                    : auth.user.role === "Admin"
                     ? "/AdminHome"
-                    : authState.user.userType === "parent"
+                    : auth.user.role === "parent"
                     ? "/ParentHome"
                     : "#"
                 }
                 className="link-header"
-              > 
+              >
                 Dashboard
               </a>
             )}
 
-           
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="" />

@@ -7,6 +7,7 @@ const io = require("socket.io")(http); // Initialize Socket.IO with HTTP server
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const mysql = require("mysql2");
+const mongoose = require("mongoose");
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -18,6 +19,17 @@ const db = mysql.createConnection({
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+mongoose
+  .connect(
+    "mongodb+srv://butritnreqica:EwKrYj7B9y586W1G@cluster0.ufzgp4x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", //"mongodb://localhost:27017/daycare"
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 const loginRoutes = require("./routes/login");
 const childrenRoutes = require("./routes/children");

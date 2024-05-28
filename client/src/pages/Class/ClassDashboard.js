@@ -36,6 +36,7 @@ import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolS
 import SessionModal from "../../components/SessionModal";
 import useLogout from "../../utils/useLogout";
 import useCheckAuth from "../../utils/useCheckAuth";
+import { useAuth } from "../../utils/authContext";
 
 function ClassDashboard() {
   const [classes, setClasses] = useState([]);
@@ -53,13 +54,26 @@ function ClassDashboard() {
   const [staffMembers, setStaffMembers] = useState([]);
   const [selectedStaffId, setSelectedStaffId] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-  
+
+  console.log(authState);
+  console.log(loading);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
+
   useEffect(() => {
     fetch("/class")
       .then((response) => response.json())
@@ -265,13 +279,11 @@ function ClassDashboard() {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">
-                        {staff
-                          .filter((s) => s.ClassId === cls.ClassId)
-                          .map((s) => s.StaffName)
-                          .join(", ")}
-                      </Typography>
-                    </TableCell>
+                  <Typography variant="body1">
+                    {cls.StaffName} {/* Display the teacher's name */}
+                  </Typography>
+                </TableCell>
+
 
                     <TableCell sx={{ textAlign: "right" }}>
                       <IconButton
@@ -329,20 +341,23 @@ function ClassDashboard() {
                 </Select>
               </FormControl>
               <FormControl fullWidth margin="normal">
-                <InputLabel id="staff-label">Staff</InputLabel>
-                <Select
-                  labelId="staff-label"
-                  value={selectedStaffId}
-                  label="Staff"
-                  onChange={(e) => setSelectedStaffId(e.target.value)}
-                >
-                  {staffMembers.map((staff) => (
+              <InputLabel id="staff-label">Staff</InputLabel>
+              <Select
+                labelId="staff-label"
+                value={selectedStaffId}
+                label="Staff"
+                onChange={(e) => setSelectedStaffId(e.target.value)}
+              >
+                {staffMembers
+                  .filter((staff) => staff.Role === "Teacher") // Filter staff members with role Teacher
+                  .map((staff) => (
                     <MenuItem key={staff.StaffId} value={staff.StaffId}>
                       {`${staff.Name} ${staff.Surname}`}
                     </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
+              </Select>
+            </FormControl>
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">

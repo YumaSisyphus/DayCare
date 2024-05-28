@@ -34,8 +34,15 @@ import ParentHome from "./pages/Parents/ParentHome";
 import ChildHome from "./pages/Children/ChildHome";
 import PaymentForm from "./pages/Parents/PaymentForm";
 import SuccessPage from "./pages/Parents/SuccessPage";
+import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
+import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
 
-const stripePromise = loadStripe("pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck");
+
+import MyClasses from "./pages/TeacherPages/MyClasses";
+
+const stripePromise = loadStripe(
+  "pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck"
+);
 
 function App() {
   return (
@@ -44,7 +51,9 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<WelcomeScreen />} />
-          <Route path="/login" element={
+          <Route
+            path="/login"
+            element={
               <AuthRoute>
                 <Login />
               </AuthRoute>
@@ -53,21 +62,57 @@ function App() {
           <Route
             path="/DashboardParents"
             element={
-              <RoleBasedRoute allowedRoles={["parent"]}>
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
                 <DashboardParents />
-             </RoleBasedRoute>
+              </RoleBasedRoute>
+            }
+          />
+
+ 
+           <Route
+            path="/TeacherHome"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Teacher"]}
+              >
+                <TeacherHome />
+              </RoleBasedRoute>
+            }
+          />
+            <Route
+            path="/MyClasses"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Teacher"]}
+              >
+                <MyClasses />
+              </RoleBasedRoute>
             }
           />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
           <Route path="/activities" element={<Activity />} />
           <Route path="/SuccessPage" element={<SuccessPage />} />
           <Route path="/ParentForm" element={<ParentForm />} />
+          <Route path="/CreatePaymentForm" element={<CreatePaymentForm />} />
           <Route path="/EditParents/:parentId" element={<EditParent />} />
           <Route path="/ChildParent" element={<ChildParent />} />
           <Route path="/foodDashboard" element={<Food />} />
-          <Route path="/ClassDashboard" element={<ClassDashboard />} />
           <Route path="/AboutUs" element={<AboutUs />} />
-          <Route path="/PaymentForm" element={<Elements stripe={stripePromise}><PaymentForm /></Elements>} />
+          <Route path="/InvoiceDashboard" element={<InvoiceDashboard />} />
+
+          <Route
+            path="/PaymentForm"
+            element={
+              <Elements stripe={stripePromise}>
+                <PaymentForm />
+              </Elements>
+            }
+          />
           <Route
             path="/AgeGroupDashboard"
             element={
@@ -80,13 +125,25 @@ function App() {
             }
           />
           <Route
-            path="/ClassDashboard"
+            path="/CreatePaymentForm"
             element={
               <RoleBasedRoute
-                allowedRoles={["staff"]}
-                allowedSpecificRoles={["Teacher"]}
+                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
               >
-                <TeacherHome />
+                <CreatePaymentForm />
+              </RoleBasedRoute>
+            }
+          />
+     
+          <Route
+            path="/ClassDashboard"
+            element={
+             <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <ClassDashboard />
               </RoleBasedRoute>
             }
           />
@@ -96,7 +153,7 @@ function App() {
               <RoleBasedRoute
                 allowedRoles={["staff"]}
                 allowedSpecificRoles={["Admin"]}
-             >
+              >
                 <AdminHome />
               </RoleBasedRoute>
             }
@@ -105,23 +162,33 @@ function App() {
             path="/ParentHome"
             element={
               <RoleBasedRoute
-                allowedRoles={["staff"]}
                 allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
               >
                 <ParentHome />
-             </RoleBasedRoute>
+              </RoleBasedRoute>
             }
           />
           <Route path="/ChildHome" element={<ChildHome />} />
           <Route path="/AddChild" element={<ChildForm />} />
           <Route path="/EditChild/:childId" element={<EditChild />} />
-          <Route path="/staffDashboard" element={<Staff />} />
+          <Route
+            path="/StaffDashboard"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <Staff />
+              </RoleBasedRoute>
+            }
+          />
           <Route
             path="/ContactDashboard"
             element={
               <PrivateRoute>
                 <ContactForm />
-             </PrivateRoute>
+              </PrivateRoute>
             }
           />
           <Route path="/mealDashboard" element={<Meal />} />

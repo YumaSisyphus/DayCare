@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     isRefreshToken: null,
     user: null,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -19,20 +20,21 @@ export const AuthProvider = ({ children }) => {
           isRefreshToken: response.data.isRefreshToken,
           user: response.data.user,
         });
-        console.log(response);
       } catch (error) {
         setAuthState({
           isAuthenticated: false,
           isRefreshToken: false,
           user: null,
         });
+      } finally {
+        setLoading(false);
       }
     };
     checkAuthStatus();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ authState, setAuthState }}>
+    <AuthContext.Provider value={{ authState, setAuthState, loading }}>
       {children}
     </AuthContext.Provider>
   );

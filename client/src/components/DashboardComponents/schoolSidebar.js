@@ -34,9 +34,10 @@ const DashboardSchoolSidebar = () => {
           Dashboards
         </Typography>
         <Box width={"100%"} display={"flex"}>
-          <StyledLink href="/staffDashboard">Staff</StyledLink>
+          <StyledLink href="/StaffDashboard">Staff</StyledLink>
         </Box>
         <StyledLink href="/ClassDashboard">Class</StyledLink>
+        <StyledLink href="/AgeGroupDashboard">Age Group</StyledLink>
 
         <StyledLink href="/DashboardParents">Parents</StyledLink>
         <StyledLink href="/DashboardChildren">Children</StyledLink>

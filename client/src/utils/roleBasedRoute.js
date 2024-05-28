@@ -1,25 +1,30 @@
-// Import necessary modules
+// RoleBasedRoute.js
 import React from "react";
-import { Navigate } from "react-router-dom"; // Import Navigate
-import { useAuth } from "./authContext"; // Import useAuth
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../utils/authContext";
+import useCheckAuth from "./useCheckAuth";
 
-// RoleBasedRoute component
 const RoleBasedRoute = ({ children, allowedRoles, allowedSpecificRoles }) => {
-  const { authState } = useAuth();
+const { authState,loading } = useAuth();
+
+  console.log(
+    (!authState.isAuthenticated && !authState.isRefreshToken) ||
+      (authState.isAuthenticated && !authState.isRefreshToken) ||
+      !allowedRoles.includes(authState.user.userType) ||
+      !allowedSpecificRoles.includes(authState.user.role)
+  );
 
   if (authState.isAuthenticated === null) {
     return <div>Loading...</div>;
   }
 
-  const { userType, role } = authState.user;
-
   if (
-    !authState.isAuthenticated ||
-    !authState.isRefreshToken ||
-    !allowedRoles.includes(userType) ||
-    !allowedSpecificRoles.includes(role)
+    (!authState.isAuthenticated && !authState.isRefreshToken) ||
+    (authState.isAuthenticated && !authState.isRefreshToken) ||
+    !allowedRoles.includes(authState.user.userType) ||
+    !allowedSpecificRoles.includes(authState.user.role)
   ) {
-    return <Navigate to="/" />; // Use Navigate component
+    return <Navigate to="/" />;
   }
 
   return children;

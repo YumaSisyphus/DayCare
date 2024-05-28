@@ -19,6 +19,7 @@ import { Colors } from "../../utils/colors";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 const EditParent = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const EditParent = () => {
     childId: "t",
   });
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -47,12 +48,14 @@ const EditParent = () => {
   };
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loading, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     const fetchChildren = async () => {

@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 const ChildForm = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const ChildForm = () => {
     },
   ]);
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loading } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -49,12 +50,14 @@ const ChildForm = () => {
   };
 
   useEffect(() => {
-    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
-      handleOpenModal();
-    } else if (!loading && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loading, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     const fetchClasses = async () => {

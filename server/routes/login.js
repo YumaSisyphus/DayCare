@@ -92,6 +92,7 @@ router.post("/", (req, res) => {
             {
               userId: parentData[0].ParentId,
               username: parentData[0].Username,
+              role: "parent", // This line is important
               userType: "parent",
             },
             secretKey,
@@ -102,6 +103,7 @@ router.post("/", (req, res) => {
             {
               userId: parentData[0].ParentId,
               username: parentData[0].Username,
+              role: "parent", // This line is important
               userType: "parent",
             },
             refreshTokenSecretKey,
@@ -125,6 +127,7 @@ router.post("/", (req, res) => {
             user: {
               id: parentData[0].ParentId,
               username: parentData[0].Username,
+              role: "parent", // This line is important
               userType: "parent",
             },
           });

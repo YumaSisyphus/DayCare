@@ -32,6 +32,7 @@ import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolS
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 function Staff() {
   const [staffList, setStaffList] = useState([]);
@@ -50,12 +51,12 @@ function Staff() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewStaff, setIsNewStaff] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const { authState, loadingAuth } = useCheckAuth();
+const { authState,loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -63,19 +64,17 @@ function Staff() {
   };
 
   useEffect(() => {
-    if (
-      !loadingAuth &&
-      !authState.isAuthenticated &&
-      authState.isRefreshToken
-    ) {
-      handleOpenModal();
-    } else if (!loadingAuth && !authState.isRefreshToken) {
-      handleLogout();
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
     }
-  }, [loadingAuth, authState]);
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingPage(true);
     fetch("/staff/getStaff")
       .then((response) => {
         if (!response.ok) {
@@ -92,7 +91,7 @@ function Staff() {
         setSnackbarOpen(true);
       })
       .finally(() => {
-        setLoading(false);
+        setLoadingPage(false);
       });
   }, []);
 
@@ -285,7 +284,7 @@ function Staff() {
             onChange={handleSearchChange}
             sx={{ width: "200px" }}
           />
-          {loading ? (
+          {loadingPage ? (
             <Typography>Loading...</Typography>
           ) : (
             <TableContainer
