@@ -14,15 +14,17 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import { useAuth } from "../../utils/authContext";
 
 function ParentHome() {
   const [parentData, setParentData] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { authState } = useAuth();
 
   useEffect(() => {
     // Fetch parent data and filter for the currently logged-in parent
-    fetch("/parents/getParent")
+    fetch(`/parents/getParent/${authState.user.id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch parent data");
@@ -78,7 +80,6 @@ function ParentHome() {
               alignItems: "center",
             }}
           >
-            
             {/* Adding decorative elements */}
             <Box
               sx={{
@@ -144,25 +145,31 @@ function ParentHome() {
             <Box sx={{ flex: 1 }}>
               {parentData ? (
                 <Grid container spacing={2}>
-                  {Object.entries(parentData).map(([key, value]) => (
-                    key !== "ParentId" && key !== "Name" && key !== "Surname" && key !== "Password" && (
-                      <Grid item xs={12} sm={6} key={key}>
-                        <Paper
-                          sx={{
-                            padding: 3,
-                            borderRadius: 10,
-                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                            backgroundColor: Colors.lightGrey,
-                          }}
-                        >
-                          <Typography variant="body1" gutterBottom>
-                            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
-                            {value}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    )
-                  ))}
+                  {Object.entries(parentData).map(
+                    ([key, value]) =>
+                      key !== "ParentId" &&
+                      key !== "Name" &&
+                      key !== "Surname" &&
+                      key !== "Password" && (
+                        <Grid item xs={12} sm={6} key={key}>
+                          <Paper
+                            sx={{
+                              padding: 3,
+                              borderRadius: 10,
+                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                              backgroundColor: Colors.lightGrey,
+                            }}
+                          >
+                            <Typography variant="body1" gutterBottom>
+                              <strong>
+                                {key.charAt(0).toUpperCase() + key.slice(1)}:
+                              </strong>{" "}
+                              {value}
+                            </Typography>
+                          </Paper>
+                        </Grid>
+                      )
+                  )}
                 </Grid>
               ) : (
                 <Typography>Loading...</Typography>

@@ -35,7 +35,9 @@ import ChildHome from "./pages/Children/ChildHome";
 import PaymentForm from "./pages/Parents/PaymentForm";
 import SuccessPage from "./pages/Parents/SuccessPage";
 
-const stripePromise = loadStripe("pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck");
+const stripePromise = loadStripe(
+  "pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck"
+);
 
 function App() {
   return (
@@ -44,7 +46,9 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<WelcomeScreen />} />
-          <Route path="/login" element={
+          <Route
+            path="/login"
+            element={
               <AuthRoute>
                 <Login />
               </AuthRoute>
@@ -55,7 +59,7 @@ function App() {
             element={
               <RoleBasedRoute allowedRoles={["Admin"]}>
                 <DashboardParents />
-             </RoleBasedRoute>
+              </RoleBasedRoute>
             }
           />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
@@ -67,7 +71,14 @@ function App() {
           <Route path="/foodDashboard" element={<Food />} />
           <Route path="/ClassDashboard" element={<ClassDashboard />} />
           <Route path="/AboutUs" element={<AboutUs />} />
-          <Route path="/PaymentForm" element={<Elements stripe={stripePromise}><PaymentForm /></Elements>} />
+          <Route
+            path="/PaymentForm"
+            element={
+              <Elements stripe={stripePromise}>
+                <PaymentForm />
+              </Elements>
+            }
+          />
           <Route
             path="/AgeGroupDashboard"
             element={
@@ -96,7 +107,7 @@ function App() {
               <RoleBasedRoute
                 allowedRoles={["staff"]}
                 allowedSpecificRoles={["Admin"]}
-             >
+              >
                 <AdminHome />
               </RoleBasedRoute>
             }
@@ -105,10 +116,11 @@ function App() {
             path="/ParentHome"
             element={
               <RoleBasedRoute
+                allowedSpecificRoles={["parent"]}
                 allowedRoles={["parent"]}
               >
                 <ParentHome />
-             </RoleBasedRoute>
+              </RoleBasedRoute>
             }
           />
           <Route path="/ChildHome" element={<ChildHome />} />
@@ -120,7 +132,7 @@ function App() {
             element={
               <PrivateRoute>
                 <ContactForm />
-             </PrivateRoute>
+              </PrivateRoute>
             }
           />
           <Route path="/mealDashboard" element={<Meal />} />
