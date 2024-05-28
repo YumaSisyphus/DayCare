@@ -16,10 +16,13 @@ import {
 } from "@mui/material";
 import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 
 const EditParent = () => {
   const navigate = useNavigate();
-  const[children, setChildren]= useState([]);
+  const [children, setChildren] = useState([]);
   const { parentId } = useParams(); // Assuming you have a parent ID in the route params
   const [parent, setParent] = useState({
     name: "",
@@ -33,8 +36,23 @@ const EditParent = () => {
     password: "",
     active: 1,
     parentId: parentId,
-    childId:"t",
+    childId: "t",
   });
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     const fetchChildren = async () => {
@@ -52,7 +70,9 @@ const EditParent = () => {
     const fetchParentData = async () => {
       try {
         const response = await axios.get(`/parents/getParent/${parentId}`);
-        const responseChild = await axios.get(  `/parents/getchildparent/${parentId}` );
+        const responseChild = await axios.get(
+          `/parents/getchildparent/${parentId}`
+        );
 
         const fetchedParent = response.data.data[0]; // Destructuring the fetched data
         const fetchChild = responseChild.data.child[0];
@@ -69,7 +89,7 @@ const EditParent = () => {
           password: fetchedParent.Password,
           active: fetchedParent.Active,
           parentId: parentId,
-          childId: fetchChild ? fetchChild.ChildId : "", 
+          childId: fetchChild ? fetchChild.ChildId : "",
         });
       } catch (error) {
         console.error("Fetch parent error:", error);
@@ -103,7 +123,8 @@ const EditParent = () => {
           ? dayjs(parent.birthday).format("YYYY-MM-DD")
           : null,
       };
-      const response = await axios.put( `/parents/updateParent`,
+      const response = await axios.put(
+        `/parents/updateParent`,
         formattedParent
       );
       if (response.data.success) {
@@ -123,29 +144,28 @@ const EditParent = () => {
     }
   };
 
-
   return (
     <Box
-    sx={{
-      bgcolor: Colors.secondary,
-      backgroundImage: `url(${DashboardBg})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}
-    height={"100vh"}
-    display={"flex"}
-    justifyContent={"center"}
-    alignItems={"center"}
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+      height={"100vh"}
+      display={"flex"}
+      justifyContent={"center"}
+      alignItems={"center"}
     >
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3 , marginTop:-10}}
+        sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3, marginTop: -10 }}
       >
-              <Grid container justifyContent="center">
+        <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>
               <Typography variant="h6" gutterBottom>
-                Edit Parent 
+                Edit Parent
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
@@ -234,24 +254,24 @@ const EditParent = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                  <FormControl variant="outlined" fullWidth>
-                  <InputLabel>Child</InputLabel>
-                  <Select
-                    name="childId"
-                    value={parent.childId}
-                    onChange={handleChange}
-                    label="Child"
-                  >
-                    <MenuItem value="">
-                      <em>No Child</em>
-                    </MenuItem>
-                    {children.map((item) => (
-                      <MenuItem key={item.ChildId} value={item.ChildId}>
-                        {item.Name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <FormControl variant="outlined" fullWidth>
+                      <InputLabel>Child</InputLabel>
+                      <Select
+                        name="childId"
+                        value={parent.childId}
+                        onChange={handleChange}
+                        label="Child"
+                      >
+                        <MenuItem value="">
+                          <em>No Child</em>
+                        </MenuItem>
+                        {children.map((item) => (
+                          <MenuItem key={item.ChildId} value={item.ChildId}>
+                            {item.Name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <Button
@@ -269,6 +289,7 @@ const EditParent = () => {
           </Grid>
         </Grid>
       </Box>
+      <SessionModal open={modalOpen} />
     </Box>
   );
 };

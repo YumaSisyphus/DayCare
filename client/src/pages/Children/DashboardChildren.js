@@ -35,6 +35,9 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import useLogout from "../../utils/useLogout";
+import useCheckAuth from "../../utils/useCheckAuth";
+import SessionModal from "../../components/SessionModal";
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
@@ -45,8 +48,22 @@ export default function DashboardChildren() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [statusFilter, setStatusFilter] = useState("all");
-
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useCheckAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading && !authState.isAuthenticated && authState.isRefreshToken) {
+      handleOpenModal();
+    } else if (!loading && !authState.isRefreshToken) {
+      handleLogout();
+    }
+  }, [loading, authState]);
 
   useEffect(() => {
     const fetchChildren = async () => {
@@ -94,7 +111,7 @@ export default function DashboardChildren() {
 
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
-    setPage(1); 
+    setPage(1);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -414,6 +431,7 @@ export default function DashboardChildren() {
           </Dialog>
         </Box>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }
