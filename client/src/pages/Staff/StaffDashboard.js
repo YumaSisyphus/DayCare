@@ -282,7 +282,7 @@ function Staff() {
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: 10  }}>
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -1  }}>
             Staff Dashboard
              </Typography>
            <Button
@@ -374,7 +374,7 @@ function Staff() {
                           <EditIcon />
                         </IconButton>
                         <IconButton
-                          color="secondary"
+                          color="primary"
                           onClick={() => handleDelete(staff.StaffId)}
                         >
                           <DeleteIcon />

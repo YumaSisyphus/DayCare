@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { Modal, Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import useLogout from "../utils/useLogout";
@@ -18,7 +17,7 @@ const style = {
 };
 
 const SessionModal = ({ open }) => {
-  const navigate = useNavigate();
+  const handleLogOut = useLogout();
   const [openModal, setOpenModal] = useState(open);
 
   useEffect(() => {
@@ -27,21 +26,21 @@ const SessionModal = ({ open }) => {
 
   const handleClose = () => {
     setOpenModal(false);
+    handleLogOut();
   };
-
-  const handleLogOut = useLogout();
-
 
   const handleRefresh = async () => {
     try {
       const response = await axios.post("/login/token/refresh");
       if (response.data.success) {
-        handleClose();
+        setOpenModal(false);
+        window.location.reload(); // Refresh the page
       }
     } catch (error) {
       console.error("Couldn't authenticate you", error);
     }
   };
+
   return (
     <Modal open={openModal} onClose={handleClose}>
       <Box sx={style}>
