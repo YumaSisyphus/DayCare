@@ -1,0 +1,25 @@
+.chat-icon {
+  display: inline-block;
+}
+
+.chat-dot {
+  animation: none;
+}
+
+.chat-icon:hover .chat-dot {
+  animation: chatMotion2 0.8s ease-in-out infinite;
+}
+
+.link-header {
+  height: 100%;
+}
+
+@keyframes chatMotion2 {
+  0%,
+  to {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1px);
+  }
+}
