@@ -34,6 +34,10 @@ import ParentHome from "./pages/Parents/ParentHome";
 import ChildHome from "./pages/Children/ChildHome";
 import PaymentForm from "./pages/Parents/PaymentForm";
 import SuccessPage from "./pages/Parents/SuccessPage";
+import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
+import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
+
+
 import MyClasses from "./pages/TeacherPages/MyClasses";
 
 const stripePromise = loadStripe(
@@ -66,6 +70,8 @@ function App() {
               </RoleBasedRoute>
             }
           />
+
+ 
            <Route
             path="/TeacherHome"
             element={
@@ -92,10 +98,13 @@ function App() {
           <Route path="/activities" element={<Activity />} />
           <Route path="/SuccessPage" element={<SuccessPage />} />
           <Route path="/ParentForm" element={<ParentForm />} />
+          <Route path="/CreatePaymentForm" element={<CreatePaymentForm />} />
           <Route path="/EditParents/:parentId" element={<EditParent />} />
           <Route path="/ChildParent" element={<ChildParent />} />
           <Route path="/foodDashboard" element={<Food />} />
           <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/InvoiceDashboard" element={<InvoiceDashboard />} />
+
           <Route
             path="/PaymentForm"
             element={
@@ -116,7 +125,19 @@ function App() {
             }
           />
           <Route
-            path="/TeacherHome"
+            path="/CreatePaymentForm"
+            element={
+              <RoleBasedRoute
+                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
+              >
+                <CreatePaymentForm />
+              </RoleBasedRoute>
+            }
+          />
+     
+          <Route
+            path="/ClassDashboard"
             element={
              <RoleBasedRoute
                 allowedRoles={["staff"]}

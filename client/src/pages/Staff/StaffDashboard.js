@@ -56,7 +56,7 @@ function Staff() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -136,6 +136,24 @@ const { authState,loading } = useAuth();
   };
 
   const handleSaveChanges = () => {
+    // Basic validation to check if any of the required fields are empty
+    if (
+      !editedName ||
+      !editedSurname ||
+      !editedBirthday ||
+      !editedGender ||
+      !editedEmail ||
+      !editedPhoneNumber ||
+      !editedRole ||
+      !editedUsername ||
+      !editedAddress ||
+      !editedPassword
+    ) {
+      setSnackbarMessage("Please fill out all fields.");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const apiUrl = isNewStaff
       ? "/staff/createStaff"
       : `/staff/updateStaff/${selectedStaff.StaffId}`;
@@ -264,18 +282,19 @@ const { authState,loading } = useAuth();
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom>
-              Staff Dashboard
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
+            <Typography variant="h4" gutterBottom sx={{ marginTop: 10  }}>
+            Staff Dashboard
+             </Typography>
+           <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAddNew}
+            sx={{ height: "20%", marginTop: 2 }}
+          >
+            Add New
+          </Button>
+
           </Box>
           <TextField
             margin="normal"
