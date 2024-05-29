@@ -121,7 +121,7 @@ const Login = () => {
             }, 1000);
           } else if (userType === "parent") {
             setTimeout(() => {
-              navigate("/parenthome");
+              navigate("/ParentHome");
             }, 1000);
           } else {
             setTimeout(() => {
