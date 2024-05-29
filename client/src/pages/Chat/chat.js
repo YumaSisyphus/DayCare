@@ -22,7 +22,7 @@ import {
 import { Colors } from "../../utils/colors";
 
 // Ensure the socket connection is established outside the component to avoid multiple connections
-const socket = io("http://localhost:7000");
+const socket = io("http://localhost:5000");
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -83,10 +83,10 @@ const Chat = () => {
       try {
         let response;
         if (senderRole === "parent") {
-          response = await axios.get("http://localhost:7000/staff/getStaff");
+          response = await axios.get("http://localhost:5000/staff/getStaff");
         } else if (senderRole === "staff") {
           response = await axios.get(
-            "http://localhost:7000/parents/getParents"
+            "http://localhost:5000/parents/getParents"
           );
         }
 
