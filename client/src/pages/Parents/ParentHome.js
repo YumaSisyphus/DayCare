@@ -99,6 +99,7 @@ function ParentHome() {
               position: "relative",
             }}
           >
+            
             {/* Adding decorative elements */}
             <Box
               sx={{
@@ -137,7 +138,7 @@ function ParentHome() {
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
               }}
             />
-            {/* End decorative elements */}
+
 
             <Box sx={{ marginRight: 4 }}>
               <Avatar
@@ -207,5 +208,6 @@ function ParentHome() {
     </ThemeProvider>
   );
 }
+
 
 export default ParentHome;
