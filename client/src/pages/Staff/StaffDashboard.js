@@ -134,7 +134,6 @@ function Staff() {
   const handleModalClose = () => {
     setOpenModal(false);
   };
-
   const handleSaveChanges = () => {
     // Basic validation to check if any of the required fields are empty
     if (
@@ -153,34 +152,38 @@ function Staff() {
       setSnackbarOpen(true);
       return;
     }
-
+  
     const apiUrl = isNewStaff
       ? "/staff/createStaff"
       : `/staff/updateStaff/${selectedStaff.StaffId}`;
-
+  
     const method = isNewStaff ? "POST" : "PUT";
-
+  
+    const requestBody = {
+      Name: editedName,
+      Surname: editedSurname,
+      Birthday: editedBirthday,
+      Gender: editedGender,
+      Email: editedEmail,
+      PhoneNumber: editedPhoneNumber,
+      Role: editedRole,
+      Username: editedUsername,
+      Address: editedAddress,
+      Password: editedPassword,
+    };
+  
     fetch(apiUrl, {
       method: method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        Name: editedName,
-        Surname: editedSurname,
-        Birthday: editedBirthday,
-        Gender: editedGender,
-        Email: editedEmail,
-        PhoneNumber: editedPhoneNumber,
-        Role: editedRole,
-        Username: editedUsername,
-        Address: editedAddress,
-        Password: editedPassword,
-      }),
+      body: JSON.stringify(requestBody),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to save changes");
+          return response.json().then((data) => {
+            throw new Error(data.message || "Failed to save changes");
+          });
         }
         return response.json();
       })
@@ -222,10 +225,11 @@ function Staff() {
       })
       .catch((error) => {
         console.error("Error updating or adding staff:", error);
-        setSnackbarMessage("Error updating or adding staff");
+        setSnackbarMessage(error.message);
         setSnackbarOpen(true);
       });
   };
+  
 
   const handleDelete = (staffId) => {
     fetch(`/staff/deleteStaff/${staffId}`, {
@@ -282,7 +286,7 @@ function Staff() {
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: 10  }}>
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -1  }}>
             Staff Dashboard
              </Typography>
            <Button
@@ -374,7 +378,7 @@ function Staff() {
                           <EditIcon />
                         </IconButton>
                         <IconButton
-                          color="secondary"
+                          color="primary"
                           onClick={() => handleDelete(staff.StaffId)}
                         >
                           <DeleteIcon />
