@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  Avatar,
-  Paper,
-  Snackbar,
-  Grid,
-  Divider,
-} from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardBg from "../../images/geometricbg.png";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
-import DashboardBg from "../../images/geometricbg.png";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
-import { useAuth } from "../../utils/authContext";
-import useLogout from "../../utils/useLogout";
-import useCheckAuth from "../../utils/useCheckAuth";
-import SessionModal from "../../components/SessionModal";
 
-function AdminHome() {
-  const [adminData, setAdminData] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
+import { Box, Typography, Grid,Paper, Container,Divider, Avatar,ThemeProvider } from "@mui/material";
+
+const AdminHome = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { authState, loading } = useAuth();
   const handleLogout = useLogout();
@@ -30,7 +18,7 @@ function AdminHome() {
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-
+  
   useEffect(() => {
     if (!loading) {
       if (!authState.isAuthenticated && authState.isRefreshToken) {
@@ -40,36 +28,6 @@ function AdminHome() {
       }
     }
   }, [loading, authState, handleLogout]);
-
-  useEffect(() => {
-    // Fetch staff data and filter for the admin
-    fetch("/staff/getStaff")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch staff data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Fetched staff data:", data); // Debugging log
-        const admin = data.data.find((staff) => staff.Role === "Admin");
-        if (admin) {
-          setAdminData(admin);
-        } else {
-          throw new Error("Admin not found");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching admin profile:", error);
-        setSnackbarMessage("Failed to fetch admin profile");
-        setSnackbarOpen(true);
-      });
-  }, []);
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <DashboardSchoolSidebar />
@@ -153,76 +111,48 @@ function AdminHome() {
                 src="/path/to/admin-avatar.jpg"
               />
             </Box>
-            {adminData && (
+            <Box
+              sx={{
+                textAlign: "center",
+                marginTop: -7,
+                paddingBottom: 6,
+                marginRight: 28,
+              }}
+            >
               <Box
                 sx={{
-                  textAlign: "center",
-                  marginTop: -7,
-                  paddingBottom: 6,
-                  marginRight: 28,
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: 2,
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: 2,
-                  }}
-                >
-                  <Typography variant="h4" sx={{ marginRight: 1 }}>
-                    {adminData.Name}
-                  </Typography>
-                  <Typography variant="h4" sx={{}}>
-                    {adminData.Surname}
-                  </Typography>
-                </Box>
+                <Typography variant="h4" sx={{ marginRight: 1 }}>
+                {authState.user?.username}
+                </Typography>
               </Box>
-            )}
+            </Box>
             <Divider sx={{ width: "100%" }} />
             <Box sx={{ flex: 1, marginTop: 2 }}>
-              {adminData ? (
-                <Grid container spacing={2}>
-                  {Object.entries(adminData).map(
-                    ([key, value]) =>
-                      key !== "StaffId" &&
-                      key !== "Name" &&
-                      key !== "Surname" &&
-                      key !== "Role" &&
-                      key !== "Password" && (
-                        <Grid item xs={12} sm={6} key={key}>
-                          <Paper
-                            sx={{
-                              padding: 3,
-                              borderRadius: 10,
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                              backgroundColor: Colors.lightGrey,
-                            }}
-                          >
-                            <Typography variant="body1" gutterBottom>
-                              <strong>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}:
-                              </strong>{" "}
-                              {value}
-                            </Typography>
-                          </Paper>
-                        </Grid>
-                      )
-                  )}
-                </Grid>
-              ) : (
-                <Typography>Loading...</Typography>
-              )}
+              <Grid container spacing={2}>
+                    <Paper
+                      sx={{
+                        padding: 3,
+                        borderRadius: 10,
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        backgroundColor: Colors.lightGrey,
+                      }}
+                    >
+                      <Typography variant="body1" gutterBottom>
+                        <strong>Role:</strong>{authState.user?.role}
+
+                      </Typography>
+                    </Paper>              
+              </Grid>
             </Box>
           </Paper>
         </Container>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          message={snackbarMessage}
-        />
       </Box>
-      <SessionModal open={modalOpen} />
+      <SessionModal open={false} />
     </ThemeProvider>
   );
 }

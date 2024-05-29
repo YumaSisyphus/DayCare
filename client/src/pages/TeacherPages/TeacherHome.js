@@ -8,12 +8,12 @@ import DashboardBg from "../../images/geometricbg.png";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 
-const { Box, Typography } = require("@mui/material");
+import { Box, Typography, Card, CardContent, Avatar } from "@mui/material";
 
 const TeacherHome = () => {
-const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
-const handleLogout = useLogout();
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useAuth();
+  const handleLogout = useLogout();
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -28,21 +28,44 @@ const handleLogout = useLogout();
       }
     }
   }, [loading, authState, handleLogout]);
+
   return (
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      <DashboardSidebar />
       <Box
         sx={{
-          bgcolor: Colors.secondary,
-          backgroundImage: `url(${DashboardBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          height: "100%",
+          marginBottom: "300px",
         }}
-        height={"100vh"}
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
       >
-        <DashboardSidebar />
-      <Typography></Typography>
+        <Card sx={{ minWidth: 275, mb: 3, mt: 3 }}>
+          <CardContent>
+            <Avatar alt={authState.user?.username} />
+            <Typography variant="h5" component="div">
+              {authState.user?.username}
+            </Typography>
+            <Typography color="text.secondary">
+              Role: {authState.user?.role}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
       <SessionModal open={modalOpen} />
     </Box>
   );
