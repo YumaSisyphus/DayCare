@@ -279,13 +279,11 @@ const { authState,loading } = useAuth();
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body1">
-                        {staff
-                          .filter((s) => s.ClassId === cls.ClassId)
-                          .map((s) => s.StaffName)
-                          .join(", ")}
-                      </Typography>
-                    </TableCell>
+                  <Typography variant="body1">
+                    {cls.StaffName} {/* Display the teacher's name */}
+                  </Typography>
+                </TableCell>
+
 
                     <TableCell sx={{ textAlign: "right" }}>
                       <IconButton
@@ -343,20 +341,23 @@ const { authState,loading } = useAuth();
                 </Select>
               </FormControl>
               <FormControl fullWidth margin="normal">
-                <InputLabel id="staff-label">Staff</InputLabel>
-                <Select
-                  labelId="staff-label"
-                  value={selectedStaffId}
-                  label="Staff"
-                  onChange={(e) => setSelectedStaffId(e.target.value)}
-                >
-                  {staffMembers.map((staff) => (
+              <InputLabel id="staff-label">Staff</InputLabel>
+              <Select
+                labelId="staff-label"
+                value={selectedStaffId}
+                label="Staff"
+                onChange={(e) => setSelectedStaffId(e.target.value)}
+              >
+                {staffMembers
+                  .filter((staff) => staff.Role === "Teacher") // Filter staff members with role Teacher
+                  .map((staff) => (
                     <MenuItem key={staff.StaffId} value={staff.StaffId}>
                       {`${staff.Name} ${staff.Surname}`}
                     </MenuItem>
                   ))}
-                </Select>
-              </FormControl>
+              </Select>
+            </FormControl>
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">

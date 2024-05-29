@@ -244,7 +244,7 @@ function ResponsiveAppBar() {
               <a
                 href={
                   authState.user.role === "Teacher"
-                    ? "/ClassDashboard"
+                    ? "/TeacherHome"
                     : authState.user.role === "Admin"
                     ? "/AdminHome"
                     : authState.user.role === "parent"
