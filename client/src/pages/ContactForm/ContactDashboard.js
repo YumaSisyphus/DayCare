@@ -28,6 +28,10 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import SessionModal from "../../components/SessionModal";
+import useLogout from "../../utils/useLogout";
+import useCheckAuth from "../../utils/useCheckAuth";
+import { useAuth } from "../../utils/authContext";
 
 function ContactForm() {
   const [contactforms, setContactForms] = useState([]);
@@ -42,6 +46,23 @@ function ContactForm() {
   const [isNewContactForm, setIsNewContactForm] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch("/contactform/getContactForm")
@@ -337,6 +358,7 @@ function ContactForm() {
           />
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

@@ -20,6 +20,8 @@ import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../utils/authContext";
 import useLogout from "../utils/useLogout";
+import useCheckAuth from "../utils/useCheckAuth";
+import { useEffect } from "react";
 
 const settings = ["Profile", "Account", "Dashboard"];
 
@@ -27,6 +29,8 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const { authState, loading } = useAuth();
+  const handleLogout = useLogout();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -53,8 +57,15 @@ function ResponsiveAppBar() {
     setIsDrawerOpen(open);
   };
 
-  const { authState } = useAuth();
-  const handleLogout = useLogout();
+  // useEffect(() => {
+  //   if (!loading) {
+  //     if (!authState.isAuthenticated && authState.isRefreshToken) {
+
+  //     }
+  //   }
+  // }, [loading, authState, handleLogout]);
+
+
 
   const drawerList = (
     <List>
@@ -229,19 +240,23 @@ function ResponsiveAppBar() {
             alignItems={"center"}
             gap={3}
           >
-            {authState.isAuthenticated && authState.user.role === "Teacher" && (
-              <a href={"/teacherhome"} className="link-header">
-                Home
+            {authState.isAuthenticated && (
+              <a
+                href={
+                  authState.user.role === "Teacher"
+                    ? "/ClassDashboard"
+                    : authState.user.role === "Admin"
+                    ? "/AdminHome"
+                    : authState.user.role === "parent"
+                    ? "/ParentHome"
+                    : "#"
+                }
+                className="link-header"
+              >
+                Dashboard
               </a>
             )}
-            {/* {authState.isAuthenticated && authState.user.role === "Admin" && ( */}
-            <a href={"/activities"} className="link-header">
-              Dashboard
-            </a>
-            {/* )} */}
-            <a href={"/ClassDashboard"} className="link-header">
-              School
-            </a>
+
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="" />

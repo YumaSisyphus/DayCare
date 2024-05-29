@@ -2,7 +2,7 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2");
-
+const bcrypt = require("bcrypt");
 router.use(express.json());
 router.use(cookieParser());
 
@@ -19,11 +19,15 @@ const formatDate = (date) => {
 };
 
 router.get("/getParents", (req, res) => {
-  const parentChildQuery = "SELECT p.*, c.Name AS ChildName, c.Surname AS ChildSurname FROM parent p LEFT JOIN child_parent cp ON p.ParentId = cp.ParentId LEFT JOIN child c ON cp.ChildId = c.ChildId";
+  const parentChildQuery =
+    "SELECT p.*, c.Name AS ChildName, c.Surname AS ChildSurname FROM parent p LEFT JOIN child_parent cp ON p.ParentId = cp.ParentId LEFT JOIN child c ON cp.ChildId = c.ChildId";
   db.query(parentChildQuery, (err, data) => {
     if (err) {
       console.error("Database error:", err);
-      return res.json({ success: false, message: "Fetch parents with child failed" });
+      return res.json({
+        success: false,
+        message: "Fetch parents with child failed",
+      });
     } else {
       // Convert dates in the 'data' array to the required format
       const formattedData = data.map((item) => ({
@@ -39,8 +43,6 @@ router.get("/getParents", (req, res) => {
     }
   });
 });
-
-
 
 router.get("/getParent/:parentId", (req, res) => {
   const sql = "SELECT * FROM parent WHERE ParentId=?";
@@ -83,7 +85,7 @@ router.delete("/deleteParent/:parentId", (req, res) => {
 
 router.post("/createParent", (req, res) => {
   const sql =
-    "INSERT INTO parent (Name, Surname, Birthday, Gender, Email, Address, PhoneNumber, Username, Password, Active) VALUES (?)";
+    "INSERT INTO parent (Name, Surname, Birthday, Gender, Email, Address, PhoneNumber, Username, Password, Active) VALUES (?,?,?,?,?,?,?,?,?,?)";
   const values = [
     req.body.name,
     req.body.surname,
@@ -96,30 +98,47 @@ router.post("/createParent", (req, res) => {
     req.body.password,
     req.body.active,
   ];
-  db.query(sql, [values], (err, result) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.json({ success: false, message: "Create parent failed" });
-    } else {
-      const insertedParent = {
-        id: result.insertId,
-        name: req.body.name,
-        surname: req.body.surname,
-        birthday: req.body.birthday,
-        gender: req.body.gender,
-        email: req.body.email,
-        address: req.body.address,
-        phoneNumber: req.body.phonenumber,
-        username: req.body.username,
-        password: req.body.password,
-        active: req.body.active,
-      };
-      return res.json({
-        success: true,
-        message: "Create parent successful",
-        data: insertedParent,
-      });
-    }
+  bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+    db.query(
+      sql,
+      [
+        req.body.name,
+        req.body.surname,
+        req.body.birthday,
+        req.body.gender,
+        req.body.email,
+        req.body.address,
+        req.body.phonenumber,
+        req.body.username,
+        hashedPassword,
+        req.body.active,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error("Database error:", err);
+          return res.json({ success: false, message: "Create parent failed" });
+        } else {
+          const insertedParent = {
+            id: result.insertId,
+            name: req.body.name,
+            surname: req.body.surname,
+            birthday: req.body.birthday,
+            gender: req.body.gender,
+            email: req.body.email,
+            address: req.body.address,
+            phoneNumber: req.body.phonenumber,
+            username: req.body.username,
+            password: hashedPassword,
+            active: req.body.active,
+          };
+          return res.json({
+            success: true,
+            message: "Create parent successful",
+            data: insertedParent,
+          });
+        }
+      }
+    );
   });
 });
 
@@ -139,23 +158,40 @@ router.put("/updateParent", (req, res) => {
     req.body.active,
     req.body.parentId,
   ];
-  db.query(sql, values, (err, data) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.json({ success: false, message: "Update parent failed" });
-    } else {
-      return res.json({
-        success: true,
-        message: "Update parent successful",
-        data:data,
-      });
-    }
+  bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+    db.query(
+      sql,
+      [
+        req.body.name,
+        req.body.surname,
+        req.body.birthday,
+        req.body.gender,
+        req.body.email,
+        req.body.address,
+        req.body.phonenumber,
+        req.body.username,
+        hashedPassword,
+        req.body.active,
+        req.body.parentId,
+      ],
+      (err, data) => {
+        if (err) {
+          console.error("Database error:", err);
+          return res.json({ success: false, message: "Update parent failed" });
+        } else {
+          return res.json({
+            success: true,
+            message: "Update parent successful",
+            data: data,
+          });
+        }
+      }
+    );
   });
 });
 
 router.post("/assignChildToParent", (req, res) => {
   const { parentId, childIds } = req.body;
-  console.log(childIds);
 
   // Insert the parent-child relationships into the child_parent table
   const insertRelationshipSql =
@@ -168,23 +204,19 @@ router.post("/assignChildToParent", (req, res) => {
   db.query(insertRelationshipSql, [insertRelationshipValues], (err) => {
     if (err) {
       console.error("Database error:", err);
-      return res
-        .status(500)
-        .json({
-          success: false,
-          message: "Assigning children to parent failed",
-        });
+      return res.status(500).json({
+        success: false,
+        message: "Assigning children to parent failed",
+      });
     } else {
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "Children assigned to parent successfully",
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Children assigned to parent successfully",
+      });
     }
   });
 });
-     
+
 router.get("/getChildren", (req, res) => {
   const sql = `
     SELECT ChildId, Name
@@ -258,6 +290,5 @@ router.put("/updateChildToParent", (req, res) => {
     }
   });
 });
-
 
 module.exports = router;

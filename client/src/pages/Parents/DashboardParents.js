@@ -23,12 +23,33 @@ import { groupParents } from "../../utils/groupParents"; // Adjust the path as p
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import { theme } from "../../utils/theme";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [modalOpen, setModalOpen] = useState(false);
+  const { authState, loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     const fetchParents = async () => {
@@ -244,7 +265,6 @@ const ParentsList = () => {
                           >
                             Edit
                           </Button>
-            
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -266,6 +286,7 @@ const ParentsList = () => {
           </Box>
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 };

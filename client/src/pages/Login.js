@@ -22,7 +22,7 @@ import { theme } from "../utils/theme";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { useAuth } from "../utils/authContext";
+import { useAuth } from "../utils/authContext"; // Import useAuth
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -31,6 +31,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const { setAuthState } = useAuth(); // Use useAuth to get setAuthState
 
   const navigate = useNavigate();
 
@@ -102,16 +103,21 @@ const Login = () => {
       .then((res) => {
         if (res.data.success) {
           Cookies.set("token", res.data.token, { expires: 1 / 24 });
+          setAuthState({
+            isAuthenticated: true,
+            isRefreshToken: true, // or however you define it
+            user: res.data.user,
+          });
           const userRole = res.data.user.role;
           const userType = res.data.user.userType;
 
-          if (userRole === "Admin") {
+          if (userRole === "Teacher") {
             setTimeout(() => {
-              navigate("/adminhome");
+              navigate("/TeacherHome");
             }, 1000);
-          } else if (userRole === "Teacher") {
+          } else if (userRole === "Admin") {
             setTimeout(() => {
-              navigate("/teacherhome");
+              navigate("/AdminHome");
             }, 1000);
           } else if (userType === "parent") {
             setTimeout(() => {

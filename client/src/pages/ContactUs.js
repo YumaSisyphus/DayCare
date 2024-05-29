@@ -8,125 +8,202 @@ import {
   Container,
   Paper,
 } from "@mui/material";
+import contactImage from "../images/children70.png";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
     email: "",
     subject: "",
-    dateCreated: null,
+    dateCreated: "",
     message: "",
   });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log(formData.email);
+    setErrors({ ...errors, [name]: "" });
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {};
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email should not be empty";
+      valid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+      valid = false;
+    }
+
+    // Subject validation
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject should not be empty";
+      valid = false;
+    } else if (formData.subject.trim().length > 50) {
+      newErrors.subject = "Subject should not exceed 50 characters";
+      valid = false;
+    }
+
+    // Date validation
+    if (!formData.dateCreated.trim()) {
+      newErrors.dateCreated = "Date should not be empty";
+      valid = false;
+    }
+
+    // Message validation
+    if (!formData.message.trim()) {
+      newErrors.message = "Message should not be empty";
+      valid = false;
+    } else if (formData.message.trim().length > 500) {
+      newErrors.message = "Message should not exceed 500 characters";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        "/contactform/createContactForm",
-        formData
-      );
-      if (response.data.success) {
-     
-        console.log("Contact form submitted successfully!");
+    if (validateForm()) {
+      try {
+        const response = await axios.post(
+          "/contactform/createContactForm",
+          formData
+        );
+        if (response.data.success) {
+          console.log("Contact form submitted successfully!");
+        }
+      } catch (error) {
+        console.error("Error submitting contact form:", error.message);
       }
-    } catch (error) {
-      setError("Error submitting contact form");
-      console.error("Error submitting contact form:", error.message);
     }
   };
 
   return (
     <Container
-      maxWidth=""
+      maxWidth="md"
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#eaf2d7",
+        minHeight: "100vh",
       }}
     >
-      <Paper
+      <Box
+        component={Paper}
         elevation={3}
-        style={{
-          padding: "20px 40px",
-          margin: "0px 430px",
-          backgroundColor: "#C0D8C0",
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "20px",
+          borderRadius: "10px",
         }}
       >
-        <Typography variant="h6" gutterBottom>
+        <Typography
+          variant="h4"
+          color="#7CB9E8"
+          style={{
+            fontFamily: "'Baloo 2', sans-serif",
+            marginTop: "18px",
+          }}
+          gutterBottom
+        >
           Contact Us
         </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <TextField
-            label="Subject"
-            variant="outlined"
-            fullWidth
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <TextField
-            label=""
-            variant="outlined"
-            fullWidth
-            type="date"
-            name="dateCreated"
-            value={formData.dateCreated}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <TextField
-            label="Message"
-            variant="outlined"
-            fullWidth
-            multiline
-            rows={4}
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-            margin="normal"
-            style={{ backgroundColor: "#ffffff" }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#90caf9",
-              color: "#ffffff",
-            }}
-          >
-            Submit
-          </Button>
-        </form>
-      </Paper>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            mt: 3,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <img
+              src={contactImage}
+              alt="contact-us-image"
+              style={{ maxWidth: "100%", borderRadius: "5px" }}
+            />
+          </Box>
+          <Box sx={{ flex: 1, ml: 3 }}>
+            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                margin="normal"
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+              <TextField
+                label="Subject"
+                variant="outlined"
+                fullWidth
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                margin="normal"
+                error={!!errors.subject}
+                helperText={errors.subject}
+              />
+              <TextField
+                label="Date"
+                variant="outlined"
+                fullWidth
+                type="date"
+                name="dateCreated"
+                value={formData.dateCreated}
+                onChange={handleChange}
+                required
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+                InputProps={{
+                  placeholder: "mm/dd/yyyy",
+                  style: { paddingRight: "8px" }
+                }}
+                error={!!errors.dateCreated}
+                helperText={errors.dateCreated}
+              />
+              <TextField
+                label="Message"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                margin="normal"
+                error={!!errors.message}
+                helperText={errors.message}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Submit
+              </Button>
+            </form>
+          </Box>
+        </Box>
+      </Box>
     </Container>
   );
 };

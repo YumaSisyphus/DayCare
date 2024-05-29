@@ -29,6 +29,10 @@ import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 function Staff() {
   const [staffList, setStaffList] = useState([]);
@@ -47,14 +51,30 @@ function Staff() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [isNewStaff, setIsNewStaff] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingPage, setLoadingPage] = useState(false);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
 
   useEffect(() => {
-    setLoading(true);
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
+
+  useEffect(() => {
+    setLoadingPage(true);
     fetch("/staff/getStaff")
       .then((response) => {
         if (!response.ok) {
@@ -71,7 +91,7 @@ function Staff() {
         setSnackbarOpen(true);
       })
       .finally(() => {
-        setLoading(false);
+        setLoadingPage(false);
       });
   }, []);
 
@@ -238,31 +258,33 @@ function Staff() {
         alignItems={"center"}
       >
         <Container>
- 
-<Box display={"flex"} justifyContent={"space-between"} mb={2} marginTop={15}>
-  <Typography variant="h4" gutterBottom>
-    Staff Dashboard
-  </Typography>
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<AddIcon />}
-    onClick={handleAddNew}
-    sx={{ height: "20%" }}
-  >
-    Add New
-  </Button>
-</Box>
-
-<TextField
-  margin="normal"
-  label="Search Staff"
-  value={searchTerm}
-  onChange={handleSearchChange}
-  sx={{ width: "200px" }} 
-/>
-
-          {loading ? (
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            mb={2}
+            marginTop={15}
+          >
+            <Typography variant="h4" gutterBottom>
+              Staff Dashboard
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleAddNew}
+              sx={{ height: "20%" }}
+            >
+              Add New
+            </Button>
+          </Box>
+          <TextField
+            margin="normal"
+            label="Search Staff"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ width: "200px" }}
+          />
+          {loadingPage ? (
             <Typography>Loading...</Typography>
           ) : (
             <TableContainer
@@ -351,7 +373,8 @@ function Staff() {
               page={page}
               onChange={handleChangePage}
             />
-          </Box>        </Container>
+          </Box>{" "}
+        </Container>
         <Dialog open={openModal} onClose={handleModalClose}>
           <DialogTitle>
             {selectedStaff ? "Edit Staff" : "Add New Staff"}
@@ -444,6 +467,7 @@ function Staff() {
           message={snackbarMessage}
         />
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

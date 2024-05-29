@@ -28,6 +28,10 @@ import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import useCheckAuth from "../../utils/useCheckAuth";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
+import { useAuth } from "../../utils/authContext";
 
 function Meal() {
   const [meals, setMeals] = useState([]);
@@ -40,6 +44,23 @@ function Meal() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch("/meal/getMeal")
@@ -48,15 +69,13 @@ function Meal() {
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-
   const filteredMeals = meals.filter((meal) =>
     meal.Name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  
- const handleSearch = (event) => {
-  setSearchQuery(event.target.value);
-};
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   const handleAddNew = () => {
     setSelectedMeal(null);
@@ -90,7 +109,6 @@ function Meal() {
       },
       body: JSON.stringify({
         Name: editedName,
-
       }),
     })
       .then((response) => response.json())
@@ -110,7 +128,6 @@ function Meal() {
                   ? {
                       ...meal,
                       Name: editedName,
-                
                     }
                   : meal
               )
@@ -138,11 +155,7 @@ function Meal() {
         setSnackbarMessage(data.message);
         setSnackbarOpen(true);
         if (data.success) {
-          setMeals(
-            meals.filter(
-              (meal) => meal.MealId !== MealId
-            )
-          );
+          setMeals(meals.filter((meal) => meal.MealId !== MealId));
         }
       })
       .catch((error) => console.error("Error deleting meal:", error));
@@ -158,42 +171,46 @@ function Meal() {
 
   return (
     <ThemeProvider theme={theme}>
-    <DashboardSidebar />
-    <Box
-      sx={{
-        bgcolor: Colors.secondary,
-        backgroundImage: `url(${DashboardBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-      height={"100vh"}
-      display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
-    >
-      <Container>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-          <Typography variant="h4" gutterBottom>
-            Meal Dashboard
-          </Typography>
-          <Box display="flex" alignItems="center" sx={{ marginBottom: 2 }}>
-  <TextField
-    label="Search"
-    variant="outlined"
-    value={searchQuery}
-    onChange={handleSearch}
-    sx={{ mr: 2 }}
-  />
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<AddIcon />}
-    onClick={handleAddNew}
-  >
-    Add New
-  </Button>
-</Box>
-</Box>
+      <DashboardSidebar />
+      <Box
+        sx={{
+          bgcolor: Colors.secondary,
+          backgroundImage: `url(${DashboardBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        height={"100vh"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <Container>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Typography variant="h4" gutterBottom>
+              Meal Dashboard
+            </Typography>
+            <Box display="flex" alignItems="center" sx={{ marginBottom: 2 }}>
+              <TextField
+                label="Search"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearch}
+                sx={{ mr: 2 }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleAddNew}
+              >
+                Add New
+              </Button>
+            </Box>
+          </Box>
 
           <TableContainer
             component={Paper}
@@ -208,15 +225,14 @@ function Meal() {
                   <TableCell>
                     <Typography fontWeight={"bold"}>Name</Typography>
                   </TableCell>
-                
-          
+
                   <TableCell>
                     <Typography fontWeight={"bold"}>Actions</Typography>
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-              {(rowsPerPage > 0
+                {(rowsPerPage > 0
                   ? filteredMeals.slice(
                       (page - 1) * rowsPerPage,
                       (page - 1) * rowsPerPage + rowsPerPage
@@ -267,9 +283,6 @@ function Meal() {
                 value={editedName}
                 onChange={(c) => setEditedName(c.target.value)}
               />
-       
-
-    
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
@@ -297,6 +310,7 @@ function Meal() {
           />
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }

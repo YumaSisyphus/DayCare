@@ -33,6 +33,10 @@ import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
 import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import SessionModal from "../../components/SessionModal";
+import useLogout from "../../utils/useLogout";
+import useCheckAuth from "../../utils/useCheckAuth";
+import { useAuth } from "../../utils/authContext";
 
 function ClassDashboard() {
   const [classes, setClasses] = useState([]);
@@ -49,7 +53,26 @@ function ClassDashboard() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [staffMembers, setStaffMembers] = useState([]);
   const [selectedStaffId, setSelectedStaffId] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+const { authState,loading } = useAuth();
+  const handleLogout = useLogout();
 
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  console.log(authState);
+  console.log(loading);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch("/class")
@@ -62,14 +85,13 @@ function ClassDashboard() {
       .then((data) => setAgeGroups(data))
       .catch((error) => console.error("Error fetching age groups:", error));
 
-      fetch("/staff/getStaff")
+    fetch("/staff/getStaff")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); 
-        setStaffMembers(data.data); 
+        console.log(data);
+        setStaffMembers(data.data);
       })
       .catch((error) => console.error("Error fetching staff members:", error));
-      
   }, []);
 
   const handleAddNew = () => {
@@ -91,7 +113,6 @@ function ClassDashboard() {
   const handleModalClose = () => {
     setOpenModal(false);
     setSelectedStaffId(""); // Reset selected staff id when closing the modal
-
   };
 
   const handleSaveChanges = () => {
@@ -118,7 +139,6 @@ function ClassDashboard() {
         Name: editedName,
         AgeGroupId: parseInt(editedAgeGroupId),
         StaffId: parseInt(selectedStaffId), // Add selected staff ID
-
       }),
     })
       .then((response) => response.json())
@@ -323,20 +343,20 @@ function ClassDashboard() {
                 </Select>
               </FormControl>
               <FormControl fullWidth margin="normal">
-              <InputLabel id="staff-label">Staff</InputLabel>
-              <Select
-                labelId="staff-label"
-                value={selectedStaffId}
-                label="Staff"
-                onChange={(e) => setSelectedStaffId(e.target.value)}
-              >
-                {staffMembers.map((staff) => (
-                  <MenuItem key={staff.StaffId} value={staff.StaffId}>
-                    {`${staff.Name} ${staff.Surname}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <InputLabel id="staff-label">Staff</InputLabel>
+                <Select
+                  labelId="staff-label"
+                  value={selectedStaffId}
+                  label="Staff"
+                  onChange={(e) => setSelectedStaffId(e.target.value)}
+                >
+                  {staffMembers.map((staff) => (
+                    <MenuItem key={staff.StaffId} value={staff.StaffId}>
+                      {`${staff.Name} ${staff.Surname}`}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
@@ -365,6 +385,7 @@ function ClassDashboard() {
           />
         </Container>
       </Box>
+      <SessionModal open={modalOpen} />
     </ThemeProvider>
   );
 }
