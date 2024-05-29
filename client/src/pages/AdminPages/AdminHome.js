@@ -64,6 +64,7 @@ const AdminHome = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
+            
               <Avatar
                 sx={{
                   marginTop: 3,

@@ -85,7 +85,7 @@ function ParentHome() {
           alignItems: "center",
         }}
       >
-        <Container maxWidth="md">
+        <Container maxWidth="md" sx={{ marginTop: -2 }}>
           <Paper
             elevation={6}
             sx={{
@@ -93,10 +93,11 @@ function ParentHome() {
               backdropFilter: "blur(10px)",
               backgroundColor: "rgba(255, 255, 255, 0.9)",
               borderRadius: 20,
-              marginTop: 8,
-              display: "flex",
-              alignItems: "center",
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
               position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             
@@ -145,6 +146,7 @@ function ParentHome() {
                 sx={{
                   width: 120,
                   height: 120,
+                  marginLeft: 5,
                   mb: 2,
                   border: `4px solid ${Colors.primary}`,
                 }}
@@ -153,11 +155,9 @@ function ParentHome() {
               {parentData && (
                 <Box textAlign="center">
                   <Typography variant="h6" gutterBottom>
-                    {parentData.Name}
+                  Welcome,  {parentData.Name}  {parentData.Surname}
                   </Typography>
-                  <Typography variant="h6" gutterBottom>
-                    {parentData.Surname}
-                  </Typography>
+
                 </Box>
               )}
             </Box>
@@ -170,7 +170,10 @@ function ParentHome() {
                       key !== "ParentId" &&
                       key !== "Name" &&
                       key !== "Surname" &&
-                      key !== "Password" && (
+                      key !== "Password" && 
+                      key !== "Birthday" && 
+                      key !== "Gender" && 
+                      key !== "Address" && (
                         <Grid item xs={12} sm={6} key={key}>
                           <Paper
                             sx={{
