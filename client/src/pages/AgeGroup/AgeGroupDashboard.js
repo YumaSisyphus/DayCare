@@ -44,7 +44,7 @@ function AgeGroupDashboard() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -272,6 +272,8 @@ const { authState,loading } = useAuth();
                 fullWidth
                 value={editedRange}
                 onChange={(e) => setEditedRange(e.target.value)}
+                error={!editedRange.trim()} // Adding error state
+                helperText={!editedRange.trim() && "Age Group cannot be empty"} // Showing error message
               />
             </DialogContent>
             <DialogActions>

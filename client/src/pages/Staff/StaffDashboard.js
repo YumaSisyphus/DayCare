@@ -56,7 +56,7 @@ function Staff() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -134,35 +134,56 @@ const { authState,loading } = useAuth();
   const handleModalClose = () => {
     setOpenModal(false);
   };
-
   const handleSaveChanges = () => {
+    // Basic validation to check if any of the required fields are empty
+    if (
+      !editedName ||
+      !editedSurname ||
+      !editedBirthday ||
+      !editedGender ||
+      !editedEmail ||
+      !editedPhoneNumber ||
+      !editedRole ||
+      !editedUsername ||
+      !editedAddress ||
+      !editedPassword
+    ) {
+      setSnackbarMessage("Please fill out all fields.");
+      setSnackbarOpen(true);
+      return;
+    }
+  
     const apiUrl = isNewStaff
       ? "/staff/createStaff"
       : `/staff/updateStaff/${selectedStaff.StaffId}`;
-
+  
     const method = isNewStaff ? "POST" : "PUT";
-
+  
+    const requestBody = {
+      Name: editedName,
+      Surname: editedSurname,
+      Birthday: editedBirthday,
+      Gender: editedGender,
+      Email: editedEmail,
+      PhoneNumber: editedPhoneNumber,
+      Role: editedRole,
+      Username: editedUsername,
+      Address: editedAddress,
+      Password: editedPassword,
+    };
+  
     fetch(apiUrl, {
       method: method,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        Name: editedName,
-        Surname: editedSurname,
-        Birthday: editedBirthday,
-        Gender: editedGender,
-        Email: editedEmail,
-        PhoneNumber: editedPhoneNumber,
-        Role: editedRole,
-        Username: editedUsername,
-        Address: editedAddress,
-        Password: editedPassword,
-      }),
+      body: JSON.stringify(requestBody),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to save changes");
+          return response.json().then((data) => {
+            throw new Error(data.message || "Failed to save changes");
+          });
         }
         return response.json();
       })
@@ -204,10 +225,11 @@ const { authState,loading } = useAuth();
       })
       .catch((error) => {
         console.error("Error updating or adding staff:", error);
-        setSnackbarMessage("Error updating or adding staff");
+        setSnackbarMessage(error.message);
         setSnackbarOpen(true);
       });
   };
+  
 
   const handleDelete = (staffId) => {
     fetch(`/staff/deleteStaff/${staffId}`, {
@@ -264,18 +286,19 @@ const { authState,loading } = useAuth();
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom>
-              Staff Dashboard
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              onClick={handleAddNew}
-              sx={{ height: "20%" }}
-            >
-              Add New
-            </Button>
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -1  }}>
+            Staff Dashboard
+             </Typography>
+           <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAddNew}
+            sx={{ height: "20%", marginTop: 2 }}
+          >
+            Add New
+          </Button>
+
           </Box>
           <TextField
             margin="normal"
@@ -355,7 +378,7 @@ const { authState,loading } = useAuth();
                           <EditIcon />
                         </IconButton>
                         <IconButton
-                          color="secondary"
+                          color="primary"
                           onClick={() => handleDelete(staff.StaffId)}
                         >
                           <DeleteIcon />
