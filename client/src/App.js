@@ -34,6 +34,9 @@ import ParentHome from "./pages/Parents/ParentHome";
 import ChildHome from "./pages/Children/ChildHome";
 import PaymentForm from "./pages/Parents/PaymentForm";
 import SuccessPage from "./pages/Parents/SuccessPage";
+import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
+import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
+
 import MyClasses from "./pages/TeacherPages/MyClasses";
 import { Class } from "@mui/icons-material";
 
@@ -67,7 +70,8 @@ function App() {
               </RoleBasedRoute>
             }
           />
-           <Route
+
+          <Route
             path="/TeacherHome"
             element={
               <RoleBasedRoute
@@ -78,7 +82,7 @@ function App() {
               </RoleBasedRoute>
             }
           />
-            <Route
+          <Route
             path="/MyClasses"
             element={
               <RoleBasedRoute
@@ -93,10 +97,13 @@ function App() {
           <Route path="/activities" element={<Activity />} />
           <Route path="/SuccessPage" element={<SuccessPage />} />
           <Route path="/ParentForm" element={<ParentForm />} />
+          <Route path="/CreatePaymentForm" element={<CreatePaymentForm />} />
           <Route path="/EditParents/:parentId" element={<EditParent />} />
           <Route path="/ChildParent" element={<ChildParent />} />
           <Route path="/foodDashboard" element={<Food />} />
           <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/InvoiceDashboard" element={<InvoiceDashboard />} />
+
           <Route
             path="/PaymentForm"
             element={
@@ -116,7 +123,17 @@ function App() {
               </RoleBasedRoute>
             }
           />
-         
+          <Route
+            path="/TeacherHome"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <ClassDashboard />
+              </RoleBasedRoute>
+            }
+          />
           <Route
             path="/AdminHome"
             element={
