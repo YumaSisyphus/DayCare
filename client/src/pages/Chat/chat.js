@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { useAuth } from "../../utils/authContext";
 import axios from "axios";
+import Background from "../../images/glassBg.jpg";
 import {
   Box,
   Container,
@@ -34,6 +35,46 @@ const Chat = () => {
   const { authState } = useAuth();
   const senderId = authState.user ? authState.user.id : null;
   const senderRole = authState.user ? authState.user.userType : null;
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const SVGIcon = () => {
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        fill="none"
+        style={{
+          animation: isHovered ? "slide-8 0.2s forwards" : "none",
+        }}
+      >
+        <style>
+          {`
+          @keyframes slide-8 {
+            to {
+              transform: translateY(-2px);
+            }
+          }
+        `}
+        </style>
+        <path
+          fill="#0A0A30"
+          fillRule="evenodd"
+          d="M17.358 11.368a.714.714 0 00-.092-1.006L12.99 6.798a.71.71 0 00-.778-.102.708.708 0 00-.155.102L7.78 10.362a.714.714 0 10.915 1.097l3.078-2.565v7.731a.75.75 0 001.5 0v-7.73l3.079 2.564a.714.714 0 001.006-.091z"
+          clipRule="evenodd"
+        />
+      </svg>
+    );
+  };
 
   const typingTimeout = useRef(null);
 
@@ -63,7 +104,6 @@ const Chat = () => {
 
     socket.on("receive_message", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
-      console.log(messages);
     });
 
     socket.on("typing", ({ senderId }) => {
@@ -83,24 +123,7 @@ const Chat = () => {
       socket.off("typing");
       socket.off("stop_typing");
     };
-  }, [filteredMessages, messages, senderId, senderRole]);
-
-  const filterMessages = () => {
-    if (recipientId && Array.isArray(messages)) {
-      const filtered = messages.filter(
-        (msg) =>
-          (msg.sender_id === senderId && msg.recipient_id === recipientId) ||
-          (msg.sender_id === recipientId && msg.recipient_id === senderId)
-      );
-      setFilteredMessages(filtered);
-    } else {
-      setFilteredMessages([]);
-    }
-  };
-
-  useEffect(() => {
-    filterMessages();
-  }, [messages, recipientId, senderId]);
+  }, [messages, senderId, senderRole]);
 
   const sendMessage = () => {
     if (!recipientId || !newMessage) return;
@@ -117,7 +140,6 @@ const Chat = () => {
     ]);
     setNewMessage("");
     stopTyping();
-    filterMessages();
   };
 
   const loadMessages = async (recipientId) => {
@@ -161,62 +183,99 @@ const Chat = () => {
     }
   };
 
+  const getUsernameById = (id) => {
+    const user = users.find(
+      (user) => user.StaffId === id || user.ParentId === id
+    );
+    return user ? user.Username : "Unknown User";
+  };
+
   return (
     <Box
       display={"flex"}
       minHeight={"100vh"}
       borderTop={`1px solid ${Colors.cleanLightBlack}`}
+      sx={{
+        background: `linear-gradient(274deg, rgba(254,213,198,1) 0%, rgba(255,243,229,1) 70%, rgba(140,163,232,1) 100%)`,
+      }}
     >
       <Box
-        style={{ padding: 20, width: "20%" }}
-        position={"fixed"}
-        top={"7%"}
+        style={{
+          padding: 20,
+          width: "20%",
+          background: "rgba(255, 255, 255, 0.17)",
+          // backdropFilter: "blur(4.4px)",
+          // WebkitBackdropFilter: "blur(4.4px)",
+          border: "1px solid rgba(255, 255, 255, 0.27)",
+        }}
         minHeight={"100%"}
+        position={"relative"}
         sx={{
           backgroundColor: Colors.primary,
           borderRight: `2px solid ${Colors.pastelPurple}`,
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Chat
-        </Typography>
-        <FormControl fullWidth style={{ marginBottom: 20 }}>
-          <InputLabel id="recipient-label">Select User</InputLabel>
-          <Select
-            labelId="recipient-label"
-            value={recipientId}
-            onChange={handleRecipientChange}
-            variant="outlined"
-          >
-            {users.map((user) => (
-              <MenuItem
-                key={senderRole === "parent" ? user.StaffId : user.ParentId}
-                value={senderRole === "parent" ? user.StaffId : user.ParentId}
-              >
-                {user.Username}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Box position={"fixed"} top={"12%"} width={"15%"}>
+          <Typography variant="h4" gutterBottom>
+            Chat
+          </Typography>
+          <FormControl fullWidth style={{ marginBottom: 20 }}>
+            <InputLabel id="recipient-label">Select User</InputLabel>
+            <Select
+              id="recipient-label"
+              label="Recipient"
+              value={recipientId}
+              onChange={handleRecipientChange}
+              variant="outlined"
+            >
+              {users.map((user) => (
+                <MenuItem
+                  key={senderRole === "parent" ? user.StaffId : user.ParentId}
+                  value={senderRole === "parent" ? user.StaffId : user.ParentId}
+                >
+                  {user.Username}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <Box
         width={"80%"}
-        bgcolor={Colors.primary}
+        style={{
+          background: "rgba(255, 255, 255, 0.17)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+          // backdropFilter: "blur(4.4px)",
+          // WebkitBackdropFilter: "blur(4.4px)",
+          border: "1px solid rgba(255, 255, 255, 0.27)",
+        }}
         minHeight={"100%"}
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"space-between"}
-        ml={"22.2%"}
         pb={10}
       >
         <List
           style={{ height: "100%", overflow: "auto", marginBottom: 20, pl: 5 }}
         >
           {messages.map((msg, index) => (
-            <ListItem key={index} alignItems="flex-start">
+            <ListItem
+              key={index}
+              sx={{
+                justifyContent:
+                  msg.senderId === senderId ? "flex-end" : "flex-start",
+              }}
+            >
               <ListItemText
-                primary={msg.sender_id}
+                primary={getUsernameById(msg.sender_id)}
                 secondary={msg.message}
+                style={{
+                  background: "rgba(255, 255, 255, 0.17)",
+                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                  backdropFilter: "blur(4.4px)",
+                  WebkitBackdropFilter: "blur(4.4px)",
+                  border: "1px solid rgba(255, 255, 255, 0.27)",
+                }}
                 sx={{
                   bgcolor: Colors.pastelBlue,
                   padding: 1.5,
@@ -241,7 +300,16 @@ const Chat = () => {
             </ListItem>
           )}
         </List>
-        <Box display={"flex"} position={"fixed"} bottom={0} width={"80%"}>
+        <Box
+          display={"flex"}
+          position={"fixed"}
+          bottom={0}
+          width={"75vw"}
+          right={0}
+          gap={4}
+          pb={2}
+          pr={2}
+        >
           <TextField
             fullWidth
             variant="outlined"
@@ -249,17 +317,47 @@ const Chat = () => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={handleTyping}
-            style={{ backgroundColor: Colors.white }}
+            sx={{
+              background: "rgba(255, 255, 255, 0.17)",
+              boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+              backdropFilter: "blur(4.4px)",
+              WebkitBackdropFilter: "blur(4.4px)",
+              borderRadius: 5,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  border: "none",
+                },
+                "&:hover fieldset": {
+                  border: "none",
+                },
+                "&.Mui-focused fieldset": {
+                  border: "none",
+                },
+              },
+              "& .MuiInputBase-input": {
+                "&:focus": {
+                  outline: "none",
+                },
+              },
+            }}
             size="small"
           />
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             onClick={sendMessage}
-            sx={{ width: "15%" }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            sx={{
+              width: "5%",
+              p: 1,
+              borderRadius: "5px",
+              border: `1px solid ${Colors.pastelPeach}`,
+              bgcolor: Colors.pastelPeach,
+            }}
             size="small"
           >
-            Send
+            <SVGIcon />
           </Button>
         </Box>
       </Box>
