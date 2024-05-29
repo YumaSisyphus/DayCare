@@ -39,6 +39,7 @@ import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
 
 
 import MyClasses from "./pages/TeacherPages/MyClasses";
+import { Class } from "@mui/icons-material";
 
 const stripePromise = loadStripe(
   "pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck"
@@ -124,29 +125,7 @@ function App() {
               </RoleBasedRoute>
             }
           />
-          <Route
-            path="/TeacherHome"
-            element={
-              <RoleBasedRoute
-                allowedSpecificRoles={["parent"]}
-                allowedRoles={["parent"]}
-              >
-                <CreatePaymentForm />
-              </RoleBasedRoute>
-            }
-          />
-     
-          <Route
-            path="/ClassDashboard"
-            element={
-             <RoleBasedRoute
-                allowedRoles={["staff"]}
-                allowedSpecificRoles={["Admin"]}
-              >
-                <ClassDashboard />
-              </RoleBasedRoute>
-            }
-          />
+         
           <Route
             path="/AdminHome"
             element={
@@ -180,6 +159,17 @@ function App() {
                 allowedSpecificRoles={["Admin"]}
               >
                 <Staff />
+              </RoleBasedRoute>
+            }
+          />
+          <Route
+            path="/ClassDashboard"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <ClassDashboard />
               </RoleBasedRoute>
             }
           />

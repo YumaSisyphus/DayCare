@@ -13,22 +13,19 @@ const db = mysql.createConnection({
 
 
 router.get("/", (req, res) => {
-  const { teacherId } = req.query; // Assuming you pass the teacher's ID as a query parameter
   const query = `
       SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, s.Name as StaffName
       FROM class c
       JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
       LEFT JOIN staff_class sc ON c.ClassId = sc.ClassId
       LEFT JOIN staff s ON sc.StaffId = s.StaffId
-      WHERE s.StaffId = ?
     `;
 
-  db.query(query, [teacherId], (err, result) => {
+  db.query(query, [], (err, result) => {
     if (err) throw err;
     res.json(result);
   });
 });
-
 
 
 router.post("/", (req, res) => {
@@ -67,38 +64,65 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { Name, AgeGroupId, StaffId } = req.body; // Extract StaffId from request body
-  const query = "UPDATE class SET Name = ?, AgeGroupId = ?, StaffId = ? WHERE ClassId = ?";
+  const { Name, AgeGroupId, StaffId } = req.body;
 
-  db.query(query, [Name, AgeGroupId, StaffId, id], (err, result) => {
+  const updateClassQuery = "UPDATE class SET Name = ?, AgeGroupId = ? WHERE ClassId = ?";
+  const updateStaffClassQuery = "UPDATE staff_class SET StaffId = ? WHERE ClassId = ?";
+
+  db.beginTransaction((err) => {
     if (err) {
-      console.error("Error updating class:", err);
-      res.status(500).json({ message: "Internal Server Error" });
-    } else {
-      const getClassQuery = `
-        SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, c.AgeGroupId, c.StaffId
-        FROM class c
-        JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
-        WHERE c.ClassId = ?
-      `;
-      
-      db.query(getClassQuery, [id], (err, classResult) => {
-        if (err) {
-          console.error("Error fetching updated class:", err);
-          res.status(500).json({ message: "Internal Server Error" });
-        } else {
-          res.json({
-            message: "Class updated successfully",
-            updatedClass: classResult[0],
-            affectedRows: result.affectedRows,
-          });
-        }
-      });
+      console.error("Error beginning transaction:", err);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
+
+    db.query(updateClassQuery, [Name, AgeGroupId, id], (err, result) => {
+      if (err) {
+        db.rollback(() => {
+          console.error("Error updating class:", err);
+          res.status(500).json({ message: "Internal Server Error" });
+        });
+      } else {
+        db.query(updateStaffClassQuery, [StaffId, id], (err) => {
+          if (err) {
+            db.rollback(() => {
+              console.error("Error updating staff_class:", err);
+              res.status(500).json({ message: "Internal Server Error" });
+            });
+          } else {
+            db.commit((err) => {
+              if (err) {
+                db.rollback(() => {
+                  console.error("Error committing transaction:", err);
+                  res.status(500).json({ message: "Internal Server Error" });
+                });
+              } else {
+                const getClassQuery = `
+                  SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, c.AgeGroupId
+                  FROM class c
+                  JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
+                  WHERE c.ClassId = ?
+                `;
+
+                db.query(getClassQuery, [id], (err, classResult) => {
+                  if (err) {
+                    console.error("Error fetching updated class:", err);
+                    res.status(500).json({ message: "Internal Server Error" });
+                  } else {
+                    res.json({
+                      message: "Class updated successfully",
+                      updatedClass: classResult[0],
+                      affectedRows: result.affectedRows,
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
   });
 });
-
-
 
 
 router.delete("/:id", (req, res) => {

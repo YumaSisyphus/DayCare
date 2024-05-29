@@ -29,8 +29,20 @@ const handleLogout = useLogout();
     }
   }, [loading, authState, handleLogout]);
   return (
-    <Box>
-      <Typography>ass</Typography>
+      <Box
+        sx={{
+          bgcolor: Colors.secondary,
+          backgroundImage: `url(${DashboardBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        height={"100vh"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <DashboardSidebar />
+      <Typography></Typography>
       <SessionModal open={modalOpen} />
     </Box>
   );
