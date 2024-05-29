@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { useAuth } from "../../utils/authContext";
 import axios from "axios";
@@ -20,20 +20,24 @@ import {
 } from "@mui/material";
 import { Colors } from "../../utils/colors";
 
-const socket = io("http://localhost:7000"); // Connect to your backend WebSocket server
+// Ensure the socket connection is established outside the component to avoid multiple connections
+const socket = io("http://localhost:7000");
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]); // Ensure messages is initialized as an array
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [recipientId, setRecipientId] = useState(""); // State to store recipient's ID
-  const [filteredMessages, setFilteredMessages] = useState([]); // State to store filtered messages
+  const [recipientId, setRecipientId] = useState("");
+  const [filteredMessages, setFilteredMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingUser, setTypingUser] = useState(null);
   const { authState } = useAuth();
   const senderId = authState.user ? authState.user.id : null;
-  const senderRole = authState.user ? authState.user.userType : null; // Assuming role is included in user data
+  const senderRole = authState.user ? authState.user.userType : null;
+
+  const typingTimeout = useRef(null);
 
   useEffect(() => {
-    // Fetch users based on role
     const fetchUsers = async () => {
       try {
         let response;
@@ -57,19 +61,31 @@ const Chat = () => {
 
     fetchUsers();
 
-    // Event listener for receiving messages
     socket.on("receive_message", (data) => {
       setMessages((prevMessages) => [...prevMessages, data]);
+      console.log(messages);
     });
 
-    return () => {
-      // Cleanup on unmount
-      socket.off("receive_message");
-    };
-  }, [senderRole]);
+    socket.on("typing", ({ senderId }) => {
+      setTypingUser(senderId);
+    });
 
-  useEffect(() => {
-    // Filter messages based on the selected recipient
+    socket.on("stop_typing", ({ senderId }) => {
+      setTypingUser(null);
+    });
+
+    if (senderId) {
+      socket.emit("authenticate", senderId);
+    }
+
+    return () => {
+      socket.off("receive_message");
+      socket.off("typing");
+      socket.off("stop_typing");
+    };
+  }, [filteredMessages, messages, senderId, senderRole]);
+
+  const filterMessages = () => {
     if (recipientId && Array.isArray(messages)) {
       const filtered = messages.filter(
         (msg) =>
@@ -78,11 +94,14 @@ const Chat = () => {
       );
       setFilteredMessages(filtered);
     } else {
-      setFilteredMessages([]); // Clear filtered messages if no recipient is selected
+      setFilteredMessages([]);
     }
+  };
+
+  useEffect(() => {
+    filterMessages();
   }, [messages, recipientId, senderId]);
 
-  // Function to handle sending messages
   const sendMessage = () => {
     if (!recipientId || !newMessage) return;
 
@@ -94,42 +113,64 @@ const Chat = () => {
 
     setMessages((prevMessages) => [
       ...prevMessages,
-      { sender_id: senderId, recipient_id: recipientId, message: newMessage },
+      { senderId, recipientId, message: newMessage },
     ]);
     setNewMessage("");
+    stopTyping();
+    filterMessages();
   };
 
-  // Function to load messages with the selected recipient from the server
   const loadMessages = async (recipientId) => {
     try {
       const response = await axios.get(`/chat/messages/${recipientId}`, {
         params: { senderId },
       });
-      setMessages(response.data); // Directly set the array of messages
+      setMessages(response.data);
     } catch (error) {
       console.error("Failed to load messages", error);
     }
   };
 
   useEffect(() => {
-    loadMessages(recipientId);
-  }, []);
+    if (recipientId) {
+      loadMessages(recipientId);
+    }
+  }, [recipientId]);
 
-  // Function to handle recipient selection
   const handleRecipientChange = (e) => {
     const selectedRecipientId = e.target.value;
     setRecipientId(selectedRecipientId);
     loadMessages(selectedRecipientId);
   };
 
+  const handleTyping = () => {
+    if (!typingTimeout.current) {
+      socket.emit("typing", { senderId, recipientId });
+      typingTimeout.current = setTimeout(() => {
+        socket.emit("stop_typing", { senderId, recipientId });
+        typingTimeout.current = null;
+      }, 3000);
+    }
+  };
+
+  const stopTyping = () => {
+    if (typingTimeout.current) {
+      clearTimeout(typingTimeout.current);
+      socket.emit("stop_typing", { senderId, recipientId });
+      typingTimeout.current = null;
+    }
+  };
+
   return (
     <Box
       display={"flex"}
-      minHeight={"92vh"}
+      minHeight={"100vh"}
       borderTop={`1px solid ${Colors.cleanLightBlack}`}
     >
       <Box
         style={{ padding: 20, width: "20%" }}
+        position={"fixed"}
+        top={"7%"}
         minHeight={"100%"}
         sx={{
           backgroundColor: Colors.primary,
@@ -165,12 +206,16 @@ const Chat = () => {
         display={"flex"}
         flexDirection={"column"}
         justifyContent={"space-between"}
+        ml={"22.2%"}
+        pb={10}
       >
-        <List style={{ height: "100%", overflow: "auto", marginBottom: 20 }}>
-          {filteredMessages.map((msg, index) => (
+        <List
+          style={{ height: "100%", overflow: "auto", marginBottom: 20, pl: 5 }}
+        >
+          {messages.map((msg, index) => (
             <ListItem key={index} alignItems="flex-start">
               <ListItemText
-                primary={msg.sender_id === senderId ? "You" : msg.sender_id}
+                primary={msg.sender_id}
                 secondary={msg.message}
                 sx={{
                   bgcolor: Colors.pastelBlue,
@@ -184,14 +229,26 @@ const Chat = () => {
               <Divider variant="inset" component="li" />
             </ListItem>
           ))}
+          {typingUser && (
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                primary="Typing..."
+                sx={{
+                  fontStyle: "italic",
+                  color: Colors.pastelPurple,
+                }}
+              />
+            </ListItem>
+          )}
         </List>
-        <Box display={"flex"}>
+        <Box display={"flex"} position={"fixed"} bottom={0} width={"80%"}>
           <TextField
             fullWidth
             variant="outlined"
             label="Type your message..."
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={handleTyping}
             style={{ backgroundColor: Colors.white }}
             size="small"
           />
@@ -199,7 +256,7 @@ const Chat = () => {
             variant="contained"
             color="primary"
             onClick={sendMessage}
-            sx={{ width: "10%" }}
+            sx={{ width: "15%" }}
             size="small"
           >
             Send
