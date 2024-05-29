@@ -125,6 +125,18 @@ function App() {
               </RoleBasedRoute>
             }
           />
+          <Route
+            path="/CreatePaymentForm"
+            element={
+              <RoleBasedRoute
+                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
+              >
+                <CreatePaymentForm />
+              </RoleBasedRoute>
+            }
+          />
+     
          
           <Route
             path="/AdminHome"
