@@ -37,8 +37,8 @@ import SuccessPage from "./pages/Parents/SuccessPage";
 import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
 import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
 
+
 import MyClasses from "./pages/TeacherPages/MyClasses";
-import { Class } from "@mui/icons-material";
 
 const stripePromise = loadStripe(
   "pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck"
@@ -71,7 +71,8 @@ function App() {
             }
           />
 
-          <Route
+ 
+           <Route
             path="/TeacherHome"
             element={
               <RoleBasedRoute
@@ -127,6 +128,18 @@ function App() {
             path="/TeacherHome"
             element={
               <RoleBasedRoute
+                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
+              >
+                <CreatePaymentForm />
+              </RoleBasedRoute>
+            }
+          />
+     
+          <Route
+            path="/ClassDashboard"
+            element={
+             <RoleBasedRoute
                 allowedRoles={["staff"]}
                 allowedSpecificRoles={["Admin"]}
               >
@@ -192,6 +205,7 @@ function App() {
           <Route path="/mealDashboard" element={<Meal />} />
           <Route path="/ReportForm/:childId" element={<ReportForm />} />
           <Route path="/ContactUs" element={<ContactUs />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

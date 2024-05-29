@@ -24,7 +24,7 @@ function ParentHome() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -42,30 +42,29 @@ const { authState,loading } = useAuth();
   }, [loading, authState, handleLogout]);
 
   useEffect(() => {
-    // Fetch parent data and filter for the currently logged-in parent
-    fetch(`/parents/getParent/${authState.user.id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch parent data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Fetched parent data:", data); // Debugging log
-        const currentUsername = "loggedInParentUsername"; // Replace with actual logic to get the logged-in parent's username
-        const parent = data.data.find((p) => p.Username === currentUsername);
-        if (parent) {
-          setParentData(parent);
-        } else {
-          throw new Error("Parent not found");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching parent profile:", error);
-        setSnackbarMessage("Failed to fetch parent profile");
-        setSnackbarOpen(true);
-      });
-  }, []);
+    if (!loading && authState.isAuthenticated) {
+      // Fetch parent data for the currently logged-in parent
+      fetch(`/parents/getParent/${authState.user.id}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch parent data");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            setParentData(data.data[0]); // Assuming the data is an array with one parent object
+          } else {
+            throw new Error(data.message || "Parent not found");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching parent profile:", error);
+          setSnackbarMessage("Failed to fetch parent profile");
+          setSnackbarOpen(true);
+        });
+    }
+  }, [loading, authState]);
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -97,6 +96,7 @@ const { authState,loading } = useAuth();
               marginTop: 8,
               display: "flex",
               alignItems: "center",
+              position: "relative",
             }}
           >
             {/* Adding decorative elements */}
