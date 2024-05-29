@@ -92,6 +92,8 @@ router.get("/getPaymentsWithChild", (req, res) => {
   });
 });
 
+//cash payments
+
 
 router.post("/createPayment", (req, res) => {
   const { name, surname, date, phonenumber, amount, childId } = req.body;
@@ -128,15 +130,28 @@ router.post("/createPayment", (req, res) => {
           amount,
           childId,
         };
-        return res.json({
-          success: true,
-          message: "Create payment successful",
-          data: insertedPayment,
+
+        // Update child's payment amount in the database
+        const updateSql = "UPDATE child SET Payments = Payments - ? WHERE ChildId = ?";
+        const updateValues = [amount, childId];
+
+        db.query(updateSql, updateValues, (updateError, updateResults) => {
+          if (updateError) {
+            console.error("Database error:", updateError);
+            return res.json({ success: false, message: "Update child's payment amount failed" });
+          } else {
+            return res.json({
+              success: true,
+              message: "Create payment successful",
+              data: insertedPayment,
+            });
+          }
         });
       }
     });
   });
 });
+
 
 router.delete("/deletePayment/:paymentId", (req, res) => {
   const sql = "DELETE FROM payment WHERE PaymentId=?";
