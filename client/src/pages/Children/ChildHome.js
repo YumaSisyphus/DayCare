@@ -1,177 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   Box,
-  Container,
   Typography,
-  Avatar,
   Paper,
-  Snackbar,
-  Grid,
-  Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
 } from "@mui/material";
-import { ThemeProvider } from "@mui/material/styles";
-import { Colors } from "../../utils/colors";
-import { theme } from "../../utils/theme";
-import DashboardBg from "../../images/geometricbg.png";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
-import useCheckAuth from "../../utils/useCheckAuth";
-import { useAuth } from "../../utils/authContext";
-import useLogout from "../../utils/useLogout";
-import SessionModal from "../../components/SessionModal";
 
-function ChildHome() {
-  const [parentData, setParentData] = useState(null);
-  const [childData, setChildData] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
-  const handleLogout = useLogout();
-
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
+const ChildHome = () => {
+  const { id } = useParams();
+  const [child, setChild] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!loading) {
-      if (!authState.isAuthenticated && authState.isRefreshToken) {
-        handleOpenModal();
-      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
-        handleLogout();
-      }
-    }
-  }, [loading, authState, handleLogout]);
-
-  useEffect(() => {
-    // Fetch parent data
-    fetch("/parent/getParent")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch parent data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Fetched parent data:", data); // Debugging log
-        if (data) {
-          setParentData(data);
-          // Once parent data is fetched, fetch child data associated with the parent
-          fetch(`/parent/getChildren/${data.ParentId}`)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Failed to fetch children data");
-              }
-              return response.json();
-            })
-            .then((childData) => {
-              console.log("Fetched children data:", childData);
-              setChildData(childData);
-            })
-            .catch((error) => {
-              console.error("Error fetching children data:", error);
-              setSnackbarMessage("Failed to fetch children data");
-              setSnackbarOpen(true);
-            });
+    const fetchChild = async () => {
+      try {
+        console.log("Fetching child with ID:", id); // Log ID parameter
+        const result = await axios.get(`/children/getChild/${id}`);
+        console.log("Fetch result:", result); // Log full response
+        if (result.data && result.data.success && result.data.child.length > 0) {
+          console.log("Fetched child data:", result.data.child[0]);
+          setChild(result.data.child[0]); // Access the first object in the array
         } else {
-          throw new Error("Parent not found");
+          setError(new Error("No child data found"));
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching parent data:", error);
-        setSnackbarMessage("Failed to fetch parent data");
-        setSnackbarOpen(true);
-      });
-  }, []);
+      } catch (err) {
+        console.error("Error fetching child data:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChild();
+  }, [id]);
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error fetching child data: {error.message}</Typography>;
+  if (!child) return <Typography>No child data found</Typography>;
 
   return (
-    <ThemeProvider theme={theme}>
-      <DashboardSchoolSidebar />
-      <Box
-        sx={{
-          bgcolor: Colors.secondary,
-          backgroundImage: `url(${DashboardBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Container maxWidth="md">
-          <Paper
-            elevation={6}
-            sx={{
-              padding: 4,
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-              borderRadius: 20,
-              marginTop: 8,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ marginRight: 4 }}>
-              <Avatar
-                sx={{
-                  width: 120,
-                  height: 120,
-                  mb: 2,
-                  border: `4px solid ${Colors.primary}`,
-                }}
-                src="/path/to/parent-avatar.jpg"
-              />
-            </Box>
-            <Divider orientation="vertical" flexItem sx={{ marginX: 2 }} />
-            <Box sx={{ flex: 1 }}>
-              {parentData ? (
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography variant="h6" gutterBottom>
-                      {parentData.Name} {parentData.Surname}
-                    </Typography>
-                  </Grid>
-                  {childData.map((child) => (
-                    <Grid item xs={12} key={child.ChildId}>
-                      <Paper
-                        sx={{
-                          padding: 3,
-                          borderRadius: 10,
-                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                          backgroundColor: Colors.lightGrey,
-                        }}
-                      >
-                        <Typography variant="body1" gutterBottom>
-                          <strong>Name:</strong> {child.Name}
-                        </Typography>
-                        <Typography variant="body1" gutterBottom>
-                          <strong>Surname:</strong> {child.Surname}
-                        </Typography>
-                        {/* Render other child details as needed */}
-                      </Paper>
-                    </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Typography>Loading...</Typography>
-              )}
-            </Box>
-          </Paper>
-        </Container>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          message={snackbarMessage}
-        />
-      </Box>
-      <SessionModal open={modalOpen} />
-    </ThemeProvider>
+    <Box
+      sx={{
+        p: 3,
+        width: "100%",
+        marginTop: "3%",
+        marginBottom: "10%",
+        marginLeft: "15%",
+        marginRight: "15%",
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Child Details
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>{child.Name}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Surname</TableCell>
+              <TableCell>{child.Surname}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Gender</TableCell>
+              <TableCell>{child.Gender}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Birthday</TableCell>
+              <TableCell>{new Date(child.Birthday).toLocaleDateString("en-GB")}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Allergies</TableCell>
+              <TableCell>{child.Allergies}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Vaccines</TableCell>
+              <TableCell>{child.Vaccines}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Payments</TableCell>
+              <TableCell>{child.Payments}€</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Active</TableCell>
+              <TableCell>{child.Active ? "Yes" : "No"}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
-}
+};
 
 export default ChildHome;

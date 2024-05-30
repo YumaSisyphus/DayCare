@@ -95,6 +95,7 @@ function App() {
           />
           <Route path="/chat" element={<Chat />} />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
+          <Route path="/ChildHome/:id" element={<ChildHome />} />
           <Route path="/activities" element={<Activity />} />
           <Route path="/SuccessPage" element={<SuccessPage />} />
           <Route path="/ParentForm" element={<ParentForm />} />
