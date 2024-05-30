@@ -11,7 +11,6 @@ const db = mysql.createConnection({
   database: "daycare",
 });
 
-
 router.get("/", (req, res) => {
   const query = `
       SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, s.Name as StaffName
@@ -26,7 +25,6 @@ router.get("/", (req, res) => {
     res.json(result);
   });
 });
-
 
 router.post("/", (req, res) => {
   const { Name, AgeGroupId, StaffId } = req.body;
@@ -45,9 +43,10 @@ router.post("/", (req, res) => {
 
     db.query(getClassQuery, [newClassId], (err, classResult) => {
       if (err) throw err;
-      
+
       if (StaffId) {
-        const staffClassQuery = "INSERT INTO staff_class (StaffId, ClassId) VALUES (?, ?)";
+        const staffClassQuery =
+          "INSERT INTO staff_class (StaffId, ClassId) VALUES (?, ?)";
         db.query(staffClassQuery, [StaffId, newClassId], (err) => {
           if (err) throw err;
         });
@@ -66,8 +65,10 @@ router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { Name, AgeGroupId, StaffId } = req.body;
 
-  const updateClassQuery = "UPDATE class SET Name = ?, AgeGroupId = ? WHERE ClassId = ?";
-  const updateStaffClassQuery = "UPDATE staff_class SET StaffId = ? WHERE ClassId = ?";
+  const updateClassQuery =
+    "UPDATE class SET Name = ?, AgeGroupId = ? WHERE ClassId = ?";
+  const updateStaffClassQuery =
+    "UPDATE staff_class SET StaffId = ? WHERE ClassId = ?";
 
   db.beginTransaction((err) => {
     if (err) {
@@ -124,7 +125,6 @@ router.put("/:id", (req, res) => {
   });
 });
 
-
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
   const query = "DELETE FROM class WHERE ClassId = ?";
@@ -138,9 +138,8 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-// Add this route to your Express router
 router.get("/assignedClasses", (req, res) => {
-  const { StaffId } = req.query; // Assuming StaffId is passed as a query parameter
+  const { StaffId } = req.query;
 
   const query = `
     SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName
@@ -160,5 +159,81 @@ router.get("/assignedClasses", (req, res) => {
   });
 });
 
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = `
+    SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName, s.Name as StaffName,
+      JSON_ARRAYAGG(JSON_OBJECT('ChildId', ch.ChildId, 'ChildName', ch.Name, 'Active', ch.Active, 'Gender', ch.Gender)) as Children
+    FROM class c
+    JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
+    LEFT JOIN staff_class sc ON c.ClassId = sc.ClassId
+    LEFT JOIN staff s ON sc.StaffId = s.StaffId
+    LEFT JOIN class_child cc ON c.ClassId = cc.ClassId
+    LEFT JOIN child ch ON cc.ChildId = ch.ChildId
+    WHERE c.ClassId = ?
+    GROUP BY c.ClassId, c.Name, a.RangeG, s.Name
+  `;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error fetching class details:", err);
+      return res.status(500).json({ message: "Internal Server Error", err });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    res.json(result[0]);
+  });
+});
+
+router.post("/assignChild", (req, res) => {
+  const { ClassId, ChildId } = req.body;
+
+  const query = "INSERT INTO class_child (ClassId, ChildId) VALUES (?, ?)";
+
+  db.query(query, [ClassId, ChildId], (err, result) => {
+    if (err) {
+      console.error("Error assigning child to class:", err);
+      return res.status(500).json({ message: "Internal Server Error", err });
+    }
+
+    res.json({
+      message: "Child assigned to class successfully",
+      affectedRows: result.affectedRows,
+    });
+  });
+});
+
+router.delete("/removeChildFromClass", (req, res) => {
+  const { childId, classId } = req.body;
+
+  console.log("Received payload:", req.body);
+
+  const sql = `
+    DELETE FROM class_child 
+    WHERE ChildId = ? AND ClassId = ?
+  `;
+
+  console.log("SQL Query:", sql);
+  console.log("Values passed to SQL Query:", [childId, classId]);
+
+  db.query(sql, [childId, classId], (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Remove child from class failed",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Child removed from class successfully",
+      });
+    }
+  });
+});
 
 module.exports = router;

@@ -284,4 +284,31 @@ cron.schedule(
   }
 );
 
+router.put("/updateChildActiveStatus/:id", (req, res) => {
+  const childId = req.params.id;
+  const activeStatus = req.body.active;
+
+  const sql = `
+    UPDATE child 
+    SET Active=?
+    WHERE ChildId=?
+  `;
+  const values = [activeStatus, childId];
+
+  db.query(sql, values, (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({
+        success: false,
+        message: "Update child active status failed",
+      });
+    } else {
+      return res.json({
+        success: true,
+        message: "Update child active status successful",
+      });
+    }
+  });
+});
+
 module.exports = router;

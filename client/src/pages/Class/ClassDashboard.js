@@ -24,6 +24,7 @@ import {
   FormControl,
   InputLabel,
   Pagination,
+  Link,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -54,7 +55,7 @@ function ClassDashboard() {
   const [staffMembers, setStaffMembers] = useState([]);
   const [selectedStaffId, setSelectedStaffId] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -271,7 +272,14 @@ const { authState,loading } = useAuth();
                 ).map((cls) => (
                   <TableRow key={cls.ClassId}>
                     <TableCell>
-                      <Typography variant="body1">{cls.Name}</Typography>
+                      <Typography
+                        variant="body1"
+                        component={Link}
+                        href={`/classes/${cls.ClassId}`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {cls.Name}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
@@ -279,11 +287,10 @@ const { authState,loading } = useAuth();
                       </Typography>
                     </TableCell>
                     <TableCell>
-                  <Typography variant="body1">
-                    {cls.StaffName} {/* Display the teacher's name */}
-                  </Typography>
-                </TableCell>
-
+                      <Typography variant="body1">
+                        {cls.StaffName} {/* Display the teacher's name */}
+                      </Typography>
+                    </TableCell>
 
                     <TableCell sx={{ textAlign: "right" }}>
                       <IconButton
@@ -341,23 +348,22 @@ const { authState,loading } = useAuth();
                 </Select>
               </FormControl>
               <FormControl fullWidth margin="normal">
-              <InputLabel id="staff-label">Staff</InputLabel>
-              <Select
-                labelId="staff-label"
-                value={selectedStaffId}
-                label="Staff"
-                onChange={(e) => setSelectedStaffId(e.target.value)}
-              >
-                {staffMembers
-                  .filter((staff) => staff.Role === "Teacher") // Filter staff members with role Teacher
-                  .map((staff) => (
-                    <MenuItem key={staff.StaffId} value={staff.StaffId}>
-                      {`${staff.Name} ${staff.Surname}`}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-
+                <InputLabel id="staff-label">Staff</InputLabel>
+                <Select
+                  labelId="staff-label"
+                  value={selectedStaffId}
+                  label="Staff"
+                  onChange={(e) => setSelectedStaffId(e.target.value)}
+                >
+                  {staffMembers
+                    .filter((staff) => staff.Role === "Teacher") // Filter staff members with role Teacher
+                    .map((staff) => (
+                      <MenuItem key={staff.StaffId} value={staff.StaffId}>
+                        {`${staff.Name} ${staff.Surname}`}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleModalClose} color="primary">
