@@ -61,7 +61,8 @@ const InvoiceDashboard = () => {
       }}
     >
       <Box mt={4} mb={4}>
-        <DashboardSchoolSidebar/>
+      <DashboardSchoolSidebar/>
+
       <Typography variant="h4" align="center" gutterBottom>
           Invoice Dashboard
         </Typography>

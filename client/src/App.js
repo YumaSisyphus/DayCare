@@ -134,8 +134,8 @@ function App() {
             } />
           <Route path="/CreatePaymentForm" element={
               <RoleBasedRoute
-                allowedRoles={["parent"]}
-                allowedSpecificRoles={["parent"]}
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
               >
                 <CreatePaymentForm />
               </RoleBasedRoute>
@@ -197,16 +197,7 @@ function App() {
               </RoleBasedRoute>
             }
           />
-          <Route
-            path="/CreatePaymentForm"
-            element={
-              <RoleBasedRoute
-                allowedSpecificRoles={["parent"]}
-                allowedRoles={["parent"]}
-              >
-                <CreatePaymentForm />
-              </RoleBasedRoute>
-            }/>
+         
           <Route
             path="/AdminHome"
             element={
@@ -230,8 +221,8 @@ function App() {
           <Route path="/AddChild" 
           element={
            <RoleBasedRoute
-                allowedSpecificRoles={["staff"]}
-                allowedRoles={["Admin"]}
+           allowedRoles={["staff"]}
+           allowedSpecificRoles={["Admin"]}
               >
                 <ChildForm />
               </RoleBasedRoute>
@@ -239,8 +230,8 @@ function App() {
           <Route path="/EditChild/:childId" 
           element={
           <RoleBasedRoute
-                allowedSpecificRoles={["staff"]}
-                allowedRoles={["Admin"]}
+          allowedRoles={["staff"]}
+          allowedSpecificRoles={["Admin"]}
               >
                 <EditChild />
               </RoleBasedRoute>

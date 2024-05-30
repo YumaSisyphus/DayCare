@@ -174,11 +174,12 @@ const ParentForm = ({ setParents }) => {
         alignItems: "center",
       }}
     >
+              <DashboardSchoolSidebar/>
+
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: Colors.secondary, p: 3, marginLeft: "20%" }}
       >
-        <DashboardSchoolSidebar/>
         <Paper
           elevation={3}
           sx={{ padding: 2, width: "67%" }}
