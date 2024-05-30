@@ -54,7 +54,7 @@ function Food() {
   const [nameSearchQuery, setNameSearchQuery] = useState("");
 
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -116,6 +116,13 @@ const { authState,loading } = useAuth();
   };
 
   const handleSaveChanges = () => {
+    // Validation: Ensure name, description, and allergens are not empty
+    if (!editedName || !editedDescription || !editedAllergens) {
+      setSnackbarMessage("Please fill in all required fields");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const apiUrl = isNewFood
       ? "/food/createFood"
       : `/food/updateFood/${selectedFood.FoodId}`;
