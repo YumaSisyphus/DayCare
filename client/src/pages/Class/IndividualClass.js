@@ -29,6 +29,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/TeacherSidebar";
+import { useAuth } from "../../utils/authContext";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 
 const SingleClass = () => {
   const { id } = useParams();
@@ -38,6 +41,23 @@ const SingleClass = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { authState, loading } = useAuth();
+  const handleLogout = useLogout();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   useEffect(() => {
     fetch(`/class/${id}`)
@@ -286,6 +306,7 @@ const SingleClass = () => {
           </Typography>
         )}
       </Box>
+      <SessionModal open={modalOpen} />
     </Box>
   );
 };

@@ -180,7 +180,15 @@ const ParentForm = ({ setParents }) => {
         component="main"
         sx={{ flexGrow: 1, bgcolor: Colors.secondary, p: 3, marginLeft: "20%" }}
       >
-        <Paper elevation={3} sx={{ padding: 2, width: "67%" }}>
+        <Paper
+          elevation={3}
+          sx={{ padding: 2, width: "67%" }}
+          style={{
+            background: "rgba(255, 255, 255, 0.17)",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.27)",
+          }}
+        >
           <Typography variant="h6" gutterBottom>
             Register a Parent
           </Typography>
@@ -306,6 +314,7 @@ const ParentForm = ({ setParents }) => {
                   type="submit"
                   variant="contained"
                   color="primary"
+                  sx={{ bgcolor: Colors.pastelBlue }}
                   fullWidth
                 >
                   Create Parent
