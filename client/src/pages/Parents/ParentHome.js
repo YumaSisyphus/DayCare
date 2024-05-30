@@ -83,7 +83,7 @@ function ParentHome() {
         }}
       >
         <Container maxWidth="md" sx={{ marginTop: -2 }}>
-        <Paper
+          <Paper
             elevation={0} // Remove elevation
             sx={{
               padding: 4,
@@ -104,32 +104,30 @@ function ParentHome() {
                   marginLeft: 16,
                   mb: 2,
                   border: `4px solid ${Colors.primary}`,
-                  animation: "fadeIn 1s ease-in", 
-                   "@keyframes fadeIn": {
-                     from: { opacity: 0 },
-                     to: { opacity: 1 },
-                   },
+                  animation: "fadeIn 1s ease-in",
+                  "@keyframes fadeIn": {
+                    from: { opacity: 0 },
+                    to: { opacity: 1 },
+                  },
                 }}
                 src="/path/to/parent-avatar.jpg"
               />
               {parentData && (
-               <Box textAlign="center">
-               <Typography
-                 variant="h2"
-                 gutterBottom
-                 sx={{
-                   fontFamily: "Gabriola", // Change font family
-                   animation: "fadeIn 1s ease-in", // Add animation
-                   "@keyframes fadeIn": {
-                     from: { opacity: 0 },
-                     to: { opacity: 1 },
-                   },
-                 }}
-               >
-                 Welcome, {parentData.Name} {parentData.Surname}
-               </Typography>
-             </Box>
-             
+                <Box textAlign="center">
+                  <Typography
+                    variant="h2"
+                    gutterBottom
+                    sx={{
+                      animation: "fadeIn 1s ease-in",
+                      "@keyframes fadeIn": {
+                        from: { opacity: 0 },
+                        to: { opacity: 1 },
+                      },
+                    }}
+                  >
+                    Welcome, {parentData.Name} {parentData.Surname}
+                  </Typography>
+                </Box>
               )}
             </Box>
           </Paper>
