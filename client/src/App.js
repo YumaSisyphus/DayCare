@@ -37,6 +37,7 @@ import SuccessPage from "./pages/Parents/SuccessPage";
 import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
 import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
 import MyClasses from "./pages/TeacherPages/MyClasses";
+import { Class } from "@mui/icons-material";
 import Chat from "./pages/Chat/chat";
 import SingleClass from "./pages/Class/IndividualClass";
 
@@ -95,6 +96,7 @@ function App() {
           />
           <Route path="/chat" element={<Chat />} />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
+          <Route path="/ChildHome/:id" element={<ChildHome />} />
           <Route path="/activities" element={<Activity />} />
           <Route path="/SuccessPage" element={<SuccessPage />} />
           <Route path="/ParentForm" element={<ParentForm />} />
@@ -136,6 +138,8 @@ function App() {
               </RoleBasedRoute>
             }
           />
+     
+         
           <Route
             path="/AdminHome"
             element={

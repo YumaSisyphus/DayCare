@@ -36,8 +36,9 @@ const ParentForm = ({ setParents }) => {
     childId: [],
   });
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
+  const navigate = useNavigate();
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -52,6 +53,7 @@ const { authState,loading } = useAuth();
       }
     }
   }, [loading, authState, handleLogout]);
+
   useEffect(() => {
     const fetchChildren = async () => {
       try {
@@ -74,6 +76,39 @@ const { authState,loading } = useAuth();
 
   const handleCreateParent = async (e) => {
     e.preventDefault();
+
+    // Basic validation to check if any of the required fields are empty
+    const requiredFields = [
+      "name",
+      "surname",
+      "birthday",
+      "gender",
+      "email",
+      "address",
+      "phonenumber",
+      "username",
+      "password",
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        console.error(`${field} field is empty`);
+        return;
+      }
+    }
+
+    // Validate password to contain at least one capital letter
+    if (!/[A-Z]/.test(formData.password)) {
+      console.error("Password must contain at least one capital letter");
+      return;
+    }
+
+    // Check if at least one child is selected
+    if (formData.childId.length === 0) {
+      console.error("Please select at least one child");
+      return;
+    }
+
     try {
       const { childId, ...parentData } = formData;
       const createParentResponse = await axios.post(
@@ -82,15 +117,13 @@ const { authState,loading } = useAuth();
       );
 
       if (createParentResponse.data.success) {
-        // Parent created successfully, now assign the children to the parent
         const parentId = createParentResponse.data.data.id;
         const assignChildResponse = await axios.post(
           "/parents/assignChildToParent",
-          { parentId, childIds: childId } // Ensure childIds is an array
+          { parentId, childIds: childId }
         );
 
         if (assignChildResponse.data.success) {
-          // Children assigned to parent successfully
           navigate("/DashboardParents");
           setParents((prevParents) => [
             ...prevParents,
@@ -107,7 +140,7 @@ const { authState,loading } = useAuth();
             username: "",
             password: "",
             active: 1,
-            childId: [], // Clear childId from the form after saving
+            childId: [],
           });
         } else {
           console.error(
@@ -125,8 +158,6 @@ const { authState,loading } = useAuth();
       console.error("Error creating parent:", error.message);
     }
   };
-
-  const navigate = useNavigate();
 
   return (
     <Box
@@ -247,14 +278,14 @@ const { authState,loading } = useAuth();
               <Grid item xs={12}>
                 <Autocomplete
                   fullWidth
-                  multiple // Enable multiple selection
+                  multiple
                   value={children.filter((child) =>
                     formData.childId.includes(child.ChildId)
                   )}
                   onChange={(event, newValue) => {
                     setFormData((prevFormData) => ({
                       ...prevFormData,
-                      childId: newValue.map((child) => child.ChildId), // Map to array of ChildIds
+                      childId: newValue.map((child) => child.ChildId),
                     }));
                   }}
                   options={children}

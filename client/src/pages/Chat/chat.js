@@ -20,7 +20,8 @@ import { Colors } from "../../utils/colors";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 
-const socket = io("http://localhost:7000");
+// Ensure the socket connection is established outside the component to avoid multiple connections
+const socket = io("http://localhost:5000");
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);

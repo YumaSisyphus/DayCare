@@ -134,6 +134,7 @@ function Staff() {
   const handleModalClose = () => {
     setOpenModal(false);
   };
+
   const handleSaveChanges = () => {
     // Basic validation to check if any of the required fields are empty
     if (
@@ -149,6 +150,19 @@ function Staff() {
       !editedPassword
     ) {
       setSnackbarMessage("Please fill out all fields.");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    // Validation for password field
+    if (editedPassword.length < 8) {
+      setSnackbarMessage("Password must be at least 8 characters long.");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (!/[A-Z]/.test(editedPassword)) {
+      setSnackbarMessage("Password must contain at least one capital letter.");
       setSnackbarOpen(true);
       return;
     }
@@ -343,12 +357,13 @@ function Staff() {
                       <Typography fontWeight={"bold"}>Role</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography fontWeight={"bold"}>Username</Typography>
-                    </TableCell>
-                    <TableCell>
                       <Typography fontWeight={"bold"}>Address</Typography>
                     </TableCell>
 
+                    <TableCell>
+                      <Typography fontWeight={"bold"}>Username</Typography>
+                    </TableCell>
+                
                     <TableCell>
                       <Typography fontWeight={"bold"}>Actions</Typography>
                     </TableCell>
@@ -364,8 +379,9 @@ function Staff() {
                       <TableCell>{staff.Email}</TableCell>
                       <TableCell>{staff.PhoneNumber}</TableCell>
                       <TableCell>{staff.Role}</TableCell>
-                      <TableCell>{staff.Username}</TableCell>
                       <TableCell>{staff.Address}</TableCell>
+                      <TableCell>{staff.Username}</TableCell>
+                  
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -413,9 +429,11 @@ function Staff() {
               value={editedSurname}
               onChange={(e) => setEditedSurname(e.target.value)}
             />
+            <Typography variant="subtitle1" sx={{ marginLeft: 1 }}>
+              Birthday:
+            </Typography> {/* Add the title "Birthday" */}
             <TextField
               margin="normal"
-              label=""
               fullWidth
               type="date"
               value={editedBirthday}
@@ -449,6 +467,14 @@ function Staff() {
               value={editedRole}
               onChange={(e) => setEditedRole(e.target.value)}
             />
+
+           <TextField
+              margin="normal"
+              label="Address"
+              fullWidth
+              value={editedAddress}
+              onChange={(e) => setEditedAddress(e.target.value)}
+            />
             <TextField
               margin="normal"
               label="Username"
@@ -456,13 +482,7 @@ function Staff() {
               value={editedUsername}
               onChange={(e) => setEditedUsername(e.target.value)}
             />
-            <TextField
-              margin="normal"
-              label="Address"
-              fullWidth
-              value={editedAddress}
-              onChange={(e) => setEditedAddress(e.target.value)}
-            />
+      
             <TextField
               margin="normal"
               label="Password"
