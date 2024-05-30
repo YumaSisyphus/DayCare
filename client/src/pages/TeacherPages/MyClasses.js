@@ -7,7 +7,19 @@ import DashboardSidebar from "../../components/DashboardComponents/TeacherSideba
 import DashboardBg from "../../images/geometricbg.png";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from "@mui/material";
+import { m } from "framer-motion";
 
 const MyClasses = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -18,7 +30,7 @@ const MyClasses = () => {
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-console.log(authState);
+  console.log(authState);
   useEffect(() => {
     if (!loading) {
       if (!authState.isAuthenticated && authState.isRefreshToken) {
@@ -32,7 +44,9 @@ console.log(authState);
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch(`/class/assignedClasses?StaffId=${authState.user.id}`);
+        const response = await fetch(
+          `/class/assignedClasses?StaffId=${authState.user.id}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch classes");
         }
@@ -56,32 +70,61 @@ console.log(authState);
       }}
       height={"100vh"}
       display={"flex"}
-      justifyContent={"center"}
-      alignItems={"center"}
+      p={10}
     >
       <DashboardSidebar />
       <Box>
         <Typography variant="h4" gutterBottom>
           Classes Assigned to You
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Class Name</TableCell>
-                <TableCell>Age Group</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {classes.map((classItem) => (
-                <TableRow key={classItem.ClassId}>
-                  <TableCell>{classItem.Name}</TableCell>
-                  <TableCell>{classItem.AgeGroupName}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Box display={"flex"} gap={4}>
+          {classes.map((classItem, index) => (
+            <Button
+              key={classItem.ClassId}
+              width={"200px"}
+              sx={{
+                bgcolor:
+                  index % 2 === 0 ? Colors.pastelPeach : Colors.pastelOrange,
+                display: "flex",
+                flexDirection: "column",
+                p: 3,
+                borderRadius: 5,
+                gap: 2,
+                transition: ".4s",
+                ":hover": {
+                  bgcolor:
+                    index % 2 === 0 ? Colors.pastelPurple : Colors.pastelPurple,
+                },
+              }}
+              href={`/classes/${classItem.ClassId}`}
+            >
+              <Box display={"flex"} gap={2} flexDirection={"column"}>
+                <Box display={"flex"} gap={2}>
+                  <Typography
+                    color={Colors.cleanLightBlack}
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Class Name:{" "}
+                  </Typography>
+                  <Typography color={Colors.cleanLightBlack}>
+                    {classItem.Name}
+                  </Typography>
+                </Box>
+                <Box display={"flex"} gap={2}>
+                  <Typography
+                    color={Colors.cleanLightBlack}
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Age Group:{" "}
+                  </Typography>
+                  <Typography color={Colors.cleanLightBlack}>
+                    {classItem.AgeGroupName}
+                  </Typography>
+                </Box>
+              </Box>
+            </Button>
+          ))}
+        </Box>
       </Box>
       <SessionModal open={modalOpen} />
     </Box>
