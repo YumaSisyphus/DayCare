@@ -13,7 +13,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import DashboardBg from "../../images/geometricbg.png"; 
+import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
@@ -36,7 +36,6 @@ const ParentForm = ({ setParents }) => {
     childId: [],
   });
   const [modalOpen, setModalOpen] = useState(false);
-  const [errors, setErrors] = useState({});
   const { authState, loading } = useAuth();
   const handleLogout = useLogout();
   const navigate = useNavigate();
@@ -75,8 +74,10 @@ const ParentForm = ({ setParents }) => {
     }));
   };
 
-  const validateForm = () => {
-    const errors = {};
+  const handleCreateParent = async (e) => {
+    e.preventDefault();
+
+    // Basic validation to check if any of the required fields are empty
     const requiredFields = [
       "name",
       "surname",
@@ -91,26 +92,20 @@ const ParentForm = ({ setParents }) => {
 
     for (const field of requiredFields) {
       if (!formData[field]) {
-        errors[field] = "This field is required";
+        console.error(`${field} field is empty`);
+        return;
       }
     }
 
+    // Validate password to contain at least one capital letter
     if (!/[A-Z]/.test(formData.password)) {
-      errors.password = "Password must contain at least one capital letter";
+      console.error("Password must contain at least one capital letter");
+      return;
     }
 
+    // Check if at least one child is selected
     if (formData.childId.length === 0) {
-      errors.childId = "Please select at least one child";
-    }
-
-    setErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleCreateParent = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
+      console.error("Please select at least one child");
       return;
     }
 
@@ -195,8 +190,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.name}
-                  helperText={errors.name}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -207,8 +200,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.surname}
-                  helperText={errors.surname}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -220,8 +211,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.birthday}
-                  helperText={errors.birthday}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -232,8 +221,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.gender}
-                  helperText={errors.gender}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -245,8 +232,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.email}
-                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -257,8 +242,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.address}
-                  helperText={errors.address}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -269,8 +252,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.phonenumber}
-                  helperText={errors.phonenumber}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -281,8 +262,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.username}
-                  helperText={errors.username}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -294,8 +273,6 @@ const ParentForm = ({ setParents }) => {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={!!errors.password}
-                  helperText={errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -316,12 +293,7 @@ const ParentForm = ({ setParents }) => {
                     option.Name + " " + option.Surname
                   }
                   renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Children"
-                      error={!!errors.childId}
-                      helperText={errors.childId}
-                    />
+                    <TextField {...params} label="Select Children" />
                   )}
                 />
               </Grid>
