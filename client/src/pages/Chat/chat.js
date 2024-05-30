@@ -2,40 +2,54 @@ import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { useAuth } from "../../utils/authContext";
 import axios from "axios";
-import Background from "../../images/glassBg.jpg";
 import {
   Box,
-  Container,
-  TextField,
-  Button,
   Typography,
   List,
   ListItem,
   ListItemText,
   Divider,
-  Paper,
+  TextField,
+  Button,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
 import { Colors } from "../../utils/colors";
+import useLogout from "../../utils/useLogout";
+import SessionModal from "../../components/SessionModal";
 
-// Ensure the socket connection is established outside the component to avoid multiple connections
 const socket = io("http://localhost:7000");
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [recipientId, setRecipientId] = useState("");
-  const [filteredMessages, setFilteredMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState(null);
-  const { authState } = useAuth();
+  const { authState, loading } = useAuth();
   const senderId = authState.user ? authState.user.id : null;
   const senderRole = authState.user ? authState.user.userType : null;
   const [isHovered, setIsHovered] = useState(false);
+  const [senderUsername, setSenderUsername] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleLogout = useLogout();
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!authState.isAuthenticated && authState.isRefreshToken) {
+        handleOpenModal();
+      } else if (!authState.isAuthenticated && !authState.isRefreshToken) {
+        handleLogout();
+      }
+    }
+  }, [loading, authState, handleLogout]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -77,6 +91,22 @@ const Chat = () => {
   };
 
   const typingTimeout = useRef(null);
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await axios.get(
+          `/chat/messagesUsername/${senderId}/${senderRole}`
+        );
+        setSenderUsername(response.data.data[0].Username);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    if (!loading) {
+      fetchUserName();
+    }
+  }, [senderId, senderRole, loading, authState]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -147,7 +177,12 @@ const Chat = () => {
       const response = await axios.get(`/chat/messages/${recipientId}`, {
         params: { senderId },
       });
-      setMessages(response.data);
+      const fetchedMessages = response.data.map((msg) => ({
+        ...msg,
+        senderId: msg.sender_id,
+        recipientId: msg.recipient_id,
+      }));
+      setMessages(fetchedMessages);
     } catch (error) {
       console.error("Failed to load messages", error);
     }
@@ -184,6 +219,9 @@ const Chat = () => {
   };
 
   const getUsernameById = (id) => {
+    if (id === senderId) {
+      return senderUsername;
+    }
     const user = users.find(
       (user) => user.StaffId === id || user.ParentId === id
     );
@@ -204,8 +242,6 @@ const Chat = () => {
           padding: 20,
           width: "20%",
           background: "rgba(255, 255, 255, 0.17)",
-          // backdropFilter: "blur(4.4px)",
-          // WebkitBackdropFilter: "blur(4.4px)",
           border: "1px solid rgba(255, 255, 255, 0.27)",
         }}
         minHeight={"100%"}
@@ -245,8 +281,6 @@ const Chat = () => {
         style={{
           background: "rgba(255, 255, 255, 0.17)",
           boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          // backdropFilter: "blur(4.4px)",
-          // WebkitBackdropFilter: "blur(4.4px)",
           border: "1px solid rgba(255, 255, 255, 0.27)",
         }}
         minHeight={"100%"}
@@ -263,11 +297,15 @@ const Chat = () => {
               key={index}
               sx={{
                 justifyContent:
-                  msg.senderId === senderId ? "flex-end" : "flex-start",
+                  msg.senderId === senderId
+                    ? "flex-end"
+                    : msg.senderId === recipientId
+                    ? "flex-start"
+                    : "",
               }}
             >
               <ListItemText
-                primary={getUsernameById(msg.sender_id)}
+                primary={getUsernameById(msg.senderId)}
                 secondary={msg.message}
                 style={{
                   background: "rgba(255, 255, 255, 0.17)",
@@ -361,6 +399,7 @@ const Chat = () => {
           </Button>
         </Box>
       </Box>
+      <SessionModal open={modalOpen} />
     </Box>
   );
 };

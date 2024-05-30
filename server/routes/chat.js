@@ -41,7 +41,8 @@ router.get("/messages/:recipientId", (req, res) => {
   const query = `
       SELECT * FROM messages 
       WHERE (sender_id = ? AND recipient_id = ?)
-         OR (sender_id = ? AND recipient_id = ?)`;
+         OR (sender_id = ? AND recipient_id = ?)
+         ORDER BY created_at ASC`;
 
   db.query(
     query,
@@ -62,8 +63,37 @@ router.get("/messages/:recipientId", (req, res) => {
   const sql = `
       SELECT * FROM messages 
       WHERE (sender_id = ? AND recipient_id = ?) 
-      OR (sender_id = ? AND recipient_id = ?)`;
+      OR (sender_id = ? AND recipient_id = ?)
+      ORDER BY created_at ASC`;
   db.query(sql, [senderId, recipientId, recipientId, senderId], (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Fetch messages failed" });
+    } else {
+      return res.json({ success: true, data });
+    }
+  });
+});
+
+router.get("/messagesUsername/:senderId/:senderRole", (req, res) => {
+  const { senderId, senderRole } = req.params;
+  let sql = `
+  SELECT DISTINCT s.Username 
+  FROM staff s 
+  JOIN messages m ON s.StaffId=m.sender_id 
+  AND m.sender_id=?
+  `;
+  if (senderRole === "parent") {
+    sql = `
+    SELECT DISTINCT p.Username 
+    FROM parent p 
+    JOIN messages m ON p.ParentId=m.sender_id 
+    AND m.sender_id=?
+    `;
+  }
+  db.query(sql, [senderId], (err, data) => {
     if (err) {
       console.error("Database error:", err);
       return res
