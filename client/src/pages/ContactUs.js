@@ -76,6 +76,14 @@ const ContactUs = () => {
         );
         if (response.data.success) {
           console.log("Contact form submitted successfully!");
+          // Reset form fields
+          setFormData({
+            email: "",
+            subject: "",
+            dateCreated: "",
+            message: "",
+          });
+          setErrors({});
         }
       } catch (error) {
         console.error("Error submitting contact form:", error.message);
