@@ -6,13 +6,15 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
+import DashboardBg from "../../images/geometricbg.png"; // Import background image
+import { Colors } from "../../utils/colors";
 
 const ReportForm = () => {
   const { childId } = useParams();
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -33,7 +35,7 @@ const { authState,loading } = useAuth();
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:7000/children/createReport",
+        "http://localhost:5000/children/createReport",
         {
           childId: childId,
           description: description,
@@ -49,32 +51,53 @@ const { authState,loading } = useAuth();
   };
 
   return (
-    <Box>
-      <Typography variant="h6" gutterBottom>
-        Create Report
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              label="Description"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
+    <Box
+      sx={{
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        bgcolor: Colors.secondary,
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        mt={-3}
+        mx="auto"
+        p={4}
+        maxWidth={600}
+        boxShadow={3}
+        bgcolor="white"
+        borderRadius={8}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
+          Create Report
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={12}>
+              <TextField
+                label="Description"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} textAlign="center">
+              <Button type="submit" variant="contained" color="primary">
+                Create Report
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Create Report
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-      <SessionModal open={modalOpen} />
+        </form>
+        <SessionModal open={modalOpen} />
+      </Box>
     </Box>
   );
 };
