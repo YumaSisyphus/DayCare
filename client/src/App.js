@@ -124,7 +124,7 @@ function App() {
             }
           />
           <Route
-            path="/TeacherHome"
+            path="/CreatePaymentForm"
             element={
               <RoleBasedRoute
                 allowedSpecificRoles={["parent"]}

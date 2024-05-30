@@ -113,10 +113,10 @@ const Chat = () => {
       try {
         let response;
         if (senderRole === "parent") {
-          response = await axios.get("http://localhost:7000/staff/getStaff");
+          response = await axios.get("http://localhost:5000/staff/getStaff");
         } else if (senderRole === "staff") {
           response = await axios.get(
-            "http://localhost:7000/parents/getParents"
+            "http://localhost:5000/parents/getParents"
           );
         }
 

@@ -279,14 +279,14 @@ function Staff() {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <Container>
+        <Container sx={{ marginTop: 2  }}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: -1  }}>
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -5  }}>
             Staff Dashboard
              </Typography>
            <Button
@@ -349,9 +349,7 @@ function Staff() {
                     <TableCell>
                       <Typography fontWeight={"bold"}>Address</Typography>
                     </TableCell>
-                    <TableCell>
-                      <Typography fontWeight={"bold"}>Password</Typography>
-                    </TableCell>
+                  
                     <TableCell>
                       <Typography fontWeight={"bold"}>Actions</Typography>
                     </TableCell>
@@ -362,14 +360,13 @@ function Staff() {
                     <TableRow key={staff.StaffId}>
                       <TableCell>{staff.Name}</TableCell>
                       <TableCell>{staff.Surname}</TableCell>
-                      <TableCell>{staff.Birthday}</TableCell>
+                      <TableCell itemType="date">{staff.Birthday}</TableCell>
                       <TableCell>{staff.Gender}</TableCell>
                       <TableCell>{staff.Email}</TableCell>
                       <TableCell>{staff.PhoneNumber}</TableCell>
                       <TableCell>{staff.Role}</TableCell>
                       <TableCell>{staff.Username}</TableCell>
                       <TableCell>{staff.Address}</TableCell>
-                      <TableCell>{staff.Password}</TableCell>
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -419,8 +416,9 @@ function Staff() {
             />
             <TextField
               margin="normal"
-              label="Birthday"
+              label=""
               fullWidth
+              type="date"
               value={editedBirthday}
               onChange={(e) => setEditedBirthday(e.target.value)}
             />
@@ -470,6 +468,7 @@ function Staff() {
               margin="normal"
               label="Password"
               fullWidth
+              type="password"
               value={editedPassword}
               onChange={(e) => setEditedPassword(e.target.value)}
             />

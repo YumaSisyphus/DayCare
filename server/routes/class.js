@@ -138,4 +138,27 @@ router.delete("/:id", (req, res) => {
   });
 });
 
+// Add this route to your Express router
+router.get("/assignedClasses", (req, res) => {
+  const { StaffId } = req.query; // Assuming StaffId is passed as a query parameter
+
+  const query = `
+    SELECT c.ClassId, c.Name, a.RangeG as AgeGroupName
+    FROM class c
+    JOIN agegroup a ON c.AgeGroupId = a.AgeGroupId
+    JOIN staff_class sc ON c.ClassId = sc.ClassId
+    WHERE sc.StaffId = ?
+  `;
+
+  db.query(query, [StaffId], (err, result) => {
+    if (err) {
+      console.error("Error fetching assigned classes:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
 module.exports = router;
