@@ -419,6 +419,16 @@ export default function DashboardChildren() {
                         >
                           Create Report
                         </Button>
+                        
+                        <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate(`/ChildHome/${child.ChildId}`)}
+                      >
+                        View Details
+                      </Button>
+
+
                         <FormControlLabel
                           control={
                             <Checkbox
