@@ -279,14 +279,14 @@ function Staff() {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <Container>
+        <Container sx={{ marginTop: 2  }}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: -1  }}>
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -5  }}>
             Staff Dashboard
              </Typography>
            <Button
