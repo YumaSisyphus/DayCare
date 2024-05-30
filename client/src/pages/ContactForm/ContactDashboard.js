@@ -32,6 +32,7 @@ import SessionModal from "../../components/SessionModal";
 import useLogout from "../../utils/useLogout";
 import useCheckAuth from "../../utils/useCheckAuth";
 import { useAuth } from "../../utils/authContext";
+import axios from "axios";
 
 function ContactForm() {
   const [contactforms, setContactForms] = useState([]);
@@ -47,7 +48,7 @@ function ContactForm() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
@@ -248,23 +249,23 @@ const { authState,loading } = useAuth();
                   <TableRow key={contactform.ContactFormId}>
                     <TableCell>
                       <Typography variant="body1">
-                        {contactform.Email}
+                        {contactform.email}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
                         {" "}
-                        {contactform.Message}{" "}
+                        {contactform.message}{" "}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
-                        {contactform.DateCreated}
+                        {contactform.dateCreated}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
-                        {contactform.Subject}
+                        {contactform.subject}
                       </Typography>
                     </TableCell>
                     <TableCell>
