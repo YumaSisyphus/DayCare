@@ -287,10 +287,11 @@ function Staff() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        height={"100vh"}
+        height={"100%"}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
+        pb={15}
       >
         <Container sx={{ marginTop: 2 }}>
           <Box
