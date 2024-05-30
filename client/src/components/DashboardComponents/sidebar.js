@@ -23,8 +23,9 @@ const DashboardSidebar = () => {
         width="17%"
         height="100%"
         bgcolor={Colors.white}
-        position="absolute"
+        position="fixed"
         left={0}
+        top={0}
         borderRadius="5px"
         boxShadow="rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px"
         zIndex={10}
@@ -39,7 +40,6 @@ const DashboardSidebar = () => {
         <StyledLink href="/mealdashboard">Meal</StyledLink>
         <StyledLink href="/ContactDashboard">Contact</StyledLink>
         <StyledLink href="/MyClasses">My Classes</StyledLink>
-
       </Box>
       <Button
         display="flex"
