@@ -7,7 +7,7 @@ import { useAuth } from "../../utils/authContext";
 import useLogout from "../../utils/useLogout";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
-import DashboardBg from "../../images/geometricbg.png";
+import DashboardBg from "../../images/shapebg.png";
 import SessionModal from "../../components/SessionModal";
 
 const AdminHome = () => {
@@ -46,13 +46,12 @@ const AdminHome = () => {
       >
         <Container maxWidth="md" sx={{ marginTop: -2 }}>
           <Paper
-            elevation={6}
+            elevation={0} 
             sx={{
               padding: 4,
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-              borderRadius: 20,
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+              backgroundColor: "transparent",
+              borderRadius: 0, 
+              boxShadow: "none", 
               position: "relative",
               display: "flex",
               flexDirection: "column",
@@ -67,42 +66,35 @@ const AdminHome = () => {
             
               <Avatar
                 sx={{
-                  marginTop: 3,
-                  marginLeft: 12,
-                  width: 120,
-                  height: 120,
-                  mb: 4,
+                  width: 130,
+                  height: 130,
+                  marginLeft: 16,
+                  mb: 2,
                   border: `4px solid ${Colors.primary}`,
+                  animation: "fadeIn 1s ease-in", 
+                   "@keyframes fadeIn": {
+                     from: { opacity: 0 },
+                     to: { opacity: 1 },
+                   },
                 }}
-                src="/path/to/admin-avatar.jpg"
+                src="/path/to/parent-avatar.jpg"
               />
-              <Typography variant="h4" sx={{ marginBottom: 4 }}>
+              <Typography 
+                 variant="h2"
+                 gutterBottom
+                 sx={{
+                   fontFamily: "Gabriola", // Change font family
+                   animation: "fadeIn 1s ease-in", // Add animation
+                   "@keyframes fadeIn": {
+                     from: { opacity: 0 },
+                     to: { opacity: 1 },
+                   },
+                 }}
+               >
                 Welcome, {authState.user?.username}!
               </Typography>
             </motion.div>
             <Divider sx={{ width: "100%", marginBottom: 4 }} />
-            <Box sx={{ flex: 1 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Paper
-                    sx={{
-                      padding: 3,
-                      borderRadius: 10,
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                      backgroundColor: Colors.lightGrey,
-                      position: "relative",
-                      textAlign: "center",
-                      color: Colors.text,
-                    }}
-                  >
-                   <Typography variant="body1" gutterBottom sx={{ textAlign: "center" }}>
-                      <strong>Role:</strong> {authState.user?.role}
-                    </Typography>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Box>
-          
           </Paper>
         </Container>
       </Box>

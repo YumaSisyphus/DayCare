@@ -11,6 +11,8 @@ import {
   TableContainer,
   TableRow,
 } from "@mui/material";
+import { Colors } from "../../utils/colors";
+import DashboardBg from "../../images/geometricbg.png"; // Importing the background image
 
 const ChildHome = () => {
   const { id } = useParams();
@@ -47,55 +49,82 @@ const ChildHome = () => {
   return (
     <Box
       sx={{
-        p: 3,
-        width: "100%",
-        marginTop: "3%",
-        marginBottom: "10%",
-        marginLeft: "15%",
-        marginRight: "15%",
+        backgroundImage: `url(${DashboardBg})`, // Background image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "20px", // Padding added for spacing
+        bgcolor: Colors.secondary,
       }}
     >
-      <Typography variant="h4" gutterBottom>
-        Child Details
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>{child.Name}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Surname</TableCell>
-              <TableCell>{child.Surname}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Gender</TableCell>
-              <TableCell>{child.Gender}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Birthday</TableCell>
-              <TableCell>{new Date(child.Birthday).toLocaleDateString("en-GB")}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Allergies</TableCell>
-              <TableCell>{child.Allergies}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Vaccines</TableCell>
-              <TableCell>{child.Vaccines}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Payments</TableCell>
-              <TableCell>{child.Payments}€</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Active</TableCell>
-              <TableCell>{child.Active ? "Yes" : "No"}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box
+        sx={{
+          p: 3,
+          width: "80%", // Adjusted width
+          margin: "auto", // Center align
+          marginTop: "45px",
+          bgcolor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+          borderRadius: "12px", // Rounded corners
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Box shadow
+        }}
+      >
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            fontFamily: "Arial, sans-serif", // Change font family
+            textAlign: "center",
+            animation: "slideIn 1s forwards", // Add animation
+            "@keyframes slideIn": {
+              from: { transform: "translateY(-100%)" },
+              to: { transform: "translateY(0)" },
+            },
+          }}
+        >
+          Child Profile
+        </Typography>
+        <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell variant="head">Name</TableCell>
+                <TableCell sx={{ width: "60%" }}>{child.Name}</TableCell> {/* Adjusted width */}
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Surname</TableCell>
+                <TableCell>{child.Surname}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Gender</TableCell>
+                <TableCell>{child.Gender}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Birthday</TableCell>
+                <TableCell>{new Date(child.Birthday).toLocaleDateString("en-GB")}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Allergies</TableCell>
+                <TableCell>{child.Allergies}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Vaccines</TableCell>
+                <TableCell>{child.Vaccines}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Payments</TableCell>
+                <TableCell>{child.Payments}€</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell variant="head">Active</TableCell>
+                <TableCell>{child.Active ? "Yes" : "No"}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Box>
   );
 };
