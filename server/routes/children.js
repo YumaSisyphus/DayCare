@@ -284,4 +284,27 @@ cron.schedule(
   }
 );
 
+
+router.get("/assignedChildren", (req, res) => {
+  const { ParentId } = req.query;
+
+  const query = `
+    SELECT ch.ChildId, ch.Name, ch.Surname, ch.Birthday, ch.Gender
+    FROM child ch
+    JOIN child_parent cp ON ch.ChildId = cp.ChildId
+    WHERE cp.ParentId = ?
+  `;
+
+  db.query(query, [ParentId], (err, result) => {
+    if (err) {
+      console.error("Error fetching assigned children:", err);
+      res.status(500).json({ message: "Internal Server Error" });
+    } else {
+      res.json(result);
+    }
+  });
+});
+
+
+
 module.exports = router;
