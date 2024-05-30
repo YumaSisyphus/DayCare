@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
-import SessionModal from "../../components/SessionModal";
 import { FormControl, InputLabel, Select, MenuItem, TextField, Button, Grid, Typography, Container } from "@mui/material";
 import CashIcon from "@mui/icons-material/Money";
 import { useAuth } from "../../utils/authContext";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/ParentSidebar";
 
 const PaymentForm = () => {
   const [children, setChildren] = useState([]);
@@ -21,6 +20,7 @@ const PaymentForm = () => {
   const [modalOpen, setModalOpen] = useState(false);
 const { authState,loading } = useAuth();
   const handleLogout = useLogout();
+
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -110,6 +110,7 @@ const { authState,loading } = useAuth();
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', }}>
+      <DashboardSchoolSidebar/>
       <div style={{ flex: 1 }}>
         <Container style={{ backdropFilter: 'blur(80px)', backgroundColor: 'rgba(137, 207, 240, 0.5)', padding: '20px', borderRadius: '10px', marginTop: 50 }}>
           <Grid container spacing={4}>

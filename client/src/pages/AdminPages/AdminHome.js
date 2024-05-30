@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Paper, Container, Divider, Avatar, ThemeProvider } from "@mui/material";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import { motion } from "framer-motion";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 import { useAuth } from "../../utils/authContext";
 import useLogout from "../../utils/useLogout";
 import { Colors } from "../../utils/colors";

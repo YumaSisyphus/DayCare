@@ -18,10 +18,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
 import { useNavigate } from "react-router-dom";
-import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
+
 
 const ChildForm = () => {
   const navigate = useNavigate();
@@ -217,6 +218,8 @@ const { authState,loading } = useAuth();
       }}
     >
       <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
+      <DashboardSchoolSidebar />
+
         <Grid container justifyContent="center" spacing={3}>
           {formDataList.map((formData, index) => (
             <Grid item xs={12} sm={6} md={6} lg={6}>

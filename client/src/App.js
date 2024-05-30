@@ -13,7 +13,6 @@ import Food from "./pages/Food/FoodDashboard";
 import EditParent from "./pages/Parents/EditParents";
 import Header from "../src/components/Header";
 import PrivateRoute from "./utils/privateRoute";
-import ChildParent from "./pages/Parents/ChildParent";
 import DashboardChildren from "./pages/Children/DashboardChildren";
 import ClassDashboard from "./pages/Class/ClassDashboard";
 import AboutUs from "./pages/AboutUs";
@@ -33,7 +32,6 @@ import AdminHome from "./pages/AdminPages/AdminHome";
 import ParentHome from "./pages/Parents/ParentHome";
 import ChildHome from "./pages/Children/ChildHome";
 import PaymentForm from "./pages/Parents/PaymentForm";
-import SuccessPage from "./pages/Parents/SuccessPage";
 import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
 import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
 import MyClasses from "./pages/TeacherPages/MyClasses";
@@ -72,7 +70,6 @@ function App() {
               </RoleBasedRoute>
             }
           />
-
           <Route
             path="/TeacherHome"
             element={
@@ -104,28 +101,89 @@ function App() {
               >
                 <MyChildren />
               </RoleBasedRoute>
-            }
-          />
+            }/>
           <Route path="/chat" element={<Chat />} />
-          <Route path="/DashboardChildren" element={<DashboardChildren />} />
-          <Route path="/ChildHome/:id" element={<ChildHome />} />
-          <Route path="/activities" element={<Activity />} />
-          <Route path="/SuccessPage" element={<SuccessPage />} />
-          <Route path="/ParentForm" element={<ParentForm />} />
-          <Route path="/CreatePaymentForm" element={<CreatePaymentForm />} />
-          <Route path="/EditParents/:parentId" element={<EditParent />} />
-          <Route path="/ChildParent" element={<ChildParent />} />
-          <Route path="/foodDashboard" element={<Food />} />
+          <Route path="/DashboardChildren"  element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <DashboardChildren />
+              </RoleBasedRoute>
+            }/>
+          <Route path="/ChildHome/:id"  element={
+              <PrivateRoute>
+                <ChildHome />
+              </PrivateRoute>
+            } />
+          <Route path="/activities" element={ 
+          <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin","Teacher"]}
+              >
+                <Activity/>
+              </RoleBasedRoute>
+            } />
+          <Route path="/ParentForm" element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <ParentForm />
+              </RoleBasedRoute>
+            } />
+          <Route path="/CreatePaymentForm" element={
+              <RoleBasedRoute
+                allowedRoles={["parent"]}
+                allowedSpecificRoles={["parent"]}
+              >
+                <CreatePaymentForm />
+              </RoleBasedRoute>
+            } />
+          <Route path="/EditParents/:parentId" element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <EditParent />
+              </RoleBasedRoute>
+            } />
+          <Route path="/foodDashboard" element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin","Teacher"]}
+              >
+                <Food />
+              </RoleBasedRoute>
+            } />
           <Route path="/AboutUs" element={<AboutUs />} />
-          <Route path="/InvoiceDashboard" element={<InvoiceDashboard />} />
-          <Route path="/classes/:id" element={<SingleClass />} />
-
+          <Route path="/InvoiceDashboard" element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <InvoiceDashboard />
+              </RoleBasedRoute>
+            } />
+          <Route path="/classes/:id" element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin","Teacher"]}
+              >
+                <SingleClass />
+              </RoleBasedRoute>
+            } />
           <Route
             path="/PaymentForm"
             element={
+              <RoleBasedRoute
+                allowedRoles={["parent"]}
+                allowedSpecificRoles={["parent"]}
+              >
               <Elements stripe={stripePromise}>
                 <PaymentForm />
               </Elements>
+              </RoleBasedRoute>
             }
           />
           <Route
@@ -148,10 +206,7 @@ function App() {
               >
                 <CreatePaymentForm />
               </RoleBasedRoute>
-            }
-          />
-     
-         
+            }/>
           <Route
             path="/AdminHome"
             element={
@@ -161,8 +216,7 @@ function App() {
               >
                 <AdminHome />
               </RoleBasedRoute>
-            }
-          />
+            }/>
           <Route
             path="/ParentHome"
             element={
@@ -172,11 +226,25 @@ function App() {
               >
                 <ParentHome />
               </RoleBasedRoute>
-            }
-          />
-          <Route path="/ChildHome" element={<ChildHome />} />
-          <Route path="/AddChild" element={<ChildForm />} />
-          <Route path="/EditChild/:childId" element={<EditChild />} />
+            } />
+          <Route path="/AddChild" 
+          element={
+           <RoleBasedRoute
+                allowedSpecificRoles={["staff"]}
+                allowedRoles={["Admin"]}
+              >
+                <ChildForm />
+              </RoleBasedRoute>
+            } />
+          <Route path="/EditChild/:childId" 
+          element={
+          <RoleBasedRoute
+                allowedSpecificRoles={["staff"]}
+                allowedRoles={["Admin"]}
+              >
+                <EditChild />
+              </RoleBasedRoute>
+            } />
           <Route
             path="/StaffDashboard"
             element={
@@ -197,20 +265,34 @@ function App() {
               >
                 <ClassDashboard />
               </RoleBasedRoute>
-            }
-          />
+            }/>
           <Route
             path="/ContactDashboard"
             element={
-              <PrivateRoute>
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
                 <ContactForm />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/mealDashboard" element={<Meal />} />
-          <Route path="/ReportForm/:childId" element={<ReportForm />} />
+              </RoleBasedRoute>
+            }/>
+          <Route path="/mealDashboard"  element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin","Teacher"]}
+              >
+                <Meal />
+              </RoleBasedRoute>
+            }/>
+          <Route path="/ReportForm/:childId"  element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Teacher"]}
+              >
+                <ReportForm />
+              </RoleBasedRoute>
+            }/>
           <Route path="/ContactUs" element={<ContactUs />} />
-          <Route path="/chat" element={<Chat />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

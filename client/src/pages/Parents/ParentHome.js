@@ -11,7 +11,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/shapebg.png";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/ParentSidebar";
 import { useAuth } from "../../utils/authContext";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";

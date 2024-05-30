@@ -5,7 +5,7 @@ import RightArrow from "../../images/rightArrow.png";
 import Staff from "../../images/manager.png";
 import { StyledLink } from "../styledCustomComponents";
 
-const DashboardSidebar = () => {
+const DashboardSchoolSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -31,14 +31,17 @@ const DashboardSidebar = () => {
         flexDirection={"column"}
       >
         <Typography variant="h6" mb={3} ml={3} mt={4}>
-          Teacher's Dashboard
+          Dashboards
         </Typography>
-
-        <StyledLink href="/activities">Activities</StyledLink>
-        <StyledLink href="/fooddashboard">Food</StyledLink>
-        <StyledLink href="/mealdashboard">Meal</StyledLink>
-        <StyledLink href="/ContactDashboard">Contact</StyledLink>
-        <StyledLink href="/MyClasses">My Classes</StyledLink>
+        <Box width={"100%"} display={"flex"}>
+          <StyledLink href="/StaffDashboard">Staff</StyledLink>
+        </Box>
+        <StyledLink href="/ClassDashboard">Classes</StyledLink>
+        <StyledLink href="/AgeGroupDashboard">Age Groups</StyledLink>
+        <StyledLink href="/DashboardParents">Parents </StyledLink>
+        <StyledLink href="/DashboardChildren">Children</StyledLink>
+        <StyledLink href="/ContactDashboard">Contact forms</StyledLink>
+        <StyledLink href="/InvoiceDashboard">Payments</StyledLink>
 
       </Box>
       <Button
@@ -75,4 +78,4 @@ const DashboardSidebar = () => {
   );
 };
 
-export default DashboardSidebar;
+export default DashboardSchoolSidebar;

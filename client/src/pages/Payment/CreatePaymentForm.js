@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import DashboardBg from "../../images/geometricbg.png"; // Import your background image
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 
 const CreatePaymentForm = () => {
   const [children, setChildren] = useState([]);
@@ -33,7 +34,6 @@ const CreatePaymentForm = () => {
   });
 
   useEffect(() => {
-    // Fetch children from server when component mounts
     axios
       .get('/payment/getChildren')
       .then((response) => {
@@ -113,6 +113,7 @@ const CreatePaymentForm = () => {
 
   return (
     <div style={{ position: 'relative', backgroundImage: `url(${DashboardBg})`, backgroundSize: 'cover', minHeight: '100vh' }}>
+      <DashboardSchoolSidebar/>
       <div
         style={{
           position: 'absolute',

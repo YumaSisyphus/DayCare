@@ -27,12 +27,10 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSidebar from "../../components/DashboardComponents/AdminSidebar";
 import SessionModal from "../../components/SessionModal";
 import useLogout from "../../utils/useLogout";
-import useCheckAuth from "../../utils/useCheckAuth";
 import { useAuth } from "../../utils/authContext";
-import axios from "axios";
 
 function ContactForm() {
   const [contactforms, setContactForms] = useState([]);

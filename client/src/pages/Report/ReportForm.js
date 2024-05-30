@@ -6,6 +6,8 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/TeacherSidebar";
+
 import DashboardBg from "../../images/geometricbg.png"; // Import background image
 import { Colors } from "../../utils/colors";
 
@@ -72,7 +74,8 @@ const ReportForm = () => {
         bgcolor="white"
         borderRadius={8}
       >
-        <Typography variant="h4" align="center" gutterBottom>
+        <DashboardSchoolSidebar/>
+      <Typography variant="h4" align="center" gutterBottom>
           Create Report
         </Typography>
         <form onSubmit={handleSubmit}>

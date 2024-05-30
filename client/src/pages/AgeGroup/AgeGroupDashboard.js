@@ -27,7 +27,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
-import DashboardSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardSidebar from "../../components/DashboardComponents/AdminSidebar";
 import SessionModal from "../../components/SessionModal";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";

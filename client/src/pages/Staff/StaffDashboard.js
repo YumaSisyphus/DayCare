@@ -27,8 +27,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
 import DashboardBg from "../../images/geometricbg.png";
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
@@ -287,10 +286,11 @@ function Staff() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        height={"100vh"}
+        height={"100%"}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
+        pb={15}
       >
         <Container sx={{ marginTop: 2 }}>
           <Box

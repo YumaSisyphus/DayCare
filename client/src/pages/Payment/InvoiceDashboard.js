@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Typography, Grid, Paper, Box } from '@mui/material';
 import DashboardBg from "../../images/geometricbg.png"; 
 import { Colors } from "../../utils/colors";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
+
 
 const InvoiceDashboard = () => {
   const [payments, setPayments] = useState([]);
@@ -52,6 +54,7 @@ const InvoiceDashboard = () => {
       }}
     >
     <Box mt={4} mb={4}>
+      <DashboardSchoolSidebar/>
       <Typography variant="h4" align="center" gutterBottom>Invoice Dashboard</Typography>
       <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center',marginTop:'40px' }}>
         <input
