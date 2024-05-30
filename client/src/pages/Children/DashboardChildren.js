@@ -24,7 +24,9 @@ import {
   FormControl,
   InputLabel,
   ThemeProvider,
+  IconButton,
 } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchBar from "../../components/Searchbar";
 import DashboardBg from "../../images/geometricbg.png";
 import AddIcon from "@mui/icons-material/Add";
@@ -39,6 +41,7 @@ import useLogout from "../../utils/useLogout";
 import useCheckAuth from "../../utils/useCheckAuth";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
+import InfoIcon from "@mui/icons-material/Info"; // Import Info icon
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
@@ -253,6 +256,9 @@ export default function DashboardChildren() {
               <TableHead>
                 <TableRow>
                   <TableCell>
+                    <Typography fontWeight="bold">Details</Typography>
+                  </TableCell>
+                  <TableCell>
                     <Typography fontWeight="bold">Photo</Typography>
                   </TableCell>
                   <TableCell onClick={() => handleSort("Name")}>
@@ -370,6 +376,16 @@ export default function DashboardChildren() {
                   : filteredChildren
                 ).map((child) => (
                   <TableRow key={child.ChildId}>
+
+                    <TableCell>
+                      <IconButton
+                        color="primary"
+                        onClick={() => navigate(`/ChildHome/${child.ChildId}`)}
+                      >
+                        <AccountCircleIcon /> {/* Use the new icon instead of PersonIcon */}
+                      </IconButton>
+                    </TableCell>
+
                     <TableCell>
                       <Typography variant="body2">{child.Photo}</Typography>
                     </TableCell>
@@ -419,16 +435,6 @@ export default function DashboardChildren() {
                         >
                           Create Report
                         </Button>
-                        
-                        <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => navigate(`/ChildHome/${child.ChildId}`)}
-                      >
-                        View Details
-                      </Button>
-
-
                         <FormControlLabel
                           control={
                             <Checkbox
