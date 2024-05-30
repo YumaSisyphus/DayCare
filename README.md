@@ -59,9 +59,13 @@
 
 <h3>A closer look on search and filtering mechanism</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/3807e7a1-24f3-4cd2-abbb-bcaea2f22cb4">
+
 <h3>Forms </h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/87f519ed-4afe-4712-bf0f-e61637232d00">
+
 <h3>Make Cache Payments</h3>
+<img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/6a38a7fb-6188-4c03-93ee-4cad7f09559b">
+
  <h3>Payments on Stripe</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/23eaf29d-a2e1-447d-9599-67f4f272d9dc">
 
