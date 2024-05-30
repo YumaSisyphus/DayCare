@@ -3,11 +3,11 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSidebar from "../../components/DashboardComponents/TeacherSidebar";
 import DashboardBg from "../../images/geometricbg.png";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
-import { Box, Typography, Button, Table, TableBody, TableCell,Card, CardActions, CardContent,CardMedia,TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Typography, Button,Card, CardActions, CardContent,CardMedia,TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const MyChildren = () => {
@@ -47,6 +47,7 @@ console.log(authState);
 
     fetchChildren();
   }, [authState.id]);
+
 
   return (
     <Box

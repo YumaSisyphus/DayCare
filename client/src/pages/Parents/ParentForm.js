@@ -19,6 +19,8 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
+
 
 const ParentForm = ({ setParents }) => {
   const [children, setChildren] = useState([]);
@@ -176,6 +178,7 @@ const ParentForm = ({ setParents }) => {
         component="main"
         sx={{ flexGrow: 1, bgcolor: Colors.secondary, p: 3, marginLeft: "20%" }}
       >
+        <DashboardSchoolSidebar/>
         <Paper elevation={3} sx={{ padding: 2, width: "67%" }}>
           <Typography variant="h6" gutterBottom>
             Register a Parent

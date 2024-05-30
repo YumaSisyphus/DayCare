@@ -35,10 +35,8 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 import useLogout from "../../utils/useLogout";
-import useCheckAuth from "../../utils/useCheckAuth";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
 import InfoIcon from "@mui/icons-material/Info"; // Import Info icon

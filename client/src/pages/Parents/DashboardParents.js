@@ -20,9 +20,8 @@ import { useNavigate } from "react-router-dom";
 import DashboardBg from "../../images/geometricbg.png";
 import { Colors } from "../../utils/colors";
 import { groupParents } from "../../utils/groupParents"; // Adjust the path as per your project structure
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import { theme } from "../../utils/theme";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";

@@ -3,7 +3,7 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
+import DashboardSidebar from "../../components/DashboardComponents/TeacherSidebar";
 import DashboardBg from "../../images/shapebg.png";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";

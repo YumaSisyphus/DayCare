@@ -19,10 +19,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
-import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 
 const EditChild = () => {
   const navigate = useNavigate();
@@ -159,6 +159,7 @@ const { authState,loading } = useAuth();
         component="main"
         sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3, marginTop: -10 }}
       >
+              <DashboardSchoolSidebar />
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>

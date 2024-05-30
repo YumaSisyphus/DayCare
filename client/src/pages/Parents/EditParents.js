@@ -14,9 +14,10 @@ import {
   MenuItem,
   InputLabel,
 } from "@mui/material";
-import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
+import DashboardBg from "../../images/geometricbg.png"; 
 import { Colors } from "../../utils/colors";
 import useCheckAuth from "../../utils/useCheckAuth";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
@@ -24,7 +25,7 @@ import { useAuth } from "../../utils/authContext";
 const EditParent = () => {
   const navigate = useNavigate();
   const [children, setChildren] = useState([]);
-  const { parentId } = useParams(); // Assuming you have a parent ID in the route params
+  const { parentId } = useParams(); 
   const [parent, setParent] = useState({
     name: "",
     surname: "",
@@ -77,7 +78,7 @@ const { authState,loading } = useAuth();
           `/parents/getchildparent/${parentId}`
         );
 
-        const fetchedParent = response.data.data[0]; // Destructuring the fetched data
+        const fetchedParent = response.data.data[0]; 
         const fetchChild = responseChild.data.child[0];
 
         setParent({
@@ -164,6 +165,7 @@ const { authState,loading } = useAuth();
         component="main"
         sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3, marginTop: -10 }}
       >
+        <DashboardSchoolSidebar/>
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>

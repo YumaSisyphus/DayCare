@@ -24,11 +24,11 @@ import {
 } from "@mui/material";
 import { Colors } from "../../utils/colors";
 import DashboardBg from "../../images/geometricbg.png";
-import DashboardSidebar from "../../components/DashboardComponents/sidebar";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/TeacherSidebar";
 
 const SingleClass = () => {
   const { id } = useParams();
@@ -178,7 +178,7 @@ const SingleClass = () => {
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <DashboardSidebar />
+      <DashboardSchoolSidebar />
       <Box width={"70%"}>
         <Typography variant="h4">{classData.Name}</Typography>
         <Typography variant="body1">
