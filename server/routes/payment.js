@@ -93,6 +93,37 @@ router.get("/getPaymentsWithChild", (req, res) => {
 });
 
 //cash payments
+router.get("/getPaymentsByChildId/:childId", (req, res) => {
+  const childId = req.params.childId;
+  const paymentsByChildQuery = `
+    SELECT 
+      p.PaymentId,
+      p.ChildId,
+      p.Name,
+      p.Surname,
+      p.Date,
+      p.PhoneNumber,
+      p.Amount
+    FROM 
+      payment p
+    WHERE
+      p.ChildId = ?`;
+
+  db.query(paymentsByChildQuery, [childId], (err, data) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.json({ success: false, message: "Fetch payments by child ID failed" });
+    } else {
+      return res.json({
+        success: true,
+        message: "Fetch payments by child ID successful",
+        data: data,
+      });
+    }
+  });
+});
+
+
 
 
 router.post("/createPayment", (req, res) => {

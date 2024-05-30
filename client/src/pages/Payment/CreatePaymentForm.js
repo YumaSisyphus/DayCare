@@ -183,19 +183,20 @@ const CreatePaymentForm = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="date"
-                    name="date"
-                    label="Date"
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    error={!!formErrors.date}
-                    helperText={formErrors.date}
-                  />
+                <TextField
+  required
+  fullWidth
+  id="date"
+  name="date"
+  label="Date"
+  type="date"
+  InputLabelProps={{ shrink: true }}
+  value={formData.date}
+  onChange={handleInputChange}
+  error={!!formErrors.date}
+  helperText={formErrors.date}
+/>
+
                 </Grid>
                 <Grid item xs={12}>
                   <TextField

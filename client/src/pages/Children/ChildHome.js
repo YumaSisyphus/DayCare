@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Importing useNavigate hook
 import axios from "axios";
 import {
   Box,
@@ -8,14 +8,18 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableRow,
+  CardActions,
+  Button, // Importing Button from Material-UI
 } from "@mui/material";
 import { Colors } from "../../utils/colors";
 import DashboardBg from "../../images/geometricbg.png"; // Importing the background image
+import { TableContainer } from "@mui/material";
+
 
 const ChildHome = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // Initializing useNavigate hook
   const [child, setChild] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -122,8 +126,12 @@ const ChildHome = () => {
                 <TableCell>{child.Active ? "Yes" : "No"}</TableCell>
               </TableRow>
             </TableBody>
+           <CardActions>
+        <Button size="small" onClick={() => navigate(`/ChildBill/${id}`)}>View Bill</Button> {/* Use navigate with the child's ID */}
+      </CardActions>
           </Table>
         </TableContainer>
+        
       </Box>
     </Box>
   );

@@ -28,6 +28,11 @@ const InvoiceDashboard = () => {
     setSearchDate(e.target.value);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
   const filteredPayments = payments.filter(payment => {
     return (
       payment.ChildName.toLowerCase().includes(searchChildName.toLowerCase()) &&
@@ -72,7 +77,7 @@ const InvoiceDashboard = () => {
               <Typography variant="subtitle1">Child Surname: {payment.ChildSurname}</Typography>
               <Typography variant="subtitle1">Parent Name: {payment.Name}</Typography>
               <Typography variant="subtitle1">Parent Surname: {payment.Surname}</Typography>
-              <Typography variant="subtitle1">Date: {payment.Date}</Typography>
+              <Typography variant="subtitle1">Date: {formatDate(payment.Date)}</Typography>
               <Typography variant="subtitle1">Phone Number: {payment.PhoneNumber}</Typography>
               <Typography variant="subtitle1">Amount: {payment.Amount}</Typography>
             </Paper>
