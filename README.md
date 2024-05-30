@@ -66,6 +66,9 @@
 <h3>Make Cache Payments</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/6a38a7fb-6188-4c03-93ee-4cad7f09559b">
 
+<h3>Make Online Payments</h3>
+<img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/9891257a-be4e-4837-80e0-df3040143de5">
+
  <h3>Payments on Stripe</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/23eaf29d-a2e1-447d-9599-67f4f272d9dc">
 
