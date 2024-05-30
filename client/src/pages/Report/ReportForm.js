@@ -65,6 +65,7 @@ const ReportForm = () => {
         alignItems: "center",
       }}
     >
+              <DashboardSchoolSidebar/>
       <Box
         mt={-3}
         mx="auto"
@@ -74,7 +75,6 @@ const ReportForm = () => {
         bgcolor="white"
         borderRadius={8}
       >
-        <DashboardSchoolSidebar/>
       <Typography variant="h4" align="center" gutterBottom>
           Create Report
         </Typography>

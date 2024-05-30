@@ -217,8 +217,9 @@ const { authState,loading } = useAuth();
         py: 3,
       }}
     >
+            <DashboardSchoolSidebar />
+
       <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
-      <DashboardSchoolSidebar />
 
         <Grid container justifyContent="center" spacing={3}>
           {formDataList.map((formData, index) => (

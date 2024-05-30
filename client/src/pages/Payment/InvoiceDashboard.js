@@ -54,7 +54,8 @@ const InvoiceDashboard = () => {
       }}
     >
     <Box mt={4} mb={4}>
-      <DashboardSchoolSidebar/>
+    <DashboardSchoolSidebar/>
+
       <Typography variant="h4" align="center" gutterBottom>Invoice Dashboard</Typography>
       <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center',marginTop:'40px' }}>
         <input

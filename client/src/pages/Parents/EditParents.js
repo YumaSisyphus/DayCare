@@ -161,11 +161,12 @@ const { authState,loading } = useAuth();
       justifyContent={"center"}
       alignItems={"center"}
     >
+              <DashboardSchoolSidebar/>
+
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: "Colors.secondary", p: 3, marginTop: -10 }}
       >
-        <DashboardSchoolSidebar/>
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={10} md={8} lg={6}>
             <Paper elevation={3} sx={{ padding: 2 }}>

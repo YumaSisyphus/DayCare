@@ -42,6 +42,7 @@ const DashboardSchoolSidebar = () => {
         <StyledLink href="/DashboardChildren">Children</StyledLink>
         <StyledLink href="/ContactDashboard">Contact forms</StyledLink>
         <StyledLink href="/InvoiceDashboard">Payments</StyledLink>
+        <StyledLink href="/CreatePaymentForm">Make a payment</StyledLink>
 
       </Box>
       <Button
