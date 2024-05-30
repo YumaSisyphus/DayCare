@@ -134,6 +134,7 @@ function Staff() {
   const handleModalClose = () => {
     setOpenModal(false);
   };
+
   const handleSaveChanges = () => {
     // Basic validation to check if any of the required fields are empty
     if (
@@ -152,13 +153,26 @@ function Staff() {
       setSnackbarOpen(true);
       return;
     }
-  
+
+    // Validation for password field
+    if (editedPassword.length < 8) {
+      setSnackbarMessage("Password must be at least 8 characters long.");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (!/[A-Z]/.test(editedPassword)) {
+      setSnackbarMessage("Password must contain at least one capital letter.");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const apiUrl = isNewStaff
       ? "/staff/createStaff"
       : `/staff/updateStaff/${selectedStaff.StaffId}`;
-  
+
     const method = isNewStaff ? "POST" : "PUT";
-  
+
     const requestBody = {
       Name: editedName,
       Surname: editedSurname,
@@ -171,7 +185,7 @@ function Staff() {
       Address: editedAddress,
       Password: editedPassword,
     };
-  
+
     fetch(apiUrl, {
       method: method,
       headers: {
@@ -229,7 +243,6 @@ function Staff() {
         setSnackbarOpen(true);
       });
   };
-  
 
   const handleDelete = (staffId) => {
     fetch(`/staff/deleteStaff/${staffId}`, {
@@ -279,26 +292,25 @@ function Staff() {
         justifyContent={"center"}
         alignItems={"center"}
       >
-        <Container sx={{ marginTop: 2  }}>
+        <Container sx={{ marginTop: 2 }}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: -5  }}>
-            Staff Dashboard
-             </Typography>
-           <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={handleAddNew}
-            sx={{ height: "20%", marginTop: 2 }}
-          >
-            Add New
-          </Button>
-
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -5 }}>
+              Staff Dashboard
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleAddNew}
+              sx={{ height: "20%", marginTop: 2 }}
+            >
+              Add New
+            </Button>
           </Box>
           <TextField
             margin="normal"
@@ -344,12 +356,13 @@ function Staff() {
                       <Typography fontWeight={"bold"}>Role</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography fontWeight={"bold"}>Username</Typography>
-                    </TableCell>
-                    <TableCell>
                       <Typography fontWeight={"bold"}>Address</Typography>
                     </TableCell>
-                  
+
+                    <TableCell>
+                      <Typography fontWeight={"bold"}>Username</Typography>
+                    </TableCell>
+                
                     <TableCell>
                       <Typography fontWeight={"bold"}>Actions</Typography>
                     </TableCell>
@@ -365,8 +378,9 @@ function Staff() {
                       <TableCell>{staff.Email}</TableCell>
                       <TableCell>{staff.PhoneNumber}</TableCell>
                       <TableCell>{staff.Role}</TableCell>
-                      <TableCell>{staff.Username}</TableCell>
                       <TableCell>{staff.Address}</TableCell>
+                      <TableCell>{staff.Username}</TableCell>
+                  
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -414,9 +428,11 @@ function Staff() {
               value={editedSurname}
               onChange={(e) => setEditedSurname(e.target.value)}
             />
+            <Typography variant="subtitle1" sx={{ marginLeft: 1 }}>
+              Birthday:
+            </Typography> {/* Add the title "Birthday" */}
             <TextField
               margin="normal"
-              label=""
               fullWidth
               type="date"
               value={editedBirthday}
@@ -450,6 +466,14 @@ function Staff() {
               value={editedRole}
               onChange={(e) => setEditedRole(e.target.value)}
             />
+
+           <TextField
+              margin="normal"
+              label="Address"
+              fullWidth
+              value={editedAddress}
+              onChange={(e) => setEditedAddress(e.target.value)}
+            />
             <TextField
               margin="normal"
               label="Username"
@@ -457,13 +481,7 @@ function Staff() {
               value={editedUsername}
               onChange={(e) => setEditedUsername(e.target.value)}
             />
-            <TextField
-              margin="normal"
-              label="Address"
-              fullWidth
-              value={editedAddress}
-              onChange={(e) => setEditedAddress(e.target.value)}
-            />
+      
             <TextField
               margin="normal"
               label="Password"
