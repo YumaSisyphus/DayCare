@@ -152,13 +152,13 @@ function Staff() {
       setSnackbarOpen(true);
       return;
     }
-  
+
     const apiUrl = isNewStaff
       ? "/staff/createStaff"
       : `/staff/updateStaff/${selectedStaff.StaffId}`;
-  
+
     const method = isNewStaff ? "POST" : "PUT";
-  
+
     const requestBody = {
       Name: editedName,
       Surname: editedSurname,
@@ -171,7 +171,7 @@ function Staff() {
       Address: editedAddress,
       Password: editedPassword,
     };
-  
+
     fetch(apiUrl, {
       method: method,
       headers: {
@@ -229,7 +229,6 @@ function Staff() {
         setSnackbarOpen(true);
       });
   };
-  
 
   const handleDelete = (staffId) => {
     fetch(`/staff/deleteStaff/${staffId}`, {
@@ -274,31 +273,31 @@ function Staff() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        height={"100vh"}
+        height={"100%"}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
+        pb={15}
       >
-        <Container sx={{ marginTop: 2  }}>
+        <Container sx={{ marginTop: 2 }}>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             mb={2}
             marginTop={15}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: -5  }}>
-            Staff Dashboard
-             </Typography>
-           <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={handleAddNew}
-            sx={{ height: "20%", marginTop: 2 }}
-          >
-            Add New
-          </Button>
-
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -5 }}>
+              Staff Dashboard
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleAddNew}
+              sx={{ height: "20%", marginTop: 2 }}
+            >
+              Add New
+            </Button>
           </Box>
           <TextField
             margin="normal"
@@ -349,7 +348,7 @@ function Staff() {
                     <TableCell>
                       <Typography fontWeight={"bold"}>Address</Typography>
                     </TableCell>
-                  
+
                     <TableCell>
                       <Typography fontWeight={"bold"}>Actions</Typography>
                     </TableCell>
