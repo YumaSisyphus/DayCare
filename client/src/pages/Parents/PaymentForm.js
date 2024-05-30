@@ -112,7 +112,7 @@ const { authState,loading } = useAuth();
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', }}>
       <DashboardSchoolSidebar/>
       <div style={{ flex: 1 }}>
-        <Container style={{ backdropFilter: 'blur(80px)', backgroundColor: 'rgba(137, 207, 240, 0.5)', padding: '20px', borderRadius: '10px', marginTop: 50 }}>
+      <Container style={{ backdropFilter: 'blur(80px)', padding: '20px', borderRadius: '10px', marginTop: 50, boxShadow: '0px 20px 50px rgba(0, 0, 255, 0.2)' }}>
           <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
               <Typography variant="h4" style={{ marginTop: 200, fontFamily: "'Baloo 2', sans-serif", color: '#0077c0' }}>
