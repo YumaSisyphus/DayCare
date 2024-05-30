@@ -22,8 +22,46 @@ import { useAuth } from "../utils/authContext";
 import useLogout from "../utils/useLogout";
 import useCheckAuth from "../utils/useCheckAuth";
 import { useEffect } from "react";
+import "./Header.css";
 
 const settings = ["Profile", "Account", "Dashboard"];
+
+function ChatIcon() {
+  return (
+    <div className="chat-icon">
+      <svg
+        viewBox="0 -3 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        width="34"
+        height="34"
+        fill="none"
+      >
+        <path
+          stroke="#0A0A30"
+          strokeWidth="1.5"
+          d="M10 6.75h4A4.25 4.25 0 0118.25 11v6.25H10A4.25 4.25 0 015.75 13v-2A4.25 4.25 0 0110 6.75z"
+        />
+        <circle cx="9" cy="12" r="1" fill="#265BFF" className="chat-dot" />
+        <circle
+          cx="12"
+          cy="12"
+          r="1"
+          fill="#265BFF"
+          className="chat-dot"
+          style={{ animationDelay: "0.3s" }}
+        />
+        <circle
+          cx="15"
+          cy="12"
+          r="1"
+          fill="#265BFF"
+          className="chat-dot"
+          style={{ animationDelay: "0.5s" }}
+        />
+      </svg>
+    </div>
+  );
+}
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -64,8 +102,6 @@ function ResponsiveAppBar() {
   //     }
   //   }
   // }, [loading, authState, handleLogout]);
-
-
 
   const drawerList = (
     <List>
@@ -238,8 +274,12 @@ function ResponsiveAppBar() {
             sx={{ flexGrow: 0 }}
             display={"flex"}
             alignItems={"center"}
+            justifyContent={"center"}
             gap={3}
           >
+            <a href="/chat">
+              <ChatIcon />
+            </a>
             {authState.isAuthenticated && (
               <a
                 href={

@@ -36,10 +36,8 @@ import PaymentForm from "./pages/Parents/PaymentForm";
 import SuccessPage from "./pages/Parents/SuccessPage";
 import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
 import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
-
-
 import MyClasses from "./pages/TeacherPages/MyClasses";
-import { Class } from "@mui/icons-material";
+import Chat from "./pages/Chat/chat";
 
 const stripePromise = loadStripe(
   "pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck"
@@ -72,8 +70,7 @@ function App() {
             }
           />
 
- 
-           <Route
+          <Route
             path="/TeacherHome"
             element={
               <RoleBasedRoute
@@ -84,7 +81,7 @@ function App() {
               </RoleBasedRoute>
             }
           />
-            <Route
+          <Route
             path="/MyClasses"
             element={
               <RoleBasedRoute
@@ -95,6 +92,7 @@ function App() {
               </RoleBasedRoute>
             }
           />
+          <Route path="/chat" element={<Chat />} />
           <Route path="/DashboardChildren" element={<DashboardChildren />} />
           <Route path="/activities" element={<Activity />} />
           <Route path="/SuccessPage" element={<SuccessPage />} />
@@ -125,7 +123,17 @@ function App() {
               </RoleBasedRoute>
             }
           />
-         
+          <Route
+            path="/TeacherHome"
+            element={
+              <RoleBasedRoute
+                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent"]}
+              >
+                <CreatePaymentForm />
+              </RoleBasedRoute>
+            }
+          />
           <Route
             path="/AdminHome"
             element={
@@ -184,6 +192,7 @@ function App() {
           <Route path="/mealDashboard" element={<Meal />} />
           <Route path="/ReportForm/:childId" element={<ReportForm />} />
           <Route path="/ContactUs" element={<ContactUs />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

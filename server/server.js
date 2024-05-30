@@ -1,9 +1,15 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const http = require("http").Server(app); // Use HTTP server with Express
-const io = require("socket.io")(http); // Initialize Socket.IO with HTTP server
+const http = require("http").Server(app); 
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "http://localhost:3000", // Your frontend URL
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+  }
+}); 
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const mysql = require("mysql2");
@@ -16,13 +22,27 @@ const db = mysql.createConnection({
   database: "daycare",
 });
 
-app.use(cors());
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to database:", err);
+    process.exit(1);
+  } else {
+    console.log("Connected to the database");
+  }
+});
+
+app.use(cors({
+  origin: "http://localhost:3000", // Your frontend URL
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose
   .connect(
-    "mongodb+srv://butritnreqica:EwKrYj7B9y586W1G@cluster0.ufzgp4x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", //"mongodb://localhost:27017/daycare"
+    "mongodb://localhost:27017/daycare",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -87,9 +107,21 @@ io.on("connection", (socket) => {
     db.query(query, [senderId, recipientId, message], (error, results) => {
       if (error) {
         console.error("Error sending message:", error);
-        return;
       }
     });
+  });
+
+  // Handle user typing
+  socket.on("typing", ({ senderId, recipientId }) => {
+    if (userSockets[recipientId]) {
+      userSockets[recipientId].emit("typing", { senderId });
+    }
+  });
+
+  socket.on("stop_typing", ({ senderId, recipientId }) => {
+    if (userSockets[recipientId]) {
+      userSockets[recipientId].emit("stop_typing", { senderId });
+    }
   });
 
   socket.on("disconnect", () => {
@@ -104,7 +136,8 @@ io.on("connection", (socket) => {
     }
   });
 });
-const PORT = process.env.PORT || 5000;
+
+const PORT = process.env.PORT || 7000;
 
 http.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
