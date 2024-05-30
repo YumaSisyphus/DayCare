@@ -13,7 +13,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
+import DashboardBg from "../../images/geometricbg.png"; 
 import { Colors } from "../../utils/colors";
 import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
@@ -36,8 +36,10 @@ const ParentForm = ({ setParents }) => {
     childId: [],
   });
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const [errors, setErrors] = useState({});
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
+  const navigate = useNavigate();
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -52,6 +54,7 @@ const { authState,loading } = useAuth();
       }
     }
   }, [loading, authState, handleLogout]);
+
   useEffect(() => {
     const fetchChildren = async () => {
       try {
@@ -72,8 +75,45 @@ const { authState,loading } = useAuth();
     }));
   };
 
+  const validateForm = () => {
+    const errors = {};
+    const requiredFields = [
+      "name",
+      "surname",
+      "birthday",
+      "gender",
+      "email",
+      "address",
+      "phonenumber",
+      "username",
+      "password",
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        errors[field] = "This field is required";
+      }
+    }
+
+    if (!/[A-Z]/.test(formData.password)) {
+      errors.password = "Password must contain at least one capital letter";
+    }
+
+    if (formData.childId.length === 0) {
+      errors.childId = "Please select at least one child";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleCreateParent = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const { childId, ...parentData } = formData;
       const createParentResponse = await axios.post(
@@ -82,15 +122,13 @@ const { authState,loading } = useAuth();
       );
 
       if (createParentResponse.data.success) {
-        // Parent created successfully, now assign the children to the parent
         const parentId = createParentResponse.data.data.id;
         const assignChildResponse = await axios.post(
           "/parents/assignChildToParent",
-          { parentId, childIds: childId } // Ensure childIds is an array
+          { parentId, childIds: childId }
         );
 
         if (assignChildResponse.data.success) {
-          // Children assigned to parent successfully
           navigate("/DashboardParents");
           setParents((prevParents) => [
             ...prevParents,
@@ -107,7 +145,7 @@ const { authState,loading } = useAuth();
             username: "",
             password: "",
             active: 1,
-            childId: [], // Clear childId from the form after saving
+            childId: [],
           });
         } else {
           console.error(
@@ -125,8 +163,6 @@ const { authState,loading } = useAuth();
       console.error("Error creating parent:", error.message);
     }
   };
-
-  const navigate = useNavigate();
 
   return (
     <Box
@@ -159,6 +195,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.name}
+                  helperText={errors.name}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -169,6 +207,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.surname}
+                  helperText={errors.surname}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -180,6 +220,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.birthday}
+                  helperText={errors.birthday}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -190,6 +232,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.gender}
+                  helperText={errors.gender}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -201,6 +245,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.email}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -211,6 +257,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.address}
+                  helperText={errors.address}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -221,6 +269,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.phonenumber}
+                  helperText={errors.phonenumber}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -231,6 +281,8 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.username}
+                  helperText={errors.username}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -242,19 +294,21 @@ const { authState,loading } = useAuth();
                   onChange={handleChange}
                   required
                   fullWidth
+                  error={!!errors.password}
+                  helperText={errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Autocomplete
                   fullWidth
-                  multiple // Enable multiple selection
+                  multiple
                   value={children.filter((child) =>
                     formData.childId.includes(child.ChildId)
                   )}
                   onChange={(event, newValue) => {
                     setFormData((prevFormData) => ({
                       ...prevFormData,
-                      childId: newValue.map((child) => child.ChildId), // Map to array of ChildIds
+                      childId: newValue.map((child) => child.ChildId),
                     }));
                   }}
                   options={children}
@@ -262,7 +316,12 @@ const { authState,loading } = useAuth();
                     option.Name + " " + option.Surname
                   }
                   renderInput={(params) => (
-                    <TextField {...params} label="Select Children" />
+                    <TextField
+                      {...params}
+                      label="Select Children"
+                      error={!!errors.childId}
+                      helperText={errors.childId}
+                    />
                   )}
                 />
               </Grid>
