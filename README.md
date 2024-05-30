@@ -50,7 +50,8 @@
      <p>Ne secilen faqe te aplikacionit eshte ofruar mundesia e filtrimit dhe sortimit te te dhenave per nje qasje me te lehte dhe me te shpejte ne to. Si dhe ne secilen faqe eshte implementuar logjika e pagination</p>
    </li>
  </ol>
- 
+<h3>Online Chat Interface</h3>
+<img src="https://github.com/YumaSisyphus/DayCare/assets/120139227/676cce9e-3fc5-45b7-bc5a-71479843cd3d">
 
 
  
