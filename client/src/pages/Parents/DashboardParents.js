@@ -175,9 +175,7 @@ const ParentsList = () => {
                   <TableCell>
                     <Typography fontWeight="bold">Username</Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Password</Typography>
-                  </TableCell>
+                 
                   <TableCell>
                     <Typography fontWeight="bold">Children</Typography>
                   </TableCell>
@@ -232,11 +230,7 @@ const ParentsList = () => {
                           {parent.Username}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">
-                          {parent.Password}
-                        </Typography>
-                      </TableCell>
+                     
                       <TableCell>
                         <Typography variant="body1">
                           {parent.children.map((child, index) => (

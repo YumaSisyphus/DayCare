@@ -37,6 +37,7 @@ import SuccessPage from "./pages/Parents/SuccessPage";
 import CreatePaymentForm from "./pages/Payment/CreatePaymentForm";
 import InvoiceDashboard from "./pages/Payment/InvoiceDashboard";
 import MyClasses from "./pages/TeacherPages/MyClasses";
+import { Class } from "@mui/icons-material";
 import Chat from "./pages/Chat/chat";
 
 const stripePromise = loadStripe(
@@ -124,7 +125,7 @@ function App() {
             }
           />
           <Route
-            path="/TeacherHome"
+            path="/CreatePaymentForm"
             element={
               <RoleBasedRoute
                 allowedSpecificRoles={["parent"]}
@@ -134,6 +135,8 @@ function App() {
               </RoleBasedRoute>
             }
           />
+     
+         
           <Route
             path="/AdminHome"
             element={
