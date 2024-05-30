@@ -1,32 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Typography, Grid, Paper, Box } from '@mui/material';
+import DashboardBg from "../../images/geometricbg.png"; 
+import { Colors } from "../../utils/colors";
 
 const InvoiceDashboard = () => {
   const [payments, setPayments] = useState([]);
+  const [searchChildName, setSearchChildName] = useState('');
+  const [searchDate, setSearchDate] = useState('');
 
   useEffect(() => {
     axios.get('/payment/getPaymentsWithChild')
       .then(response => {
-        setPayments(response.data.data);
+        const sortedPayments = response.data.data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+        setPayments(sortedPayments);
       })
       .catch(error => {
         console.error('Error fetching payments:', error);
       });
   }, []);
 
+  const handleChildNameSearch = (e) => {
+    setSearchChildName(e.target.value);
+  };
+
+  const handleDateSearch = (e) => {
+    setSearchDate(e.target.value);
+  };
+
+  const filteredPayments = payments.filter(payment => {
+    return (
+      payment.ChildName.toLowerCase().includes(searchChildName.toLowerCase()) &&
+      (searchDate === '' || payment.Date.includes(searchDate))
+    );
+  });
+
   return (
+    <Box
+      sx={{
+        bgcolor: Colors.secondary,
+        backgroundImage: `url(${DashboardBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "140vh",
+        marginTop: "-30px",
+      }}
+    >
     <Box mt={4} mb={4}>
       <Typography variant="h4" align="center" gutterBottom>Invoice Dashboard</Typography>
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center',marginTop:'40px' }}>
+        <input
+          type="text"
+          placeholder="Search by child name"
+          value={searchChildName}
+          onChange={handleChildNameSearch}
+          style={{ padding: '8px', fontSize: '16px', marginRight: '20px', borderRadius: '5px', border: '1px solid #ccc' }}
+        />
+        <input
+          type="date"
+          value={searchDate}
+          onChange={handleDateSearch}
+          style={{ padding: '8px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ccc' }}
+        />
+      </div>
       <Grid container justifyContent="center" spacing={2}>
-        {payments.map(payment => (
+        {filteredPayments.map(payment => (
           <Grid item xs={12} sm={6} md={4} key={payment.PaymentId}>
             <Paper elevation={3} style={{ padding: '20px', marginBottom: '20px' }}>
               <Typography variant="subtitle1">Payment ID: {payment.PaymentId}</Typography>
               <Typography variant="subtitle1">Child Name: {payment.ChildName}</Typography>
               <Typography variant="subtitle1">Child Surname: {payment.ChildSurname}</Typography>
-              <Typography variant="subtitle1">Name: {payment.Name}</Typography>
-              <Typography variant="subtitle1">Surname: {payment.Surname}</Typography>
+              <Typography variant="subtitle1">Parent Name: {payment.Name}</Typography>
+              <Typography variant="subtitle1">Parent Surname: {payment.Surname}</Typography>
               <Typography variant="subtitle1">Date: {payment.Date}</Typography>
               <Typography variant="subtitle1">Phone Number: {payment.PhoneNumber}</Typography>
               <Typography variant="subtitle1">Amount: {payment.Amount}</Typography>
@@ -35,6 +80,8 @@ const InvoiceDashboard = () => {
         ))}
       </Grid>
     </Box>
+    </Box>
+    
   );
 };
 
