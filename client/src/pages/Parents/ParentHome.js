@@ -6,16 +6,13 @@ import {
   Avatar,
   Paper,
   Snackbar,
-  Grid,
-  Divider,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { Colors } from "../../utils/colors";
 import { theme } from "../../utils/theme";
-import DashboardBg from "../../images/geometricbg.png";
+import DashboardBg from "../../images/shapebg.png";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/schoolSidebar";
 import { useAuth } from "../../utils/authContext";
-import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 
@@ -86,116 +83,53 @@ function ParentHome() {
         }}
       >
         <Container maxWidth="md" sx={{ marginTop: -2 }}>
-          <Paper
-            elevation={6}
+        <Paper
+            elevation={0} // Remove elevation
             sx={{
               padding: 4,
-              backdropFilter: "blur(10px)",
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-              borderRadius: 20,
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+              backgroundColor: "transparent",
+              borderRadius: 0, // Remove border radius
+              boxShadow: "none", // Remove box shadow
               position: "relative",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            
-            {/* Adding decorative elements */}
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-20px",
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: "80px",
-                height: "80px",
-                borderRadius: "50%",
-                bgcolor: Colors.primary,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            />
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-20px",
-                left: "10%",
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                bgcolor: Colors.primary,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            />
-            <Box
-              sx={{
-                position: "absolute",
-                top: "-30px",
-                right: "10%",
-                width: "60px",
-                height: "60px",
-                borderRadius: "50%",
-                bgcolor: Colors.primary,
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            />
-
-
             <Box sx={{ marginRight: 4 }}>
               <Avatar
                 sx={{
-                  width: 120,
-                  height: 120,
-                  marginLeft: 5,
+                  width: 130,
+                  height: 130,
+                  marginLeft: 16,
                   mb: 2,
                   border: `4px solid ${Colors.primary}`,
+                  animation: "fadeIn 1s ease-in", // Add animation
+                   "@keyframes fadeIn": {
+                     from: { opacity: 0 },
+                     to: { opacity: 1 },
+                   },
                 }}
                 src="/path/to/parent-avatar.jpg"
               />
               {parentData && (
-                <Box textAlign="center">
-                  <Typography variant="h6" gutterBottom>
-                  Welcome,  {parentData.Name}  {parentData.Surname}
-                  </Typography>
-
-                </Box>
-              )}
-            </Box>
-            <Divider orientation="vertical" flexItem sx={{ marginX: 2 }} />
-            <Box sx={{ flex: 1 }}>
-              {parentData ? (
-                <Grid container spacing={2}>
-                  {Object.entries(parentData).map(
-                    ([key, value]) =>
-                      key !== "ParentId" &&
-                      key !== "Name" &&
-                      key !== "Surname" &&
-                      key !== "Password" && 
-                      key !== "Birthday" && 
-                      key !== "Gender" && 
-                      key !== "Address" && (
-                        <Grid item xs={12} sm={6} key={key}>
-                          <Paper
-                            sx={{
-                              padding: 3,
-                              borderRadius: 10,
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                              backgroundColor: Colors.lightGrey,
-                            }}
-                          >
-                            <Typography variant="body1" gutterBottom>
-                              <strong>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}:
-                              </strong>{" "}
-                              {value}
-                            </Typography>
-                          </Paper>
-                        </Grid>
-                      )
-                  )}
-                </Grid>
-              ) : (
-                <Typography>Loading...</Typography>
+               <Box textAlign="center">
+               <Typography
+                 variant="h2"
+                 gutterBottom
+                 sx={{
+                   fontFamily: "Gabriola", // Change font family
+                   animation: "fadeIn 1s ease-in", // Add animation
+                   "@keyframes fadeIn": {
+                     from: { opacity: 0 },
+                     to: { opacity: 1 },
+                   },
+                 }}
+               >
+                 Welcome, {parentData.Name} {parentData.Surname}
+               </Typography>
+             </Box>
+             
               )}
             </Box>
           </Paper>
@@ -211,6 +145,5 @@ function ParentHome() {
     </ThemeProvider>
   );
 }
-
 
 export default ParentHome;
