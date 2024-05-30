@@ -104,7 +104,7 @@ function ParentHome() {
                   marginLeft: 16,
                   mb: 2,
                   border: `4px solid ${Colors.primary}`,
-                  animation: "fadeIn 1s ease-in", // Add animation
+                  animation: "fadeIn 1s ease-in", 
                    "@keyframes fadeIn": {
                      from: { opacity: 0 },
                      to: { opacity: 1 },
