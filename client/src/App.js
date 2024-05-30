@@ -270,7 +270,7 @@ function App() {
           <Route path="/mealDashboard"  element={
               <RoleBasedRoute
                 allowedRoles={["staff"]}
-                allowedSpecificRoles={["Admin","Teacher"]}
+                allowedSpecificRoles={["Teacher"]}
               >
                 <Meal />
               </RoleBasedRoute>

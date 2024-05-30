@@ -49,8 +49,10 @@ const InvoiceDashboard = () => {
         backgroundImage: `url(${DashboardBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "140vh",
-        marginTop: "-30px",
+        height: "100%",
+        minHeight:"100vh",
+        p:10, 
+        pt:5
       }}
     >
       <Box mt={4} mb={4}>
@@ -65,7 +67,7 @@ const InvoiceDashboard = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "40px",
+            marginTop: "20px",
           }}
         >
           <input
@@ -95,10 +97,16 @@ const InvoiceDashboard = () => {
         </div>
         <Grid container justifyContent="center" spacing={2}>
           {filteredPayments.map((payment) => (
-            <Grid item xs={12} sm={6} md={4} key={payment.PaymentId}>
+            <Grid item xs={12} sm={6} md={4} key={payment.PaymentId} >
               <Paper
                 elevation={3}
-                style={{ padding: "20px", marginBottom: "20px" }}
+                sx={{borderRadius:5}}
+                style={{
+                  background: "rgba(255, 255, 255, 0.9)",
+                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.27)",
+                  padding:"20px",
+                }}
               >
                 <Typography variant="subtitle1">
                   Payment ID: {payment.PaymentId}

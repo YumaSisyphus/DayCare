@@ -124,6 +124,7 @@ const ParentsList = () => {
             >
               Register a parent
             </Button>
+            <br></br>
 
             <Button
             // variant="contained"

@@ -292,17 +292,26 @@ function Staff() {
         alignItems={"center"}
         pb={15}
       >
-        <Container sx={{ marginTop: 2 }}>
-          <Box
+        <Container sx={{ marginTop: 4 }}>
+        
+            <Typography variant="h4" gutterBottom >
+              Staff Dashboard
+            </Typography>
+            <Box
             display={"flex"}
             justifyContent={"space-between"}
             mb={2}
-            marginTop={15}
+            alignItems={"center"}
           >
-            <Typography variant="h4" gutterBottom sx={{ marginTop: -5 }}>
-              Staff Dashboard
-            </Typography>
-            <Button
+         
+          <TextField
+            margin="normal"
+            label="Search Staff"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ width: "200px" }}
+          />
+           <Button
               variant="contained"
               color="primary"
               startIcon={<AddIcon />}
@@ -311,14 +320,7 @@ function Staff() {
             >
               Add New
             </Button>
-          </Box>
-          <TextField
-            margin="normal"
-            label="Search Staff"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            sx={{ width: "200px" }}
-          />
+           </Box>
           {loadingPage ? (
             <Typography>Loading...</Typography>
           ) : (

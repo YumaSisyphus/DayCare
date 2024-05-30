@@ -3,11 +3,10 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
-import DashboardSidebar from "../../components/DashboardComponents/TeacherSidebar";
+import DashboardSidebar from "../../components/DashboardComponents/ParentSidebar";
 import DashboardBg from "../../images/geometricbg.png";
 import { Colors } from "../../utils/colors";
-import { theme } from "../../utils/theme";
-import { Box, Typography, Button,Card, CardActions, CardContent,CardMedia,TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Box, Typography, Button,Card, CardActions, CardContent,CardMedia } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const MyChildren = () => {
@@ -84,9 +83,9 @@ console.log(authState);
               ))}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
+        Lorem ipsum dolor sit amet, consectetur
+adipiscing elit, sed do eiusmod tempor incididunt
+ut labore et dolore magna aliqua        </Typography>
       </CardContent>
       <CardActions>
      
