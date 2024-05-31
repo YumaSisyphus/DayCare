@@ -11,6 +11,9 @@ import {
   MenuItem,
   Select,
   FormControl,
+  ThemeProvider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -23,6 +26,7 @@ import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 
+import { theme } from "../../utils/theme";
 
 const ChildForm = () => {
   const navigate = useNavigate();
@@ -43,8 +47,10 @@ const ChildForm = () => {
     },
   ]);
   const [modalOpen, setModalOpen] = useState(false);
-const { authState,loading } = useAuth();
+  const { authState, loading } = useAuth();
   const handleLogout = useLogout();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -59,6 +65,14 @@ const { authState,loading } = useAuth();
       }
     }
   }, [loading, authState, handleLogout]);
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      setOpenSnackbar(false);
+    }
+
+    setOpenSnackbar(false);
+  };
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -82,22 +96,6 @@ const { authState,loading } = useAuth();
         };
         return newDataList;
       });
-    } else if (e.target.name === "photo") {
-      const fd = new FormData();
-      fd.append("photo", JSON.stringify(e.target.files[0]));
-      setFormDataList((prevFormDataList) => {
-        const newDataList = [...prevFormDataList];
-        newDataList[index] = {
-          ...newDataList[index],
-          photo: fd,
-          photoName: e.target.files[0].name,
-        };
-        return newDataList;
-      });
-      // for (let [key, value] of fd) {
-      //   console.log(`${key}: ${value}`);
-      // }
-      console.log(e.target.files[0]);
     } else {
       const { name, value } = e.target;
       setFormDataList((prevFormDataList) => {
@@ -113,6 +111,16 @@ const { authState,loading } = useAuth();
 
   const handleCreateChildren = async (e) => {
     e.preventDefault();
+    console.log(errorMessage);
+    // Validation
+    const isValid = validateForm();
+    if (!isValid) {
+      const newErrors = "Please fill all the required fields";
+      setErrorMessage(newErrors);
+      setOpenSnackbar(true);
+      return;
+    }
+
     try {
       const formattedChildrenData = formDataList.map((child) => {
         const { classId, ...formattedChild } = child;
@@ -157,6 +165,8 @@ const { authState,loading } = useAuth();
       ]);
       navigate("/DashboardChildren");
     } catch (error) {
+      const newErrors = "Please fill all the required fields";
+      setErrorMessage(newErrors);
       console.error("Error creating children:", error.message);
     }
   };
@@ -206,186 +216,231 @@ const { authState,loading } = useAuth();
     }
   };
 
+  const validateForm = () => {
+    formDataList.forEach((formData, index) => {
+      if (
+        !formData.name.trim() ||
+        !formData.surname.trim() ||
+        !formData.birthday ||
+        formData.gender === "t" ||
+        !formData.allergies.trim() ||
+        !formData.vaccines.trim() ||
+        !formData.payments.trim() ||
+        formData.active === "t" ||
+        formData.classId === "t"
+      ) {
+        const newErrors = "Please fill all the required fields";
+        setErrorMessage(newErrors);
+      }
+    });
+  };
+
   return (
-    <Box
-      sx={{
-        bgcolor: Colors.secondary,
-        backgroundImage: `url(${DashboardBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        py: 3,
-      }}
-    >
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          bgcolor: Colors.secondary,
+          backgroundImage: `url(${DashboardBg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: "100vh",
+          py: 3,
+        }}
+      >
             <DashboardSchoolSidebar />
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
+        {errorMessage && (
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              {errorMessage}
+            </Alert>
+          </Snackbar>
+        )}
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            bgcolor: "Colors.secondary",
+            p: 3,
+            marginTop: -10,
+          }}
+        ></Box>
+        <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 5 }}>
 
-        <Grid container justifyContent="center" spacing={3}>
-          {formDataList.map((formData, index) => (
-            <Grid item xs={12} sm={6} md={6} lg={6}>
-              <Paper elevation={3} sx={{ padding: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Register a Child {index + 1}
-                </Typography>
-                <form
-                  onSubmit={handleCreateChildren}
-                  enctype="multipart/form-data"
+          <Grid container justifyContent="center" spacing={3}>
+            {formDataList.map((formData, index) => (
+              <Grid item xs={12} sm={6} md={6} lg={6}>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    overflowX: "auto",
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.6)",
+                    maxWidth: "none",
+                    width: "100%",
+                    "@media (max-width: 1200px)": {
+                      width: "100%",
+                    },
+                    padding: 2,
+                    mb: 2,
+                  }}
                 >
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <input
-                        type="file"
-                        name="photo"
-                        onChange={(e) => handleChange(index, e)}
-                      />
-                      {/* <TextField
-                        label="Photo"
-                        name="photo"
-                        value={formData.photo}
-                        onChange={(e) => handleChange(index, e)}
-                        required
-                        fullWidth
-                      /> */}
-                      <Typography>{formData.photoName}</Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Name"
-                        name="name"
-                        value={formData.name}
-                        onChange={(e) => handleChange(index, e)}
-                        required
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Surname"
-                        name="surname"
-                        value={formData.surname}
-                        onChange={(e) => handleChange(index, e)}
-                        required
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        fullWidth
-                      >
-                        <DatePicker
-                          label="Birthday"
-                          name="birthday"
-                          minDate={dayjs().subtract(6, "year")}
-                          maxDate={dayjs()}
-                          value={
-                            formData.birthday ? dayjs(formData.birthday) : null
-                          }
+                  <Typography variant="h6" gutterBottom>
+                    Register a Child {index + 1}
+                  </Typography>
+                  <form
+                    onSubmit={handleCreateChildren}
+                    enctype="multipart/form-data"
+                  >
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Name"
+                          name="name"
+                          value={formData.name}
                           onChange={(e) => handleChange(index, e)}
-                          sx={{ width: "100%" }}
+                          required
+                          fullWidth
                         />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl variant="outlined" fullWidth>
-                        <Select
-                          name="gender"
-                          // error={
-                          //   valid &&
-                          //   (formData.statusId === undefined ||
-                          //     formData.statusId === 0 ||
-                          //     !formData.statusId)
-                          // }
-                          value={formData.gender}
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Surname"
+                          name="surname"
+                          value={formData.surname}
                           onChange={(e) => handleChange(index, e)}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <LocalizationProvider
+                          dateAdapter={AdapterDayjs}
+                          fullWidth
                         >
-                          <MenuItem value="t">
-                            <em>Choose gender</em>
-                          </MenuItem>
-                          <MenuItem value="Ma">Male</MenuItem>
-                          <MenuItem value="Fe">Female</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Allergies"
-                        name="allergies"
-                        value={formData.allergies}
-                        onChange={(e) => handleChange(index, e)}
-                        required
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Vaccines"
-                        name="vaccines"
-                        value={formData.vaccines}
-                        onChange={(e) => handleChange(index, e)}
-                        required
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Payments"
-                        name="payments"
-                        value={formData.payments}
-                        onChange={(e) => handleChange(index, e)}
-                        required
-                        fullWidth
-                      />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                      <FormControl variant="outlined" fullWidth>
-                        <Select
-                          name="active"
-                          // error={
-                          //   valid &&
-                          //   (formData.statusId === undefined ||
-                          //     formData.statusId === 0 ||
-                          //     !formData.statusId)
-                          // }
-                          value={formData.active}
-                          onChange={(e) => handleChange(index, e)}
-                        >
-                          <MenuItem value="t">
-                            <em>Choose status</em>
-                          </MenuItem>
-                          <MenuItem value={0}>Passive</MenuItem>
-                          <MenuItem value={1}>Active</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControl variant="outlined" fullWidth>
-                        <Select
-                          name="classId"
-                          // error={
-                          //   valid &&
-                          //   (formData.statusId === undefined ||
-                          //     formData.statusId === 0 ||
-                          //     !formData.statusId)
-                          // }
-                          value={formData.classId}
-                          onChange={(e) => handleChange(index, e)}
-                        >
-                          <MenuItem value="t">
-                            <em>Choose class</em>
-                          </MenuItem>
-                          {classes.map((item) => (
-                            <MenuItem key={item.ClassId} value={item.ClassId}>
-                              {item.Name}
+                          <DatePicker
+                            label="Birthday"
+                            name="birthday"
+                            minDate={dayjs().subtract(6, "year")}
+                            maxDate={dayjs()}
+                            value={
+                              formData.birthday
+                                ? dayjs(formData.birthday)
+                                : null
+                            }
+                            onChange={(e) => handleChange(index, e)}
+                            sx={{ width: "100%" }}
+                          />
+                        </LocalizationProvider>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <FormControl variant="outlined" fullWidth>
+                          <Select
+                            name="gender"
+                            // error={
+                            //   valid &&
+                            //   (formData.statusId === undefined ||
+                            //     formData.statusId === 0 ||
+                            //     !formData.statusId)
+                            // }
+                            value={formData.gender}
+                            onChange={(e) => handleChange(index, e)}
+                          >
+                            <MenuItem value="t">
+                              <em>Choose gender</em>
                             </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    {/* <Grid item xs={12}>
+                            <MenuItem value="Ma">Male</MenuItem>
+                            <MenuItem value="Fe">Female</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Allergies"
+                          name="allergies"
+                          value={formData.allergies}
+                          onChange={(e) => handleChange(index, e)}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Vaccines"
+                          name="vaccines"
+                          value={formData.vaccines}
+                          onChange={(e) => handleChange(index, e)}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Payments"
+                          name="payments"
+                          value={formData.payments}
+                          onChange={(e) => handleChange(index, e)}
+                          required
+                          fullWidth
+                        />
+                      </Grid>
+
+                      <Grid item xs={12} sm={6}>
+                        <FormControl variant="outlined" fullWidth>
+                          <Select
+                            name="active"
+                            // error={
+                            //   valid &&
+                            //   (formData.statusId === undefined ||
+                            //     formData.statusId === 0 ||
+                            //     !formData.statusId)
+                            // }
+                            value={formData.active}
+                            onChange={(e) => handleChange(index, e)}
+                          >
+                            <MenuItem value="t">
+                              <em>Choose status</em>
+                            </MenuItem>
+                            <MenuItem value={0}>Passive</MenuItem>
+                            <MenuItem value={1}>Active</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <FormControl variant="outlined" fullWidth>
+                          <Select
+                            name="classId"
+                            // error={
+                            //   valid &&
+                            //   (formData.statusId === undefined ||
+                            //     formData.statusId === 0 ||
+                            //     !formData.statusId)
+                            // }
+                            value={formData.classId}
+                            onChange={(e) => handleChange(index, e)}
+                          >
+                            <MenuItem value="t">
+                              <em>Choose class</em>
+                            </MenuItem>
+                            {classes.map((item) => (
+                              <MenuItem key={item.ClassId} value={item.ClassId}>
+                                {item.Name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      {/* <Grid item xs={12}>
                       <Button
                         type="submit"
                         variant="contained"
@@ -395,44 +450,61 @@ const { authState,loading } = useAuth();
                         Create Child
                       </Button>
                     </Grid> */}
-                  </Grid>
-                </form>
-                <Box mt={2} textAlign="right">
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => handleDeleteForm(index)}
-                  >
-                    Delete Form
-                  </Button>
-                </Box>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} sm={10} md={8} lg={6}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddChild}
-              fullWidth
-            >
-              Add Another Child
-            </Button>
-            <Button
-              onClick={handleCreateChildren}
-              variant="contained"
-              color="primary"
-              fullWidth
-            >
-              Create Children
-            </Button>
+                    </Grid>
+                  </form>
+                  <Box mt={2} textAlign="right">
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => handleDeleteForm(index)}
+                    >
+                      Delete Form
+                    </Button>
+                  </Box>
+                </Paper>
+              </Grid>
+            ))}
           </Grid>
-        </Grid>
+          <Grid container justifyContent="center">
+            <Grid
+              item
+              xs={12}
+              sm={10}
+              md={8}
+              lg={6}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 30,
+                width: "100%",
+                "@media (max-width: 1200px)": {
+                  width: "100%",
+                },
+                ml: 4,
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddChild}
+                fullWidth
+              >
+                Add Another Child
+              </Button>
+              <Button
+                onClick={handleCreateChildren}
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                Create Children
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+        <SessionModal open={modalOpen} />
       </Box>
-      <SessionModal open={modalOpen} />
-    </Box>
+    </ThemeProvider>
   );
 };
 

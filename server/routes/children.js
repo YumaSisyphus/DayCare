@@ -2,8 +2,6 @@ const express = require("express");
 const cron = require("node-cron");
 const router = express.Router();
 const mysql = require("mysql2");
-const multer = require("multer");
-const upload = multer({ dest: "upload/" });
 
 router.use(express.json());
 
@@ -71,12 +69,11 @@ router.delete("/deleteChildren", (req, res) => {
   });
 });
 
-router.post("/createChildren", upload.array("photo"), (req, res) => {
+router.post("/createChildren", (req, res) => {
   console.log(req.files);
   const childrenData = req.body.map((child) => [
     child.birthday,
     child.gender,
-    child.photoName,
     child.allergies,
     child.vaccines,
     child.name,
@@ -87,7 +84,7 @@ router.post("/createChildren", upload.array("photo"), (req, res) => {
 
   const sql = `
     INSERT INTO child 
-    (Birthday, Gender, Photo, Allergies, Vaccines, Name, Surname, Payments, Active) 
+    (Birthday, Gender, Allergies, Vaccines, Name, Surname, Payments, Active) 
     VALUES ?
     `;
   db.query(sql, [childrenData], (err, data) => {
@@ -111,7 +108,7 @@ router.post("/createChildren", upload.array("photo"), (req, res) => {
 router.put("/updateChild", (req, res) => {
   const sql = `
     UPDATE child 
-    SET Birthday=?, Gender=?, Photo=?, 
+    SET Birthday=?, Gender=?,
     Allergies=?, Vaccines=?, Name=?, 
     Surname=?, Payments=?, Active=? 
     WHERE ChildId=?
@@ -119,7 +116,6 @@ router.put("/updateChild", (req, res) => {
   const values = [
     req.body.birthday,
     req.body.gender,
-    req.body.photo,
     req.body.allergies,
     req.body.vaccines,
     req.body.name,

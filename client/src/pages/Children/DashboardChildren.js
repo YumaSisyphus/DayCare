@@ -39,7 +39,6 @@ import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSi
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
-import InfoIcon from "@mui/icons-material/Info"; // Import Info icon
 
 export default function DashboardChildren() {
   const [children, setChildren] = useState([]);
@@ -100,6 +99,7 @@ export default function DashboardChildren() {
         data: { childIds: selectedChildren },
       });
       handleDeleteChildModalClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting children:", error.message);
     }
@@ -206,10 +206,10 @@ export default function DashboardChildren() {
           <Button
             sx={{ marginBottom: 2 }}
             variant="contained"
-            color="primary"
             onClick={() => navigate("/AddChild")}
+            color="info"
           >
-            Add Child
+            Add Child <AddIcon />
           </Button>
           <Box
             sx={{
@@ -233,6 +233,7 @@ export default function DashboardChildren() {
               variant="contained"
               onClick={handleDeleteChildModalOpen}
               disabled={selectedChildren.length === 0}
+              color="error"
             >
               Delete Selected Children
             </Button>
@@ -255,9 +256,6 @@ export default function DashboardChildren() {
                 <TableRow>
                   <TableCell>
                     <Typography fontWeight="bold">Details</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="bold">Photo</Typography>
                   </TableCell>
                   <TableCell onClick={() => handleSort("Name")}>
                     <Typography
@@ -374,18 +372,14 @@ export default function DashboardChildren() {
                   : filteredChildren
                 ).map((child) => (
                   <TableRow key={child.ChildId}>
-
                     <TableCell>
                       <IconButton
                         color="primary"
                         onClick={() => navigate(`/ChildHome/${child.ChildId}`)}
                       >
-                        <AccountCircleIcon /> {/* Use the new icon instead of PersonIcon */}
+                        <AccountCircleIcon />{" "}
+                        {/* Use the new icon instead of PersonIcon */}
                       </IconButton>
-                    </TableCell>
-
-                    <TableCell>
-                      <Typography variant="body2">{child.Photo}</Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">{child.Name}</Typography>
@@ -418,6 +412,7 @@ export default function DashboardChildren() {
                     <TableCell>
                       <Box display="flex" flexDirection={"column"}>
                         <Button
+                          sx={{ mb: 1 }}
                           variant="contained"
                           color="primary"
                           onClick={() =>
@@ -425,6 +420,7 @@ export default function DashboardChildren() {
                           }
                         >
                           Edit
+                          <EditIcon />
                         </Button>
                         <Button
                           variant="contained"
@@ -440,7 +436,7 @@ export default function DashboardChildren() {
                               onChange={() => toggleSelectChild(child.ChildId)}
                             />
                           }
-                          label="SELECT"
+                          label="Select for deletion"
                         ></FormControlLabel>
                       </Box>
                     </TableCell>
