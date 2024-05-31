@@ -116,10 +116,11 @@ npm start
 </li>
 </ol>
 
-<h4>Pasi te perfundohen keta hapa, nevojitet krijimi i nje account per t'u bere log in. Shkoni ne MySQL dhe ekzekutoni komanden ne vazhdim per krijimin e nje admini. Pastaj ne admin dashboard jane te gjitha funksionet e nevojshme per krijimin e user-eve te tjere !</h4>
-<h4>insert into daycare.staff (Name, Surname, Birthday, Gender, Email, PhoneNumber, Role, Username, Address, Password)
+<h4>Pasi te perfundohen keta hapa, nevojitet krijimi i nje account per t'u bere log in. <br> Shkoni ne MySQL dhe ekzekutoni komanden ne vazhdim per krijimin e nje admini. Pastaj ne admin dashboard jane te gjitha funksionet e nevojshme per krijimin e user-eve te tjere !</h4>
+<p>insert into daycare.staff (Name, Surname, Birthday, Gender, Email, PhoneNumber, Role, Username, Address, Password)
  VALUES('test','testtest','2015-02-20','Fe','test@gmail','678686','Admin','admin','address','$2b$10$.2zl2lTl6yS1oMH9q0Whk.qsTwhezW1HAA/NTLgNRTqpFgo4ErSzS')</h4>
- <h3>IMPORTANT !</h3>
- <h4>Log in behet permes username dhe password dmth. Username: admin, Password: a</h4>
+ <br>
+ <h3>IMPORTANT !</p>
+ <p>Log in behet permes username dhe password dmth. <b> Username: admin, Password: a</b></p>
 
 
