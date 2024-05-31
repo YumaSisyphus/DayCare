@@ -28,7 +28,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/TeacherSidebar";
 import { useAuth } from "../../utils/authContext";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
@@ -198,7 +197,6 @@ const SingleClass = () => {
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <DashboardSchoolSidebar />
       <Box width={"70%"}>
         <Typography variant="h4">{classData.Name}</Typography>
         <Typography variant="body1">
