@@ -138,8 +138,7 @@ function App() {
               </RoleBasedRoute>
             }
           />
-     
-         
+
           <Route
             path="/AdminHome"
             element={
@@ -163,7 +162,17 @@ function App() {
             }
           />
           <Route path="/ChildHome" element={<ChildHome />} />
-          <Route path="/AddChild" element={<ChildForm />} />
+          <Route
+            path="/AddChild"
+            element={
+              <RoleBasedRoute
+                allowedRoles={["staff"]}
+                allowedSpecificRoles={["Admin"]}
+              >
+                <ChildForm />
+              </RoleBasedRoute>
+            }
+          />
           <Route path="/EditChild/:childId" element={<EditChild />} />
           <Route
             path="/StaffDashboard"

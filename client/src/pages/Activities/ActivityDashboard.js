@@ -277,7 +277,13 @@ const { authState,loading } = useAuth();
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredActivities.map((activity) => (
+              {(rowsPerPage > 0
+                  ? activities.slice(
+                      (page - 1) * rowsPerPage,
+                      (page - 1) * rowsPerPage + rowsPerPage
+                    )
+                  : activities
+                ).map((activity) => (
                   <TableRow key={activity.ActivityId}>
                     <TableCell>
                       <Typography variant="body1">{activity.Name}</Typography>

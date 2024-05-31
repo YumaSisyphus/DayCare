@@ -137,7 +137,7 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7000;
 
 http.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
