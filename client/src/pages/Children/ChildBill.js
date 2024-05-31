@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { CircularProgress,Box, Typography, Card, CardContent, Grid } from "@mui/material";
-import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
-import { Colors } from "../../utils/colors";
+import { CircularProgress, Typography, Card, CardContent, Grid } from "@mui/material";
 
 const ChildPayments = () => {
   const { id } = useParams();
@@ -36,29 +34,13 @@ const ChildPayments = () => {
   if (error) return <Typography variant="body1">Error: {error.message}</Typography>;
   
   return (
-    <Box>
-
-    <Box
-      sx={{
-        bgcolor: Colors.secondary,
-        backgroundImage: `url(${DashboardBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        py: 3,
-      }}
-    >
-    <div style={{padding:60}}>
+    <div>
       <Typography variant="h4" gutterBottom>Child Payments</Typography>
-      <Grid container spacing={2} >
+      <Grid container spacing={2}>
         {payments.map((payment) => (
-          <Grid item key={payment.PaymentId} xs={12} sm={6} md={4} >
-            <Card variant="outlined" sx={{borderRadius:5}}
-            style={{
-              background: "rgba(255, 255, 255, 0.9)",
-
-            }}>
-              <CardContent >
+          <Grid item key={payment.PaymentId} xs={12} sm={6} md={4}>
+            <Card variant="outlined">
+              <CardContent>
                 <Typography variant="h6" gutterBottom>Date: {new Date(payment.Date).toLocaleDateString()}</Typography>
                 <Typography variant="body1">Amount: {payment.Amount}</Typography>
               </CardContent>
@@ -67,8 +49,6 @@ const ChildPayments = () => {
         ))}
       </Grid>
     </div>
-    </Box>
-    </Box>
   );
 };
 

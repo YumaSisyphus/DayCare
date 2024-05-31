@@ -39,7 +39,6 @@ import { Class } from "@mui/icons-material";
 import Chat from "./pages/Chat/chat";
 import SingleClass from "./pages/Class/IndividualClass";
 import MyChildren from "./pages/Parents/MyChildren";
-import ChildPayments from "./pages/Children/ChildBill";
 
 const stripePromise = loadStripe(
   "pk_test_51PKjl62MB0mC2oqNWZNkOj7IeAiL6wEnwh7WBi0qA3mOOgAuKEvCXk3VcSmieNR8MYSvgxZ3yotDnGk6BPOdZ4uG00u5ewr2Ck"
@@ -79,17 +78,6 @@ function App() {
                 allowedSpecificRoles={["Teacher"]}
               >
                 <TeacherHome />
-              </RoleBasedRoute>
-            }
-          />
-          <Route
-            path="/ChildBill/:id"
-            element={
-              <RoleBasedRoute
-                allowedRoles={["parent","staff"]}
-                allowedSpecificRoles={["parent","Admin"]}
-              >
-                <ChildPayments />
               </RoleBasedRoute>
             }
           />
@@ -282,7 +270,7 @@ function App() {
           <Route path="/mealDashboard"  element={
               <RoleBasedRoute
                 allowedRoles={["staff"]}
-                allowedSpecificRoles={["Teacher"]}
+                allowedSpecificRoles={["Admin","Teacher"]}
               >
                 <Meal />
               </RoleBasedRoute>

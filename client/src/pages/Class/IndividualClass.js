@@ -31,6 +31,7 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { useAuth } from "../../utils/authContext";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
+import DashboardSchoolSidebar from "../../components/DashboardComponents/TeacherSidebar";
 
 const SingleClass = () => {
   const { id } = useParams();
@@ -197,6 +198,7 @@ const SingleClass = () => {
       justifyContent={"center"}
       alignItems={"center"}
     >
+      <DashboardSchoolSidebar />
       <Box width={"70%"}>
         <Typography variant="h4">{classData.Name}</Typography>
         <Typography variant="body1">

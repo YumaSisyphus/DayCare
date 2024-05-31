@@ -26,7 +26,6 @@ import useCheckAuth from "../../utils/useCheckAuth";
 import useLogout from "../../utils/useLogout";
 import SessionModal from "../../components/SessionModal";
 import { useAuth } from "../../utils/authContext";
-import SearchBar from "../../components/Searchbar";
 
 const ParentsList = () => {
   const [parents, setParents] = useState([]);
@@ -34,17 +33,11 @@ const ParentsList = () => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modalOpen, setModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const { authState, loading } = useAuth();
   const handleLogout = useLogout();
 
   const handleOpenModal = () => {
     setModalOpen(true);
-  };
-
-  const handleSearch = (searchTerm) => {
-    setSearchTerm(searchTerm);
-    setPage(1);
   };
 
   useEffect(() => {
@@ -61,21 +54,14 @@ const ParentsList = () => {
     const fetchParents = async () => {
       try {
         const response = await axios.get("/parents/getParents");
-
-        const processedParents = groupParents(response.data.data);
-        console.log(processedParents);
-        const filteredRows = processedParents.filter((data) =>
-          `${data.Name} ${data.Surname}`
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-        ); // Process the data here
-        setParents(filteredRows);
+        const processedParents = groupParents(response.data.data); // Process the data here
+        setParents(processedParents);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchParents();
-  }, [searchTerm]);
+  }, []);
 
   const groupParents = (data) => {
     const grouped = {};
@@ -116,7 +102,6 @@ const ParentsList = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "100vh",
-          
         }}
       >
         <Container sx={{ flexGrow: 1, p: 3, width: "100%", py: 6 }}>
@@ -127,23 +112,27 @@ const ParentsList = () => {
           </Box>
           <Toolbar />
           <Box
-             display={"flex"}
-             justifyContent={"space-between"}
-             mb={2}
-             alignItems={"center"}
-           >
-
-           
-         
-          <SearchBar label="Search..." onSearch={handleSearch} />
-          <Button
+            textAlign="right"
+            marginTop={-5}
+            marginRight={-15}
+            marginLeft={-10}
+          >
+            <Button
               variant="contained"
               color="primary"
               onClick={() => navigate("/ParentForm")}
             >
               Register a parent
             </Button>
+
+            <Button
+            // variant="contained"
+            //       color="primary"
+            //     onClick={() => navigate("/ChildParent")}
+            //   sx={{ ml: 2 }}
+            ></Button>
           </Box>
+
           <TableContainer
             component={Paper}
             sx={{
@@ -185,7 +174,7 @@ const ParentsList = () => {
                   <TableCell>
                     <Typography fontWeight="bold">Username</Typography>
                   </TableCell>
-
+                 
                   <TableCell>
                     <Typography fontWeight="bold">Children</Typography>
                   </TableCell>
@@ -203,67 +192,81 @@ const ParentsList = () => {
                       (page - 1) * rowsPerPage + rowsPerPage
                     )
                   : parents
-                ).map((parent) => (
-                  <TableRow key={parent.ParentId}>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Name}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Surname}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Birthday}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Gender}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Email}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Address}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">
-                        {parent.PhoneNumber}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body1">{parent.Username}</Typography>
-                    </TableCell>
-
-                    <TableCell>
-                      <Typography variant="body1">
-                        {parent.children.map((child, index) => (
-                          <span key={index}>
-                            {child.Name} {child.Surname}
-                            {index !== parent.children.length - 1 ? ", " : ""}
-                          </span>
-                        ))}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Box textAlign="center">
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => handleDeleteParent(parent.ParentId)}
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            navigate(`/EditParents/${parent.ParentId}`)
-                          }
-                        >
-                          Edit
-                        </Button>
-                      </Box>
-                    </TableCell>
+                ).length > 0 ? (
+                  parents.map((parent) => (
+                    <TableRow key={parent.ParentId}>
+                      <TableCell>
+                        <Typography variant="body1">{parent.Name}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {parent.Surname}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {parent.Birthday}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">{parent.Gender}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">{parent.Email}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {parent.Address}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {parent.PhoneNumber}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">
+                          {parent.Username}
+                        </Typography>
+                      </TableCell>
+                     
+                      <TableCell>
+                        <Typography variant="body1">
+                          {parent.children.map((child, index) => (
+                            <span key={index}>
+                              {child.Name} {child.Surname}
+                              {index !== parent.children.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box textAlign="center">
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleDeleteParent(parent.ParentId)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              navigate(`/EditParents/${parent.ParentId}`)
+                            }
+                          >
+                            Edit
+                          </Button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={11}>No parents found.</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>

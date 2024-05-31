@@ -32,7 +32,7 @@ const DashboardSchoolSidebar = () => {
         flexDirection={"column"}
       >
         <Typography variant="h6" mb={3} ml={3} mt={4}>
-          Admin's Dashboard
+          Dashboards
         </Typography>
         <Box width={"100%"} display={"flex"}>
           <StyledLink href="/StaffDashboard">Staff</StyledLink>

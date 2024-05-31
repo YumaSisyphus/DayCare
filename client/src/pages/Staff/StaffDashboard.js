@@ -292,26 +292,17 @@ function Staff() {
         alignItems={"center"}
         pb={15}
       >
-        <Container sx={{ marginTop: 4 }}>
-        
-            <Typography variant="h4" gutterBottom >
-              Staff Dashboard
-            </Typography>
-            <Box
+        <Container sx={{ marginTop: 2 }}>
+          <Box
             display={"flex"}
             justifyContent={"space-between"}
             mb={2}
-            alignItems={"center"}
+            marginTop={15}
           >
-         
-          <TextField
-            margin="normal"
-            label="Search Staff"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            sx={{ width: "200px" }}
-          />
-           <Button
+            <Typography variant="h4" gutterBottom sx={{ marginTop: -5 }}>
+              Staff Dashboard
+            </Typography>
+            <Button
               variant="contained"
               color="primary"
               startIcon={<AddIcon />}
@@ -320,7 +311,14 @@ function Staff() {
             >
               Add New
             </Button>
-           </Box>
+          </Box>
+          <TextField
+            margin="normal"
+            label="Search Staff"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ width: "200px" }}
+          />
           {loadingPage ? (
             <Typography>Loading...</Typography>
           ) : (
@@ -364,20 +362,14 @@ function Staff() {
                     <TableCell>
                       <Typography fontWeight={"bold"}>Username</Typography>
                     </TableCell>
-
+                
                     <TableCell>
                       <Typography fontWeight={"bold"}>Actions</Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(rowsPerPage > 0
-                    ? filteredStaffList.slice(
-                        (page - 1) * rowsPerPage,
-                        (page - 1) * rowsPerPage + rowsPerPage
-                      )
-                    : filteredStaffList
-                  ).map((staff) => (
+                  {filteredStaffList.map((staff) => (
                     <TableRow key={staff.StaffId}>
                       <TableCell>{staff.Name}</TableCell>
                       <TableCell>{staff.Surname}</TableCell>
@@ -388,7 +380,7 @@ function Staff() {
                       <TableCell>{staff.Role}</TableCell>
                       <TableCell>{staff.Address}</TableCell>
                       <TableCell>{staff.Username}</TableCell>
-
+                  
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -438,8 +430,7 @@ function Staff() {
             />
             <Typography variant="subtitle1" sx={{ marginLeft: 1 }}>
               Birthday:
-            </Typography>{" "}
-            {/* Add the title "Birthday" */}
+            </Typography> {/* Add the title "Birthday" */}
             <TextField
               margin="normal"
               fullWidth
@@ -475,7 +466,8 @@ function Staff() {
               value={editedRole}
               onChange={(e) => setEditedRole(e.target.value)}
             />
-            <TextField
+
+           <TextField
               margin="normal"
               label="Address"
               fullWidth
@@ -489,6 +481,7 @@ function Staff() {
               value={editedUsername}
               onChange={(e) => setEditedUsername(e.target.value)}
             />
+      
             <TextField
               margin="normal"
               label="Password"
