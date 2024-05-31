@@ -82,6 +82,9 @@
 <h3>Online Chat Interface</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/7288ca6e-9fd1-4e2b-8d71-d61d62cb83ca">
 
+<h3> Database </h3>
+<img src="https://media.discordapp.net/attachments/1217215378896322623/1245904152492642374/Database.png?ex=665a7229&is=665920a9&hm=2700df7923655a2faaf383d06f30d57e877f675668ad282c25b54a1906133699&=&format=webp&quality=lossless&width=665&height=670">
+
 <h3>Instruksionet per instalim</h3>
 <ul>
 <li><b>Node.js</b> (version 14.x or higher)</li>
