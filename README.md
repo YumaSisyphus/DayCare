@@ -79,14 +79,14 @@
 <h3>Online Chat Interface</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/7288ca6e-9fd1-4e2b-8d71-d61d62cb83ca">
 
-Instruksionet per instalim
+<h3>Instruksionet per instalim</h3>
 <ul>
-<li>Node.js (version 14.x or higher)</li>
-<li>MySQL (version 8.x or higher)</li>
-<li>MongoDB (version 4.x or higher)</li>
-<li>Stripe account for online payments</li>
+<li><b>Node.js</b> (version 14.x or higher)</li>
+<li><b>MySQL</b> (version 8.x or higher)</li>
+<li><b>MongoDB</b> (version 4.x or higher)</li>
+<li><b>Stripe account</b> for online payments</li>
  </ul>
-Setup
+<h3>Setup</h3>
 <ol>
  <li>Clone the repository:
  <p>git clone https://github.com/YumaSisyphus/DayCare.git <br>
