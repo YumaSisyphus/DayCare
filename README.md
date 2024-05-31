@@ -77,7 +77,7 @@
 
 
 <h3>Online Chat Interface</h3>
-<img src="https://github.com/YumaSisyphus/DayCare/assets/120139227/676cce9e-3fc5-45b7-bc5a-71479843cd3d">
+<img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/7288ca6e-9fd1-4e2b-8d71-d61d62cb83ca">
 
 
 
