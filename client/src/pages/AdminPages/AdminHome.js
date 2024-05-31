@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, Paper, Container, Divider, Avatar, ThemeProvider } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  Container,
+  Divider,
+  Avatar,
+  ThemeProvider,
+} from "@mui/material";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import { motion } from "framer-motion";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
@@ -46,12 +55,12 @@ const AdminHome = () => {
       >
         <Container maxWidth="md" sx={{ marginTop: -2 }}>
           <Paper
-            elevation={0} 
+            elevation={0}
             sx={{
               padding: 4,
               backgroundColor: "transparent",
-              borderRadius: 0, 
-              boxShadow: "none", 
+              borderRadius: 0,
+              boxShadow: "none",
               position: "relative",
               display: "flex",
               flexDirection: "column",
@@ -63,7 +72,6 @@ const AdminHome = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-            
               <Avatar
                 sx={{
                   width: 130,
@@ -71,26 +79,25 @@ const AdminHome = () => {
                   marginLeft: 16,
                   mb: 2,
                   border: `4px solid ${Colors.primary}`,
-                  animation: "fadeIn 1s ease-in", 
-                   "@keyframes fadeIn": {
-                     from: { opacity: 0 },
-                     to: { opacity: 1 },
-                   },
+                  animation: "fadeIn 1s ease-in",
+                  "@keyframes fadeIn": {
+                    from: { opacity: 0 },
+                    to: { opacity: 1 },
+                  },
                 }}
                 src="/path/to/parent-avatar.jpg"
               />
-              <Typography 
-                 variant="h2"
-                 gutterBottom
-                 sx={{
-                   fontFamily: "Gabriola", // Change font family
-                   animation: "fadeIn 1s ease-in", // Add animation
-                   "@keyframes fadeIn": {
-                     from: { opacity: 0 },
-                     to: { opacity: 1 },
-                   },
-                 }}
-               >
+              <Typography
+                variant="h2"
+                gutterBottom
+                sx={{
+                  animation: "fadeIn 1s ease-in",
+                  "@keyframes fadeIn": {
+                    from: { opacity: 0 },
+                    to: { opacity: 1 },
+                  },
+                }}
+              >
                 Welcome, {authState.user?.username}!
               </Typography>
             </motion.div>
