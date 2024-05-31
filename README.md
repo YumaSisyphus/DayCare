@@ -53,7 +53,10 @@
  </ol>
  <h3>Home Page</h3>
  <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/5ba09691-75c6-4230-babf-135b57befd77">
- 
+
+ <h3>Log in Page</h3>
+ <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/01963015-3696-4068-b1b0-ec433851d547">
+
  <h3>Dashboards</h3>
  <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/e79ff16e-6354-4839-b86e-f26c14adbab3">
 
@@ -115,7 +118,7 @@ npm start
  <li>Access the application in your browser at http://localhost:3000.
 </li>
 </ol>
-
+<br>
 <p>Pasi te perfundohen keta hapa, nevojitet krijimi i nje account per t'u bere log in.<br> <br> Shkoni ne MySQL dhe ekzekutoni komanden ne vazhdim per krijimin e nje admini. Pastaj ne admin dashboard jane te gjitha funksionet e nevojshme per krijimin e user-eve te tjere !</p>
 
 <h3>Komanda qe do ekzekutohet ne MySQL :</h3>
