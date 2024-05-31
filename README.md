@@ -79,8 +79,41 @@
 <h3>Online Chat Interface</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/7288ca6e-9fd1-4e2b-8d71-d61d62cb83ca">
 
-
-
- 
+Instruksionet per instalim
+<ul>
+<li>Node.js (version 14.x or higher)</li>
+<li>MySQL (version 8.x or higher)</li>
+<li>MongoDB (version 4.x or higher)</li>
+<li>Stripe account for online payments</li>
+ </ul>
+Setup
+<ol>
+ <li>Clone the repository:
+ <p>git clone https://github.com/YumaSisyphus/DayCare.git <br>
+     cd DayCare</p></li>
+ <li>Install backend dependencies:
+ <p>cd server <br>
+npm install
+</p></li>
+ <li>Install frontend dependencies:
+  <p>cd ../client <br>
+npm install
+</p>
+ </li>
+ <li>Configure environment variables:
+<p>Create a .env file in the server directory and add the necessary environment variables (e.g., database connection strings, JWT secret, Stripe API keys).
+</p>
+</li>
+ <li>Run the backend server:
+ cd server <br>
+npm start
+</li>
+ <li>Run the frontend development server:
+ <p>cd ../client <br>
+npm start
+</p></li>
+ <li>Access the application in your browser at http://localhost:3000.
+</li>
+</ol>
 
 
