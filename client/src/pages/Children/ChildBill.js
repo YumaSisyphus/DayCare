@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { CircularProgress,Box, Typography, Card, CardContent, Grid } from "@mui/material";
 import DashboardBg from "../../images/geometricbg.png"; // Assuming you have the background image imported
 import { Colors } from "../../utils/colors";
-import DashboardSchoolSidebar from "../../components/DashboardComponents/ParentSidebar";
 
 const ChildPayments = () => {
   const { id } = useParams();
@@ -38,7 +37,6 @@ const ChildPayments = () => {
   
   return (
     <Box>
-       <DashboardSchoolSidebar/>
 
     <Box
       sx={{

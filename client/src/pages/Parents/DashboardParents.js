@@ -116,6 +116,7 @@ const ParentsList = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "100vh",
+          
         }}
       >
         <Container sx={{ flexGrow: 1, p: 3, width: "100%", py: 6 }}>
@@ -126,28 +127,23 @@ const ParentsList = () => {
           </Box>
           <Toolbar />
           <Box
-            textAlign="right"
-            marginTop={-5}
-            marginRight={-15}
-            marginLeft={-10}
-          >
-            <Button
+             display={"flex"}
+             justifyContent={"space-between"}
+             mb={2}
+             alignItems={"center"}
+           >
+
+           
+         
+          <SearchBar label="Search..." onSearch={handleSearch} />
+          <Button
               variant="contained"
               color="primary"
               onClick={() => navigate("/ParentForm")}
             >
               Register a parent
             </Button>
-            <br></br>
-
-            <Button
-            // variant="contained"
-            //       color="primary"
-            //     onClick={() => navigate("/ChildParent")}
-            //   sx={{ ml: 2 }}
-            ></Button>
           </Box>
-          <SearchBar label="Search..." onSearch={handleSearch} />
           <TableContainer
             component={Paper}
             sx={{

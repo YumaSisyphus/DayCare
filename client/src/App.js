@@ -86,8 +86,8 @@ function App() {
             path="/ChildBill/:id"
             element={
               <RoleBasedRoute
-                allowedRoles={["parent"]}
-                allowedSpecificRoles={["parent"]}
+                allowedRoles={["parent","staff"]}
+                allowedSpecificRoles={["parent","Admin"]}
               >
                 <ChildPayments />
               </RoleBasedRoute>
