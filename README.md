@@ -72,6 +72,10 @@
  <h3>Payments on Stripe</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/23eaf29d-a2e1-447d-9599-67f4f272d9dc">
 
+<h3>Invoices</h3>
+<img src="https://github.com/YumaSisyphus/DayCare/assets/119975261/1e439eb2-2aa4-4a2b-8f39-6d736c725a0a">
+
+
 <h3>Online Chat Interface</h3>
 <img src="https://github.com/YumaSisyphus/DayCare/assets/120139227/676cce9e-3fc5-45b7-bc5a-71479843cd3d">
 
