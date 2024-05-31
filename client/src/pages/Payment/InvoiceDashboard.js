@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Typography, Grid, Paper, Box } from "@mui/material";
-import DashboardBg from "../../images/geometricbg.png";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Typography, Grid, Paper, Box } from '@mui/material';
+import DashboardBg from "../../images/geometricbg.png"; 
 import { Colors } from "../../utils/colors";
 import DashboardSchoolSidebar from "../../components/DashboardComponents/AdminSidebar";
 
 
 const InvoiceDashboard = () => {
   const [payments, setPayments] = useState([]);
-  const [searchChildName, setSearchChildName] = useState("");
-  const [searchDate, setSearchDate] = useState("");
+  const [searchChildName, setSearchChildName] = useState('');
+  const [searchDate, setSearchDate] = useState('');
 
   useEffect(() => {
-    axios
-      .get("/payment/getPaymentsWithChild")
-      .then((response) => {
-        const sortedPayments = response.data.data.sort(
-          (a, b) => new Date(b.Date) - new Date(a.Date)
-        );
+    axios.get('/payment/getPaymentsWithChild')
+      .then(response => {
+        const sortedPayments = response.data.data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
         setPayments(sortedPayments);
       })
-      .catch((error) => {
-        console.error("Error fetching payments:", error);
+      .catch(error => {
+        console.error('Error fetching payments:', error);
       });
   }, []);
 
@@ -38,26 +35,24 @@ const InvoiceDashboard = () => {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     return (
       payment.ChildName.toLowerCase().includes(searchChildName.toLowerCase()) &&
-      (searchDate === "" || payment.Date.includes(searchDate))
+      (searchDate === '' || payment.Date.includes(searchDate))
     );
   });
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexGrow: 1,
         bgcolor: Colors.secondary,
         backgroundImage: `url(${DashboardBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        maxWidth: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
+        height: "100%",
+        minHeight:"100vh",
+        p:10, 
+        pt:5
       }}
     >
       <Box mt={4} mb={4}>
@@ -72,7 +67,7 @@ const InvoiceDashboard = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "40px",
+            marginTop: "20px",
           }}
         >
           <input
@@ -102,10 +97,16 @@ const InvoiceDashboard = () => {
         </div>
         <Grid container justifyContent="center" spacing={2}>
           {filteredPayments.map((payment) => (
-            <Grid item xs={12} sm={6} md={4} key={payment.PaymentId}>
+            <Grid item xs={12} sm={6} md={4} key={payment.PaymentId} >
               <Paper
                 elevation={3}
-                style={{ padding: "20px", marginBottom: "20px" }}
+                sx={{borderRadius:5}}
+                style={{
+                  background: "rgba(255, 255, 255, 0.9)",
+                  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.27)",
+                  padding:"20px",
+                }}
               >
                 <Typography variant="subtitle1">
                   Payment ID: {payment.PaymentId}
@@ -137,6 +138,7 @@ const InvoiceDashboard = () => {
         </Grid>
       </Box>
     </Box>
+    
   );
 };
 
