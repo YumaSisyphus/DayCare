@@ -1,15 +1,92 @@
-.welcome-screen-top-animation {
-  width: 180px;
-  height: 180px;
-  background-color: rgb(255 255 255 / 30%);
-  backdrop-filter: blur(10px);
-  position: absolute;
-  right: 30%;
-  top: 30%;
+.welcome-screen-img {
+  width: 50%;
+  height: 58%;
+  border-radius: 5px;
+  filter: drop-shadow(rgba(224, 182, 199, 0.7) 0px 8px 24px);
+  transition: 0.4s;
 }
 
-.welcome-screen-logo {
-  width: 22%;
-  height: 70%;
+.welcome-screen-img:hover {
+  transform: scale(1.08);
+}
+
+.welcome-screen-img2 {
+  width: 30%;
+  height: 38%;
   border-radius: 5px;
+  filter: drop-shadow(rgba(163, 208, 252, 0.7) 0px 8px 24px);
+  transition: 0.4s;
+}
+
+.welcome-screen-img2:hover {
+  transform: scale(1.08);
+}
+
+.aboutUs-img {
+  filter: drop-shadow(rgba(224, 182, 199, 0.7) 0px 8px 24px);
+}
+
+.welcome-first-section {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 24px;
+}
+
+.login-logo {
+  border-radius: 10px;
+}
+
+.welcome-services-card {
+  position: relative;
+  transition: 0.4s;
+}
+
+.welcome-services-card:hover {
+  box-shadow: rgba(163, 208, 252, 0.4) 0px 8px 24px;
+}
+
+.welcome-services-card:hover .welcome-services-img {
+  opacity: 1;
+}
+
+.welcome-services-img {
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+  opacity: 0;
+  transition: 0.4s ease-in-out;
+  top: 0;
+}
+
+.link-header {
+  text-decoration: none;
+  color: black;
+}
+
+@media screen and (max-width: 900px) {
+  .login-mobile {
+    width: 80% !important;
+    height: 100vh !important;
+  }
+
+  .welcome-services-box {
+    flex-wrap: wrap;
+  }
+
+  .welcome-services-img {
+    opacity: 1;
+  }
+
+  .welcome-screen-img {
+    display: none;
+  }
+
+  .welcome-screen-img2 {
+    display: none;
+  }
+
+  .welcome-first-section {
+    width: 90% !important;
+  }
 }

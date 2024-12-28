@@ -1,5 +1,16 @@
 export const Colors = {
-  primary: "#fff3e5",
-  secondary: "#fed5c6",
+  primary: "#fed5c6",
+  secondary: "#fff3e5",
   lightbg: "#fff0ec",
+  cleanLightBlack: "#4a4a4a",
+  white: "#ffffff",
+  black: "#292929",
+  redlet: "#da1737",
+  tomato: "#ff735e",
+  pastelPurple: "#e0b6c7",
+  pastelOrange: "#FFCF81",
+  yellowLime: "#F6FDC3",
+  pastelPeach: "#EEA5A6",
+  darkSilver: "#737373",
+  pastelBlue: "#5775cd",
 };
