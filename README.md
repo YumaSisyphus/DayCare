@@ -8,7 +8,7 @@
  <ol>
    <li>Dea Fetahu</li>
    <li>Erblin Ymeri</li>
-   <li>Butrint Reqica</li>
+   <li>Butrint Reçica</li>
    <li>Elsa Tomaj</li>
    <li>Marjeta Ramaj</li>
  </ol>
